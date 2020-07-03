@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "application.jwt",
+      "type": "ou.phamquangtinh.controller.security.config.JwtConfig",
+      "sourceType": "ou.phamquangtinh.controller.security.config.JwtConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "application.jwt.secretkey",
+      "type": "java.lang.String",
+      "sourceType": "ou.phamquangtinh.controller.security.config.JwtConfig"
+    },
+    {
+      "name": "application.jwt.token-expiration-after-days",
+      "type": "java.lang.Integer",
+      "sourceType": "ou.phamquangtinh.controller.security.config.JwtConfig"
+    },
+    {
+      "name": "application.jwt.token-prefix",
+      "type": "java.lang.String",
+      "sourceType": "ou.phamquangtinh.controller.security.config.JwtConfig"
+    }
+  ],
+  "hints": []
+}

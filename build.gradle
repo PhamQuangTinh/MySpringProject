@@ -1,0 +1,130 @@
+allprojects {
+    group 'ou.phamquangtinh'
+    version '1.0-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    repositories{
+        mavenCentral()
+        jcenter()
+    }
+}
+
+buildscript {
+    ext{
+        springBootVersion = '2.3.1.RELEASE'
+        springManagementVersion = '1.0.9.RELEASE'
+        lombokVersion = '1.18.4'
+//        guavaVersion = '27.1-jre'
+        commonLang3Version = '3.8.1'
+        jaxbVersion = '2.2.4'
+        swaggerVersion = "2.9.2"
+        jwtVersion = '0.11.2'
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("io.spring.gradle:dependency-management-plugin:${springManagementVersion}")
+    }
+}
+
+subprojects {
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+
+    def defaultEncoding = 'UTF-8'
+    tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
+
+    javadoc {
+        options.encoding = defaultEncoding
+        options.addBooleanOption('Xdoclint:none', true)
+    }
+
+    dependencies{
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+        compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+        compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+        // SPRING DEPENDENCIES
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        runtime "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
+        runtimeOnly 'mysql:mysql-connector-java'
+
+        //***Utilities
+        //to use collection
+        compile("org.springframework.boot:spring-boot-starter-security")
+        compile "io.jsonwebtoken:jjwt-api:${jwtVersion}","io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
+//        compile group: 'com.google.guava', name: 'guava', version: "${guavaVersion}"
+
+        //to use StringUtils
+        compile group: 'org.apache.commons', name: 'commons-lang3', version: "${commonLang3Version}"
+        // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+        compile group: 'javax.xml.bind', name: 'jaxb-api', version: "${jaxbVersion}"
+        compile group: 'io.springfox', name: 'springfox-swagger2', version: "${swaggerVersion}"
+        compile group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swaggerVersion}"
+//        compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+
+
+
+        // TEST
+        testImplementation 'org.springframework.security:spring-security-test'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
+    }
+
+    compileJava.dependsOn(processResources)
+
+    springBoot {
+        buildInfo()
+    }
+}
+
+//project(':domain'){
+//
+//}
+
+//project(':model'){
+//
+//}
+//
+//
+//project(':repository'){
+//    dependencies {
+//        implementation(':domain')
+//    }
+//}
+//
+//project(':service'){
+//    dependencies {
+//        implementation(':domain')
+//        implementation(':repository')
+//
+//    }
+//}
+//
+//project(':web'){
+//    dependencies {
+//        implementation project(':domain')
+//        compile('org.springframework.boot:spring-boot-starter-web')
+//        compile('org.springframework.boot:spring-boot-devtools')
+//        compile('org.springframework.boot:spring-boot-starter-security')
+//    }
+//}
+
+
+
+

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.3.1.RELEASE/f1b8c72063714f16f88b495bd1662aa06ac8cbb5/spring-boot-configuration-processor-2.3.1.RELEASE.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.4/7103ab519b1cdbb0642ad4eaf1db209d905d0f96/lombok-1.18.4.jar" />
+        </processorPath>
+        <module name="my-spring-boot-project.domain.main" />
+        <module name="my-spring-boot-project.repository.main" />
+        <module name="my-spring-boot-project.web.main" />
+        <module name="my-spring-boot-project.security.main" />
+        <module name="my-spring-boot-project.service.main" />
+        <module name="my-spring-boot-project.model.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.8" />
+  </component>
+</project>

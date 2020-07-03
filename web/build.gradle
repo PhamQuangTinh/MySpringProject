@@ -1,0 +1,10 @@
+
+dependencies {
+    compile project (':domain')
+    compile project (':service')
+    compile project (':model')
+    compile project (':security')
+
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-devtools')
+}

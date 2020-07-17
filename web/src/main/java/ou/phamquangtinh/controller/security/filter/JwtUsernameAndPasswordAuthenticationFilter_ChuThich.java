@@ -1,8 +1,6 @@
 package ou.phamquangtinh.controller.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ou.phamquangtinh.controller.security.models.UsernameAndPasswordAuthenticationRequest;
+import ou.phamquangtinh.dto.request.user_request.UsernameAndPasswordAuthenticationRequest;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Date;
 
 public class JwtUsernameAndPasswordAuthenticationFilter_ChuThich extends UsernamePasswordAuthenticationFilter {

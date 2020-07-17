@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ou.phamquangtinh.controller.security.filter.JwtTokenVerifier;
-import ou.phamquangtinh.controller.security.filter.JwtUsernameAndPasswordAuthenticationFilter_ChuThich;
 
 @EnableWebSecurity
 @Configuration
@@ -24,13 +23,16 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private JwtTokenVerifier jwtTokenVerifier;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -40,20 +42,25 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenVerifier(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtTokenVerifier, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/","/hello","/register","/api","/login")
+                .antMatchers("/"
+                        , "/api/user/post/hello"
+                        , "/api/user/post/register",
+                        "/api/user/post/login")
                 .permitAll()
+                .antMatchers("/api/user/post/postmapping")
+                .hasAnyAuthority("SUPER_ADMIN")
                 .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+                .authenticated();
+
 
         //                .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager()))
 
@@ -65,7 +72,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 "/configuration/ui",
                 "/swagger-resources/**",
                 "/configuration/security",
-                "/swagger-ui.html",
+                "/swagger-ui.html/**",
                 "/webjars/**");
     }
 }

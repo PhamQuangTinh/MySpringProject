@@ -10,14 +10,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
 @MappedSuperclass //Class cha
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class BaseEntity<T> implements Serializable {
+    protected static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,17 +25,17 @@ public abstract class BaseEntity implements Serializable {
 
     @Column
     @CreatedBy
-    private String createdBy;
+    private T createdBy;
 
     @Column
     @CreatedDate
-    private Date createdDate;
+    private ZonedDateTime createdDate;
 
     @Column
     @LastModifiedBy
-    private String modifiedBy;
+    private T modifiedBy;
 
     @Column
     @LastModifiedDate
-    private Date modifiedDate;
+    private ZonedDateTime modifiedDate;
 }

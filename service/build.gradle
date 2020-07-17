@@ -3,4 +3,6 @@ jar.enabled = true
 dependencies {
     compile project(':repository')
     compile project(':domain')
+    compile project (':dto')
+
 }

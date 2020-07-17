@@ -3,6 +3,5 @@ include 'domain'
 include 'repository'
 include 'service'
 include 'web'
-include 'model'
-include 'security'
+include 'dto'
 

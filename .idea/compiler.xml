@@ -12,9 +12,8 @@
         <module name="my-spring-boot-project.domain.main" />
         <module name="my-spring-boot-project.repository.main" />
         <module name="my-spring-boot-project.web.main" />
-        <module name="my-spring-boot-project.security.main" />
         <module name="my-spring-boot-project.service.main" />
-        <module name="my-spring-boot-project.model.main" />
+        <module name="my-spring-boot-project.dto.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8" />

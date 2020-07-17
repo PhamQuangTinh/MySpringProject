@@ -1,26 +1,24 @@
 package ou.phamquangtinh.controller.user;
 
-import org.springframework.web.bind.annotation.*;
-import ou.phamquangtinh.entity.user.User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class GetUser {
 
-    @RequestMapping("/hello")
+    @GetMapping("/hello")
     public @ResponseBody String firstPage() {
-        System.out.println("checked at hello");
         return "<h1>hello world</h1>";
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String firstPag() {
-        System.out.println("checked at nothing");
         return "<h1>ok</h1>";
     }
 
     @GetMapping("/api")
     public @ResponseBody String ok() {
-        System.out.println("Checked at API");
         return "api check";
     }
 

@@ -18,16 +18,16 @@ public class Swagger2Config {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2).select()
                 .apis(RequestHandlerSelectors.basePackage("ou.phamquangtinh.controller.user"))
-                .paths(PathSelectors.regex("/*"))
+                .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiEndPointsInfo());
     }
 
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("Employee Management REST API")
-                .contact(new Contact("Pham Quang Tinh",
-                        "https://ou.phamquangtinh", "tinhphamqtkd@gmail.com"))
+                .description("Đồ Án Cuối Kỳ")
+                .contact(new Contact("Phạm Quang Tình",
+                        "https://github.com/PhamQuangTinh/MySpringProject", "tinhphamqtkd@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")

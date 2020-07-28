@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,7 +29,7 @@ public abstract class BaseEntity<T> implements Serializable {
 
     @Column
     @CreatedDate
-    private ZonedDateTime createdDate;
+    private LocalDateTime createdDate;
 
     @Column
     @LastModifiedBy
@@ -37,5 +37,5 @@ public abstract class BaseEntity<T> implements Serializable {
 
     @Column
     @LastModifiedDate
-    private ZonedDateTime modifiedDate;
+    private LocalDateTime modifiedDate;
 }

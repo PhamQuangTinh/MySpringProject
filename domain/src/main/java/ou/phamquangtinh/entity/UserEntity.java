@@ -1,6 +1,9 @@
-package ou.phamquangtinh.entity;// User.java
+package ou.phamquangtinh.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import ou.phamquangtinh.entity.middle_entity.CommentEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -10,7 +13,7 @@ import java.util.Collection;
 @Entity
 @Getter
 @Setter
-@Table(name = "User")
+@Table(name = "user")
 public class UserEntity extends BaseEntity<String> {
 
     @Column(name = "username")
@@ -31,7 +34,25 @@ public class UserEntity extends BaseEntity<String> {
     @Column(name = "phone")
     private String phone;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<OrderEntity> orders;
+
+    @OneToMany(mappedBy = "userEntity")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<CommentEntity> comments;
+
+    @OneToMany(mappedBy = "userEntity")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Collection<CartEntity> carts;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH
+            , CascadeType.REFRESH}
+            , fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     @EqualsAndHashCode.Exclude //Không sử dụng trường này trong hashcode và equals
     @ToString.Exclude //Không sử dụng trường này trong toString()
     @JoinTable(name = "user_role", // Tạo một join table tên là "user_role"

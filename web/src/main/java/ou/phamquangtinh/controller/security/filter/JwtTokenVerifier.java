@@ -47,7 +47,8 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader("Authorization");
 
         //Kiểm tra có tồn tại token hoặc token có bắt đầu bằng Bearer ?
-        if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")) {
+        if (Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith("Bearer ")
+                || authorizationHeader.contains("Bearer input_your_token")) {
             filterChain.doFilter(request, response);
             return;
         }

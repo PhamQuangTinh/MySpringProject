@@ -5,21 +5,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.entity.UserEntity;
-import ou.phamquangtinh.repository.user_repository.UserRepository;
-
-import java.util.Optional;
+import ou.phamquangtinh.service.component_service.IUserService;
 
 @Service
+
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserService userService;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> user = userRepository.findByUsername(username);
-        user.orElseThrow(()-> new UsernameNotFoundException("Not found" + username));
-        return user.map(MyUserDetails::new).get();
+        UserEntity user = userService.findByUsername(username);
+        return new MyUserDetails(user);
     }
 }

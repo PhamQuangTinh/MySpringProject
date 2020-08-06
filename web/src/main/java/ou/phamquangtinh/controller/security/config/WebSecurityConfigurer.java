@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ou.phamquangtinh.controller.security.filter.JwtTokenVerifier;
 
+import javax.servlet.Filter;
+
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)  //sử dụng @PreAuthorize() trong controller
@@ -27,6 +29,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtTokenVerifier jwtTokenVerifier;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,6 +51,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -59,6 +64,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/user/post/login",
                         "/api/user/put/updation",
                         "/api/user/get/user_name/{username}",
+                        "/api/user/get/id/{id}",
                         "/api/user/delete/id/{id}",
                         "/api/user/delete/many_users"
                 )

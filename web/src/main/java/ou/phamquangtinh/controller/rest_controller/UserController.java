@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ou.phamquangtinh.controller.security.service.MyUserDetailService;
@@ -17,7 +18,7 @@ import ou.phamquangtinh.controller.security.util.JwtUtil;
 import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
 import ou.phamquangtinh.dto.request.user_request.UsernameAndPasswordAuthenticationRequest;
-import ou.phamquangtinh.dto.response.user_response.ListUsersResponsePagination;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.RegisterResponse;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.UserEntity;
@@ -45,10 +46,6 @@ public class UserController {
 
 
     //*******************************************POST USER**************************************************
-    @PostMapping("post/postmapping")
-    private String returnString() {
-        return "ok";
-    }
 
     @PostMapping("post/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterReq user) throws Exception {
@@ -90,10 +87,10 @@ public class UserController {
 
 
     //****************************************GET USER*******************************************
-    @GetMapping("get//user_name/{username}")
+    @GetMapping("get/user_name/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String userName) {
 
-        UserEntityResponse res = userService.findByUserNameResponse(userName);
+        UserEntity res = userService.findByUserNameResponse(userName);
 
         return ResponseEntity.ok(res);
     }
@@ -101,15 +98,16 @@ public class UserController {
     @GetMapping("get/id/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable("id") Long id) {
 
-        UserEntityResponse res = userService.findUserByIdResponse(id);
+        UserEntity res = userService.findUserByIdResponse(id);
 
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("get/list_users/{code}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<Object> getListUsersByRoleCode(@PathVariable("code") String code){
-        List<UserEntityResponse> res = userService.findUsersByRoleCode(code);
+    public ResponseEntity<Object> getListUsersByRoleCode(@PathVariable("code") String code
+            , @RequestParam("page") int page, @RequestParam("size") int size){
+        ListResponsePagination res = userService.findUsersByRoleCodePagination(code,page,size);
 
         return ResponseEntity.ok(res);
     }
@@ -118,7 +116,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getUserByLastName(@PathVariable("lastName") String lastName){
 
-        List<UserEntityResponse> res = userService.findByLastName(lastName);
+        List<UserEntity> res = userService.findByLastName(lastName);
 
         return ResponseEntity.ok(res);
     }
@@ -126,7 +124,7 @@ public class UserController {
     @GetMapping("get/all_user/pagination")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getAllUsersPagination(@RequestParam("page") int page,@RequestParam("size") int size){
-        ListUsersResponsePagination res = userService.findAllUsers(page,size);
+        ListResponsePagination res = userService.findAllUsers(page,size);
         return ResponseEntity.ok(res);
     }
 
@@ -134,7 +132,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getUserByFirstNameOrLastName(@RequestParam("page") int page
             ,@RequestParam("size") int size, @RequestParam("keyword") String keyword){
-        ListUsersResponsePagination res = userService.findByLastNameOrFirstNameContaining(keyword, page, size);
+        ListResponsePagination res = userService.findByLastNameOrFirstNameContaining(keyword, page, size);
         return ResponseEntity.ok(res);
     }
 
@@ -148,7 +146,7 @@ public class UserController {
     @PutMapping("put/updation")
     public ResponseEntity<Object> updateUser(UpdateUserReq user) {
 
-        UserEntityResponse userOK = userService.updateUser(user);
+        UserEntity userOK = userService.updateUser(user);
 
         return ResponseEntity.ok(userOK);
     }

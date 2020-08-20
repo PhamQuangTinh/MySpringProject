@@ -1,6 +1,7 @@
 package ou.phamquangtinh.controller.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ import javax.servlet.Filter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)  //sử dụng @PreAuthorize() trong controller
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
+    @Qualifier("myUserDetailService")
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -66,7 +68,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/user/get/user_name/{username}",
                         "/api/user/get/id/{id}",
                         "/api/user/delete/id/{id}",
-                        "/api/user/delete/many_users"
+                        "/api/user/delete/many_users",
+
+
+                        "/api/role/post/data-crawling"
                 )
                 .permitAll()
                 .antMatchers("/api/user/post/postmapping")

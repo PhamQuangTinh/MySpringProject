@@ -9,8 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.entity.UserEntity;
 import ou.phamquangtinh.service.component_service.IUserService;
 
-@Service
-
+@Service("myUserDetailService")
 public class MyUserDetailService implements UserDetailsService {
 
     @Autowired

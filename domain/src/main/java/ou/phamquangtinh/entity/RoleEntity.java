@@ -1,6 +1,7 @@
 package ou.phamquangtinh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,5 +28,6 @@ public class RoleEntity {
     @ManyToMany(mappedBy = "roles")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Collection<UserEntity> users;
 }

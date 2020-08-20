@@ -1,11 +1,9 @@
 package ou.phamquangtinh.service.component_service;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
-import ou.phamquangtinh.dto.response.user_response.ListUsersResponsePagination;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.UserEntity;
 
@@ -19,21 +17,21 @@ public interface IUserService {
 
     UserEntity findUserById(Long id);
 
-    UserEntityResponse findByUserNameResponse(String username);
+    UserEntity findByUserNameResponse(String username);
 
-    UserEntityResponse updateUser(UpdateUserReq userEntity);
+    UserEntity updateUser(UpdateUserReq userEntity);
 
-    UserEntityResponse findUserByIdResponse(Long id);
+    UserEntity findUserByIdResponse(Long id);
 
     void deleteUserByID(Long id);
 
-    List<UserEntityResponse> findUsersByRoleCode(String code);
+    ListResponsePagination findUsersByRoleCodePagination(String code, int page, int size);
 
-    List<UserEntityResponse> findByLastName(String lastName);
+    List<UserEntity> findByLastName(String lastName);
 
-    ListUsersResponsePagination findAllUsers(int page, int size);
+    ListResponsePagination findAllUsers(int page, int size);
 
-    ListUsersResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size);
+    ListResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size);
 
 
 }

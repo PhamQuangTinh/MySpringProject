@@ -14,21 +14,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
-import ou.phamquangtinh.dto.response.PageMetadata;
-import ou.phamquangtinh.dto.response.user_response.ListUsersResponsePagination;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.entity.UserEntity;
 import ou.phamquangtinh.repository.UserJPARepository;
 import ou.phamquangtinh.service.component_service.IRoleService;
 import ou.phamquangtinh.service.component_service.IUserService;
-import ou.phamquangtinh.service.util.UserServiceUtil;
+import ou.phamquangtinh.service.util.CommonUtil;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -42,7 +40,7 @@ public class UserService implements IUserService {
     private IRoleService roleService;
 
     @Autowired
-    private UserServiceUtil userServiceUtil;
+    private CommonUtil commonUtil;
 
 
     @Override
@@ -79,33 +77,30 @@ public class UserService implements IUserService {
 
     //Tìm kiếm User theo tên
     @Override
-    public UserEntityResponse findByUserNameResponse(String username) {
+    public UserEntity findByUserNameResponse(String username) {
 
         UserEntity userEntity = findByUsername(username);
 
-        UserEntityResponse userRes = userServiceUtil.returnUserEntityResponse(userEntity);
-
-        return userRes;
+        return userEntity;
     }
 
 
     @Override
-    public UserEntityResponse findUserByIdResponse(Long id) {
+    public UserEntity findUserByIdResponse(Long id) {
         UserEntity userEntity = findUserById(id);
-        UserEntityResponse res = userServiceUtil.returnUserEntityResponse(userEntity);
-        return  res;
+        return  userEntity;
     }
 
 
     //Sửa dổi User
     @Override
-    public UserEntityResponse updateUser(UpdateUserReq user) {
+    public UserEntity updateUser(UpdateUserReq user) {
 
         UserEntity userEntity = userJPARepository.getOne(user.getId());
 
         String oldPassword = userEntity.getPassword();
 
-        if (new BCryptPasswordEncoder().matches(user.getOldPass(), oldPassword)) {
+        if (new BCryptPasswordEncoder().matches(user.getOldPass(), oldPassword) && userEntity != null) {
 
 
             userEntity.setPhone(user.getPhone());
@@ -121,12 +116,8 @@ public class UserService implements IUserService {
 
             userJPARepository.save(userEntity);
 
-            UserEntityResponse userRes = userServiceUtil.returnUserEntityResponse(userEntity);
-
-            return userRes;
+            return userEntity;
         }
-
-
         return null;
     }
 
@@ -138,48 +129,53 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserEntityResponse> findByLastName(String lastName) {
+    public List<UserEntity> findByLastName(String lastName) {
 
         Streamable<UserEntity> user = userJPARepository.findByLastNameContaining(lastName);
 
+        return user.toList();
+    }
 
-        List<UserEntityResponse> res = user.get().map(userServiceUtil::returnUserEntityResponse).collect(Collectors.toList());
+    @Override
+    public ListResponsePagination findUsersByRoleCodePagination(String code, int page, int size) {
+
+        Sort sort = Sort.by("id").descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Page<UserEntity> users = userJPARepository.findByRoles_Code(code, pageable);
+
+
+        ListResponsePagination res = commonUtil.getListResponsePagination(users);
+
         return res;
     }
 
-    @Override
-    public List<UserEntityResponse> findUsersByRoleCode(String code) {
-        List<UserEntity> userlist = userJPARepository.findByRoles_Code(code);
-
-        return userlist.stream().map(userServiceUtil::returnUserEntityResponse).collect(Collectors.toList());
-
-    }
 
 
 
 
 
     @Override
-    public ListUsersResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size) {
+    public ListResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size) {
 
         Sort sort = Sort.by("lastName").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<UserEntity> users = userJPARepository.findByFirstNameOrLastNameContaining(keyword,keyword, pageable);
 
 
-        ListUsersResponsePagination res = userServiceUtil.returnListUsersResponsePagination(users);
+        ListResponsePagination res = commonUtil.getListResponsePagination(users);
 
         return res;
     }
 
     @Override
-    public ListUsersResponsePagination findAllUsers(int page, int size) {
+    public ListResponsePagination findAllUsers(int page, int size) {
         Sort sort = Sort.by("lastName").descending();
         Pageable pageable = PageRequest.of(page - 1,size,sort);
         Page<UserEntity> userEntityList = userJPARepository.findAll(pageable);
 
-        ListUsersResponsePagination listUsers = userServiceUtil.returnListUsersResponsePagination(userEntityList);
+        ListResponsePagination res = commonUtil.getListResponsePagination(userEntityList);
 
-        return listUsers;
+
+        return res;
     }
 }

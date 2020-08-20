@@ -15,12 +15,13 @@ import java.util.stream.Stream;
 public interface UserJPARepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUsername(String username);
 
-    List<UserEntity> findByRoles_Code(String code);
+    Page<UserEntity> findByRoles_Code(String code, Pageable pageable);
 
     Streamable<UserEntity> findByLastNameContaining(String lastName);
 
     Page<UserEntity> findByFirstNameOrLastNameContaining(String firstName, String lastName, Pageable pageable);
 
+    
 
 
 

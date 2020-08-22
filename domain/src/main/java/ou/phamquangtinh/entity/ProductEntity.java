@@ -1,7 +1,10 @@
 package ou.phamquangtinh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
 import ou.phamquangtinh.entity.middle_entity.CartItemEntity;
@@ -13,22 +16,19 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "Products")
 public class ProductEntity extends BaseEntity<String> {
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String productName;
 
     @Column
     private double unitPrice;
 
-    @Column(nullable = true)
-    private int unitInOrder;
 
-    @Column(nullable = true)
-    private int unitInStock;
-
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = true)
@@ -65,6 +65,12 @@ public class ProductEntity extends BaseEntity<String> {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<ProductAvatarEntity> productAvatarEntities;
+
+    @ManyToMany(mappedBy = "productEntities")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Collection<CategoryEntity> categoryEntities;
 
 
 }

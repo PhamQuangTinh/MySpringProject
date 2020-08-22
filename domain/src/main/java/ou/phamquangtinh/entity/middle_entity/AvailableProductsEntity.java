@@ -21,6 +21,9 @@ public class AvailableProductsEntity {
     @EmbeddedId
     private AvailableProductsKey id;
 
+    @Column(nullable = true)
+    private int unitInOrder;
+
     @Column(name = "unit_in_stock")
     private int unitInStock;
 

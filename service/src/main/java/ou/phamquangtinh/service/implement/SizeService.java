@@ -2,11 +2,15 @@ package ou.phamquangtinh.service.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.SizeEntity;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
 import ou.phamquangtinh.repository.SizeJPARepository;
 import ou.phamquangtinh.service.component_service.IAvailableProductService;
 import ou.phamquangtinh.service.component_service.ISizeService;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -22,7 +26,28 @@ public class SizeService implements ISizeService {
     }
 
     @Override
-    public SizeEntity createNewSize(SizeEntity sizeEntity) {
+    public SizeEntity createNewOrUpdateSize(SizeEntity sizeEntity) {
         return sizeJPARepository.saveAndFlush(sizeEntity);
+    }
+
+    @Override
+    public SizeEntity getSizeToUpdate(Long id) {
+        return sizeJPARepository.getOne(id);
+    }
+
+    @Override
+    public SizeEntity addNewAvailableProduct(Long sizeId, AvailableProductsEntity availableProductsEntity) {
+        SizeEntity sizeEntity = sizeJPARepository.getOne(sizeId);
+
+        if(sizeEntity.getAvailableProductsEntities() == null){
+            Collection<AvailableProductsEntity> availableProductsEntities = new HashSet<>();
+            availableProductsEntities.add(availableProductsEntity);
+            sizeEntity.setAvailableProductsEntities(availableProductsEntities);
+        }else{
+            sizeEntity.getAvailableProductsEntities().add(availableProductsEntity);
+        }
+        SizeEntity sizeRes = sizeJPARepository.saveAndFlush(sizeEntity);
+
+        return sizeRes;
     }
 }

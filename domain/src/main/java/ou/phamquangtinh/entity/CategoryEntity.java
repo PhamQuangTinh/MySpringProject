@@ -33,13 +33,13 @@ public class CategoryEntity extends BaseEntity<String> {
     @EqualsAndHashCode.Exclude
     private SuperCategoryEntity superCategoryEntity;
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @EqualsAndHashCode.Exclude
-//    @ToString.Exclude
-//    @JoinTable(name = "category_product", // Tạo một join table tên là "user_role"
-//            joinColumns = @JoinColumn(name = "category_id"), //Trong đó, khóa ngoại chính là user_id trỏ tới class hiện tại(User)
-//            inverseJoinColumns = @JoinColumn(name = "product_id") //khóa ngoại thứ 2 là role_id trỏ tới thuộc tính của bảng còn lại(Role)
-//    )
-//    private Collection<ProductEntity> productEntities;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JoinTable(name = "category_product", // Tạo một join table tên là "user_role"
+            joinColumns = @JoinColumn(name = "category_id"), //Trong đó, khóa ngoại chính là user_id trỏ tới class hiện tại(User)
+            inverseJoinColumns = @JoinColumn(name = "product_id") //khóa ngoại thứ 2 là role_id trỏ tới thuộc tính của bảng còn lại(Role)
+    )
+    private Collection<ProductEntity> productEntities;
 
 }

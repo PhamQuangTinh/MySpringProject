@@ -13,7 +13,13 @@ public class ProductImagesService implements IProductImagesService {
     @Autowired
     private ProductImagesJPARepository productImagesJPARepository;
 
-    public ProductImagesEntity saveProductImages(ProductImagesEntity productImagesEntity){
+    @Override
+    public ProductImagesEntity findProductImagesByImageLink(String imageLink) {
+        return productImagesJPARepository.findByImageLink(imageLink).orElse(null);
+    }
+
+    @Override
+    public ProductImagesEntity createNewOrUpdateProductImages(ProductImagesEntity productImagesEntity) {
         return productImagesJPARepository.saveAndFlush(productImagesEntity);
     }
 }

@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface SuperCategoryJPARepository extends JpaRepository<SuperCategoryEntity,Long> {
 
     Optional<SuperCategoryEntity> findByName(String name);
+
+    Optional<SuperCategoryEntity> findByCategoryEntities_Id(Long id);
 }

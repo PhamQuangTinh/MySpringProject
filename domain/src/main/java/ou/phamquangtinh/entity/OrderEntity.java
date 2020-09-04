@@ -1,5 +1,6 @@
 package ou.phamquangtinh.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -12,6 +13,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @Entity
 @Table(name = "orders")
+@JsonIgnoreProperties(value = {"orderDetail"})
 public class OrderEntity extends BaseEntity<String> {
 
     @ManyToOne

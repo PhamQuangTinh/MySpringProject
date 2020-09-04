@@ -1,0 +1,9 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            clientId: 303836084211239
+            clientSecret: dd1e3a2b5c056a3fd74e14c777ec4d71
+            redirectUri:

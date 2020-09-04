@@ -33,7 +33,7 @@ public abstract class BaseEntity<T> implements Serializable {
 
     @Column
     @LastModifiedBy
-    private T modifiedBy;
+    private T modifieBy;
 
     @Column
     @LastModifiedDate

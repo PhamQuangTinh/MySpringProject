@@ -1,9 +1,8 @@
 package ou.phamquangtinh.service.component_service;
 
-import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.SizeEntity;
-import ou.phamquangtinh.entity.SubCategoryEntity;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 
 public interface ISizeService {
 
@@ -13,7 +12,7 @@ public interface ISizeService {
 
     SizeEntity getSizeToUpdate(Long id);
 
-    SizeEntity addNewAvailableProduct(Long sizeId, AvailableProductsEntity availableProductsEntity);
+    SizeEntity addNewAvailableProduct(Long sizeId, AvailableProductEntity availableProductsEntity);
 
 
 }

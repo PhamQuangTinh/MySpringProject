@@ -1,13 +1,15 @@
 package ou.phamquangtinh.service.component_service;
 
+import ou.phamquangtinh.dto.response.ListResponsePagination;
+import ou.phamquangtinh.dto.response.ProductInfoResponse;
 import ou.phamquangtinh.entity.CategoryEntity;
 import ou.phamquangtinh.entity.ProductAvatarEntity;
 import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.SubCategoryEntity;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
-import ou.phamquangtinh.service.implement.ProductService;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.Set;
 
 public interface IProductService {
 
@@ -15,14 +17,36 @@ public interface IProductService {
 
     ProductEntity createNewOrUpdateProduct(ProductEntity productEntity);
 
+    ProductEntity findProductById(Long id);
+
     ProductEntity getProductToUpdate(Long id);
 
     ProductEntity addNewCategory(Long productId, CategoryEntity categoryEntity);
 
     ProductEntity addNewProductAvatar(Long productId, ProductAvatarEntity productAvatarEntity);
 
-    ProductEntity addNewAvailableProduct(Long productId, AvailableProductsEntity availableProductsEntity);
+    ProductEntity addNewProductColor(Long productId, ProductColorEntity productColorEntity);
 
-    void addNewSubCategory(Long productId, SubCategoryEntity subCategoryEntity);
+    ListResponsePagination getAllProductPagination(int page, int size);
+
+    ProductEntity addNewSubCategory(Long productId, SubCategoryEntity subCategoryEntity);
+
+    ListResponsePagination findProductByCategoryId(Long cateId, int page, int size);
+
+    ListResponsePagination findProductByCategoryName(String categoryName, int page, int size);
+
+    ListResponsePagination findProductBySubCategoryId(Long subCateId, int page, int size);
+
+    ListResponsePagination findProductBySubCategoryName(String subCategoryName, int page, int size);
+
+    ListResponsePagination findProductByColorId(Long colorId, int page, int size);
+
+    ListResponsePagination findProductBySizeId(Long sizeId, int page, int size);
+
+    List<ProductEntity> findProductProductNameOrDescription(String keyword);
+
+    List<ProductEntity> findTop10LikeProduct(Long userId);
+
+    ProductInfoResponse getProductInfo(Long proId);
 
 }

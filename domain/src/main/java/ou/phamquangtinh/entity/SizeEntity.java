@@ -1,8 +1,10 @@
 package ou.phamquangtinh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -13,6 +15,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @Entity
 @Table(name = "size")
+@JsonIgnoreProperties(value = {"availableProductsEntities"})
 public class SizeEntity extends BaseEntity<String> {
 
 
@@ -26,5 +29,5 @@ public class SizeEntity extends BaseEntity<String> {
     @OneToMany(mappedBy = "sizeEntity",cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<AvailableProductsEntity> availableProductsEntities;
+    private Collection<AvailableProductEntity> availableProductsEntities;
 }

@@ -11,13 +11,13 @@ import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.service.component_service.IRoleService;
 
 @RestController
-@RequestMapping("/api/role/")
+@RequestMapping("/api/role")
 public class RoleController {
 
     @Autowired
     private IRoleService roleService;
 
-    @GetMapping("get/code/{codeName}")
+    @GetMapping("/get/code/{codeName}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> findRoleById(@PathVariable("codeName") String code) {
         GetUserFromRoleResponse res = roleService.findUserByCodeOfRole(code);
@@ -29,7 +29,7 @@ public class RoleController {
 
 
     //*******************************************POST ROLE*************************************************
-    @PostMapping("post/new-role")
+    @PostMapping("/post/new-role")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<RoleEntity> createnewRole(@RequestBody CreateRoleRequest req){
         RoleEntity res = roleService.createNewRole(req);

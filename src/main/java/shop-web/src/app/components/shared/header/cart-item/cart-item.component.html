@@ -1,0 +1,10 @@
+<td class="si-pic" style="width: 60px; height: 50px;" ><img src="http://localhost:4200{{cartItem.productImage}}" alt=""></td>
+<td class="si-text">
+    <div class="product-selected">
+        <p>${{cartItem.price}} x {{cartItem.qty}}</p>
+        <h6>{{cartItem.productName}}</h6>
+    </div>
+</td>
+<td class="si-close">
+    <a href="javascript:void(0)" (click) = "removeCartItem()"><i class="ti-close"></i></a>
+</td>

@@ -1,6 +1,7 @@
 package ou.phamquangtinh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.Collection;
 @Setter
 @Entity
 @Table(name = "super_category")
+@JsonIgnoreProperties(value = {"categoryEntities"})
 public class SuperCategoryEntity extends BaseEntity<String>{
 
     @Column

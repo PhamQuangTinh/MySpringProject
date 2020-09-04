@@ -1,5 +1,7 @@
 package ou.phamquangtinh.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -7,6 +9,7 @@ import ou.phamquangtinh.entity.middle_entity.CommentEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -14,6 +17,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Table(name = "user")
+@JsonIgnoreProperties(value = {"orders","comments","roles"})
 public class UserEntity extends BaseEntity<String> {
 
     @Column(name = "username")
@@ -34,6 +38,12 @@ public class UserEntity extends BaseEntity<String> {
     @Column(name = "phone")
     private String phone;
 
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String accessToken;
+
+    @Column(nullable = true, columnDefinition = "TEXT")
+    private String refreshToken;
+
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -44,20 +54,18 @@ public class UserEntity extends BaseEntity<String> {
     @ToString.Exclude
     private Collection<CommentEntity> comments;
 
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "users")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<CartEntity> carts;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH
-            , CascadeType.REFRESH}
-            , fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    @EqualsAndHashCode.Exclude //Không sử dụng trường này trong hashcode và equals
-    @ToString.Exclude //Không sử dụng trường này trong toString()
-    @JoinTable(name = "user_role", // Tạo một join table tên là "user_role"
-            joinColumns = @JoinColumn(name = "user_id"), //Trong đó, khóa ngoại chính là user_id trỏ tới class hiện tại(User)
-            inverseJoinColumns = @JoinColumn(name = "role_id") //khóa ngoại thứ 2 là role_id trỏ tới thuộc tính của bảng còn lại(Role)
-    )
     private Collection<RoleEntity> roles;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JoinTable(name = "user_like_product",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<ProductEntity> likeProductEntities;
 }

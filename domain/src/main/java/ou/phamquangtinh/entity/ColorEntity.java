@@ -1,8 +1,9 @@
 package ou.phamquangtinh.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @Entity
 @Table(name = "color")
+@JsonIgnoreProperties(value = {"productColorEntities"})
 public class ColorEntity extends BaseEntity<String> {
 
     @Column(name = "color_name")
@@ -28,15 +30,9 @@ public class ColorEntity extends BaseEntity<String> {
     private String description;
 
 
-
-    @OneToMany(mappedBy = "productColorEntity")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Collection<ProductImagesEntity> productImagesEntities;
-
     @OneToMany(mappedBy = "colorEntity")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<AvailableProductsEntity> availableProductsEntities;
+    private Collection<ProductColorEntity> productColorEntities;
 
 }

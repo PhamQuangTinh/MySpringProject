@@ -21,8 +21,5 @@ public interface UserJPARepository extends JpaRepository<UserEntity, Long> {
 
     Page<UserEntity> findByFirstNameOrLastNameContaining(String firstName, String lastName, Pageable pageable);
 
-    
-
-
 
 }

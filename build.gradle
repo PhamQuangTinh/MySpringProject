@@ -76,9 +76,19 @@ subprojects {
         compile group: 'io.springfox', name: 'springfox-swagger2', version: "${swaggerVersion}"
         compile group: 'io.springfox', name: 'springfox-swagger-ui', version: "${swaggerVersion}"
         compile group: 'org.modelmapper', name: 'modelmapper', version: "${modelmapperVersion}"
-//        compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+        
         // https://mvnrepository.com/artifact/org.jsoup/jsoup
         compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+
+        // https://mvnrepository.com/artifact/org.springframework.social/spring-social-facebook
+        compile group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
+
+        // https://mvnrepository.com/artifact/org.springframework.security.oauth/spring-security-oauth2
+        compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.4.RELEASE'
+
+        // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+        compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.3.0.RELEASE'
+
 
 
 

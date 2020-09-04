@@ -1,5 +1,7 @@
 package ou.phamquangtinh.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "product_avatar")
+@JsonIgnoreProperties(value = {"productEntity"})
 public class ProductAvatarEntity extends BaseEntity<String> {
 
     @Column(name = "image_link")
@@ -20,5 +23,6 @@ public class ProductAvatarEntity extends BaseEntity<String> {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private ProductEntity productEntity;
 }

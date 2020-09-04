@@ -13,6 +13,8 @@ public interface IUserService {
 
     UserEntity createUser(RegisterReq user);
 
+    UserEntity updateUser(UserEntity userEntity);
+
     UserEntity findByUsername(String username);
 
     UserEntity findUserById(Long id);
@@ -23,6 +25,8 @@ public interface IUserService {
 
     UserEntity findUserByIdResponse(Long id);
 
+    UserEntity getUserToUpdate(Long id);
+
     void deleteUserByID(Long id);
 
     ListResponsePagination findUsersByRoleCodePagination(String code, int page, int size);
@@ -32,6 +36,10 @@ public interface IUserService {
     ListResponsePagination findAllUsers(int page, int size);
 
     ListResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size);
+
+    void likeProduct(Long userId, Long productId);
+
+    void unLikeProduct(Long userId, Long proId);
 
 
 }

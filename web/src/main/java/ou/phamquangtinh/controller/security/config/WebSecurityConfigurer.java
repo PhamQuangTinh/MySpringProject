@@ -70,12 +70,36 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/user/delete/id/{id}",
                         "/api/user/delete/many_users",
 
+                        //Product
+                        "/api/product/get/all_product",
+                        "/api/product/get/id/{id}",
+                        "/api/product/get/cate_id/{id}",
+                        "/api/product/get/cate_name/{name}",
+                        "/api/product/get/sub_cate_id/{id}",
+                        "/api/product/get/sub_cate_name/{name}",
+                        "/api/product/get/color/{id}",
+                        "/api/product/get/size/{id}",
+                        "/api/product/get/product_name_or_description",
+                        "/api/product/get/product_info/{proId}",
 
-                        "/api/role/post/data-crawling"
+
+                        //Product Images
+                        "/api/product_images/get/product_id",
+                        "/api/product_images/get/color_id_and_pro_id",
+
+
+
+                        //Color
+                        "/api/color/get/pro_id/{id}"
+
+
+//                        "/api/role/post/data-crawling"
                 )
                 .permitAll()
                 .antMatchers("/api/user/post/postmapping")
                 .hasAnyAuthority("SUPER_ADMIN")
+//                .antMatchers("/api/user/put/likination")
+//                .hasAnyAuthority("USER")
                 .anyRequest()
                 .authenticated();
 

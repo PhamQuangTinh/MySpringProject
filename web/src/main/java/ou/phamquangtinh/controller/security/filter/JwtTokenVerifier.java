@@ -3,6 +3,7 @@ package ou.phamquangtinh.controller.security.filter;
 import com.google.common.base.Strings;
 import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Qualifier("myUserDetailService")
     @Autowired
     private UserDetailsService userDetailsServie;
 

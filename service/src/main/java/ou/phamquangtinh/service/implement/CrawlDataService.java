@@ -7,14 +7,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import ou.phamquangtinh.entity.*;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
-import ou.phamquangtinh.entity.middle_entity.embaddableEntity.AvailableProductsKey;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
+import ou.phamquangtinh.entity.middle_entity.embaddableEntity.AvailableProductKey;
+import ou.phamquangtinh.entity.middle_entity.embaddableEntity.ProductColorKey;
 import ou.phamquangtinh.service.component_service.*;
 
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class CrawlDataService {
@@ -40,6 +41,8 @@ public class CrawlDataService {
 
     private final ICategoryService categoryService;
 
+    private final IProductColorService productColorService;
+
     private final ISubCategoryService subCategoryService;
 
     {
@@ -48,7 +51,7 @@ public class CrawlDataService {
         categoryNames.add("Accessories");
     }
 
-    public CrawlDataService(IProductService productService, IProductAvatarService productAvatarService, ISizeService sizeService, IColorService colorService, IProductImagesService productImagesService, IAvailableProductService availableProductService, ISuperCategoryService superCategoryService, ICategoryService categoryService, ISubCategoryService subCategoryService) {
+    public CrawlDataService(IProductService productService, IProductAvatarService productAvatarService, ISizeService sizeService, IColorService colorService, IProductImagesService productImagesService, IAvailableProductService availableProductService, ISuperCategoryService superCategoryService, ICategoryService categoryService, IProductColorService productColorService, ISubCategoryService subCategoryService) {
         this.productService = productService;
         this.productAvatarService = productAvatarService;
         this.sizeService = sizeService;
@@ -57,6 +60,7 @@ public class CrawlDataService {
         this.availableProductService = availableProductService;
         this.superCategoryService = superCategoryService;
         this.categoryService = categoryService;
+        this.productColorService = productColorService;
         this.subCategoryService = subCategoryService;
     }
 
@@ -106,24 +110,24 @@ public class CrawlDataService {
                 } else {
                     superCategoryLink = superCategoryLink + "/living";
                 }
-                System.out.println("************************************************************************************************************************************");
-                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
                 System.out.println("*************************************" + "START ACCESSING " + sexTypeProduct + " PAGE: " + superCategoryLink + "**************************************");
-                System.out.println("************************************************************************************************************************************");
-                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
 
                 crawlDataSuperCategory(superCategoryLink, folderURL);
 
-                System.out.println("************************************************************************************************************************************");
-                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
                 System.out.println("*************************************" + "END ACCESSING " + sexTypeProduct + " PAGE: " + superCategoryLink + "**************************************");
-                System.out.println("************************************************************************************************************************************");
-                System.out.println("************************************************************************************************************************************");
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println();
+//                System.out.println("************************************************************************************************************************************");
+//                System.out.println("************************************************************************************************************************************");
+//                System.out.println();
+//                System.out.println();
+//                System.out.println();
+//                System.out.println();
+//                System.out.println();
 
             }
 
@@ -173,18 +177,18 @@ public class CrawlDataService {
 
 
                 System.out.println();
-                System.out.println("******************************************************************************************************************************");
+//                System.out.println("******************************************************************************************************************************");
                 System.out.println("*************************************START ACCESSING SUPER CATEGORY: " + superCategoryDB + "**************************************");
-                System.out.println("******************************************************************************************************************************");
+//                System.out.println("******************************************************************************************************************************");
 
                 //Tạo đường link tới CATEGORY
                 String fullLinkToCategory = webURL + categoryLink;
                 System.out.println("LINK SUPER CATEGORY: " + fullLinkToCategory);
                 crawlDataCategory(fullLinkToCategory, folderSuperCategoryURL, superCategoryEntity);
 
-                System.out.println("******************************************************************************************************************************");
+//                System.out.println("******************************************************************************************************************************");
                 System.out.println("*************************************END ACCESSING SUPER CATEGORY: " + superCategoryDB + "**************************************");
-                System.out.println("******************************************************************************************************************************");
+//                System.out.println("******************************************************************************************************************************");
             }
 
         } catch (NullPointerException | IOException e) {
@@ -208,14 +212,8 @@ public class CrawlDataService {
                 e.printStackTrace();
                 return;
             }
-//            if(menuCategory == null){
-//                finalURL = folder;
-//                System.out.println("**********************************NO CATEGORY*********************************");
-//                crawlDataProduct(link);
-//                return;
-//            }
+
             Elements categoryLink = menuCategory.select("li");
-            ;
 
 
             for (Element subCate : categoryLink) {
@@ -223,22 +221,23 @@ public class CrawlDataService {
                 //CATEGORY NAME lưu vào database
                 String categoryDBName = subCate.getElementsByTag("a").first().text();
 
+                if (categoryDBName.contains("SALE world")) {
+                    continue;
+                }
+
                 categoryDBName = categoryDBName.replaceAll("[\\/:*?\"<>|]", "");
 
                 //URL CATEGORY
                 String folderCategoryURL = folder + "\\" + categoryDBName;
 
                 //DATABASE
-                CategoryEntity categoryEntity = categoryService.findCategoryByName(categoryDBName);
-                if (categoryEntity == null) {
-                    categoryEntity = new CategoryEntity();
-                    categoryEntity.setCategoryName(categoryDBName);
-                    categoryEntity.setSuperCategoryEntity(superCategory);
-                    categoryEntity = categoryService.createNewOrUpdateCategory(categoryEntity);
 
+                CategoryEntity categoryEntity = new CategoryEntity();
+                categoryEntity.setCategoryName(categoryDBName);
+                categoryEntity.setSuperCategoryEntity(superCategory);
+                categoryEntity = categoryService.createNewOrUpdateCategory(categoryEntity);
 
-                    superCategoryService.addNewCategory(superCategory.getId(), categoryEntity);
-                }
+                superCategoryService.addNewCategory(superCategory.getId(), categoryEntity);
 
 
                 //END DATABASE
@@ -250,7 +249,7 @@ public class CrawlDataService {
                 String subCategoryLink = subCate.getElementsByTag("a").attr("href");
 
 
-                System.out.println();
+//                System.out.println();
                 System.out.println("*********************************START ACCESSING CATEGORY: " + categoryDBName + "**********************************");
 
                 //Tạo đường link tới SUB CATEGORY
@@ -299,7 +298,12 @@ public class CrawlDataService {
                 //SUB CATEGORY NAME lưu vào database
                 String subCategoryDBName = subCate.getElementsByTag("a").first().text();
 
+                if (subCategoryDBName.contains("SALE world")) {
+                    continue;
+                }
                 subCategoryDBName = subCategoryDBName.replaceAll("[\\/:*?\"<>|]", "");
+
+
                 //URL CATEGORY
                 String folderSubCategoryURL = folder + "\\" + subCategoryDBName;
 
@@ -326,7 +330,7 @@ public class CrawlDataService {
                 String productLink = subCate.getElementsByTag("a").attr("href");
 
 
-                System.out.println();
+//                System.out.println();
                 System.out.println("*********************************START ACCESSING SUB CATEGORY: " + subCategoryDBName + "**********************************");
 
                 //Tạo đường link tới SUB CATEGORY
@@ -388,7 +392,6 @@ public class CrawlDataService {
 
                     crawlDataProductInfo(page, id, code);
 
-
                     page = page.substring(0, page.length() - String.valueOf(i).length());
                 }
             }
@@ -421,12 +424,34 @@ public class CrawlDataService {
             productItems.forEach(element -> {
                 Element linkToProductInfo = element.selectFirst(".product-details__style-name");
 
-                String getProductInfoLink = linkToProductInfo.getElementsByTag("a").attr("href");
+                String productNameAtPage = linkToProductInfo.text();
 
-                String finalLinkToProduct = webURL + getProductInfoLink;
+                ProductEntity productEntity = productService.findProductByProductName(productNameAtPage);
+                if (productEntity != null) {
+                    if (code == 1) {
+                        CategoryEntity categoryEntity = categoryService.addNewProduct(id, productEntity);
+                        if(categoryEntity != null){
+                            productService.addNewCategory(productEntity.getId(), categoryEntity);
+                            System.out.println("UPDATE PRODUCT" + productNameAtPage + " TO CATEGORY " + categoryEntity.getCategoryName() + " SUCCESS");
+                        }
+                    } else if (code == 2) {
+                        SubCategoryEntity subCategoryEntity = subCategoryService.addNewProduct(id, productEntity);
+                        if(subCategoryEntity != null){
+                            productService.addNewSubCategory(productEntity.getId(), subCategoryEntity);
+                            System.out.println("UPDATE PRODUCT " + productNameAtPage + " TO SUB_CATEGORY " + subCategoryEntity.getName() + " SUCCESS");
+                        }
+                    }
+                } else {
 
-                System.out.println("PRODUCT: " + finalLinkToProduct);
-                getProductInfo(finalLinkToProduct, id, code);
+                    String getProductInfoLink = linkToProductInfo.getElementsByTag("a").attr("href");
+
+                    String finalLinkToProduct = webURL + getProductInfoLink;
+
+                    System.out.println("PRODUCT: " + finalLinkToProduct + ", " + "CREATE SUCCESS");
+
+                    getProductInfo(finalLinkToProduct);
+                }
+
             });
 
 
@@ -435,10 +460,10 @@ public class CrawlDataService {
         }
     }
 
-    private void getProductInfo(String link, Long id, int code) {
+    private void getProductInfo(String link) {
         try {
             String productName;
-            String productPriceString;
+            String productPriceString = null;
             String productDescription;
             double productPrice;
             List<String> sizeProduct;
@@ -448,7 +473,13 @@ public class CrawlDataService {
 
             //Thông tin cơ bản của sản phẩm
             productName = document.selectFirst("h1.hc-headline-m").text();
-            productPriceString = document.selectFirst("span.spv-price__selling").text();
+            try {
+                productPriceString = document.selectFirst("span.spv-price__selling").text();
+            } catch (Exception ignored) {
+            }
+            if (productPriceString == null) {
+                return;
+            }
             productPrice = Double.parseDouble(productPriceString.substring(1));
 
             //Lấy tất cả màu ảnh
@@ -494,14 +525,16 @@ public class CrawlDataService {
             productDescription = getProductDescription(productDescriptionElement);
 
 
-            System.out.println("PROUCT NAME: " + productName);
+//            System.out.println("PROUCT NAME: " + productName);
             SizeEntity sizeEntity = null;
             ColorEntity colorEntity = null;
+            ProductColorEntity productColorEntity = null;
             ProductEntity productEntity = productService.findProductByProductName(productName);
             if (productEntity == null) {
                 productEntity = new ProductEntity();
                 productEntity.setProductName(productName);
                 productEntity.setUnitPrice(productPrice);
+                productEntity.setSexType(sexType);
                 productEntity.setDescription(productDescription);
 
                 productEntity = productService.createNewOrUpdateProduct(productEntity);
@@ -514,7 +547,7 @@ public class CrawlDataService {
                 String colorNameRes = "";
                 for (Map.Entry<String, List<String>> entry : listProductColorImages.entrySet()) {
 
-                    System.out.println("COLOR: " + entry.getKey());
+//                    System.out.println("COLOR: " + entry.getKey());
 
 
                     colorNameRes = entry.getKey();
@@ -525,7 +558,7 @@ public class CrawlDataService {
                     for (int i = 0; i < entry.getValue().size(); i++) {
                         String image = entry.getValue().get(i);
                         String imageLinkDB = finalURL.substring(65) + "\\" + image.substring(image.lastIndexOf("/") + 1, image.lastIndexOf("?")) + ".jfif";
-                        String imageLinkFolder = "https:" + image;
+                        String imageLinkWeb = "https:" + image;
 
                         if (i == 0 || i == 1) {
                             if (i == 0) {
@@ -536,6 +569,10 @@ public class CrawlDataService {
                                     colorEntity.setColorLink(imageLinkDB);
                                     colorEntity = colorService.createNewOrUpdateColor(colorEntity);
                                 }
+                                ProductColorKey productColorKey = new ProductColorKey(productEntity.getId(), colorEntity.getId());
+                                productColorEntity = new ProductColorEntity();
+                                productColorEntity.setId(productColorKey);
+                                productColorEntity = productColorService.createOrUpdateProductColor(productColorEntity);
                             }
 
                             ProductAvatarEntity productAvatarEntity1 = new ProductAvatarEntity();
@@ -545,17 +582,19 @@ public class CrawlDataService {
                             productAvatarEntity1 = productAvatarService.createNewProductAvatar(productAvatarEntity1);
                             productService.addNewProductAvatar(productEntity.getId(), productAvatarEntity1);
                         }
+                        downloadImage(imageLinkWeb);
 
+                        if (i == 0) {
+                            continue;
+                        }
                         productImagesEntity = new ProductImagesEntity();
                         productImagesEntity.setImageLink(imageLinkDB);
-                        productImagesEntity.setProductColorEntity(colorEntity);
+                        productImagesEntity.setProductColorEntity(productColorEntity);
                         productImagesEntity = productImagesService.createNewOrUpdateProductImages(productImagesEntity);
-                        colorService.addNewProductImage(colorEntity.getId(), productImagesEntity);
-                        downloadImage(imageLinkFolder);
-
+                        productColorService.addNewProductImages(productColorEntity.getId(), productImagesEntity);
                     }
 
-                    for(String size: sizeProduct) {
+                    for (String size : sizeProduct) {
                         sizeEntity = sizeService.findSizeBySizeType(size);
                         if (sizeEntity == null) {
                             sizeEntity = new SizeEntity();
@@ -563,33 +602,29 @@ public class CrawlDataService {
                             sizeService.createNewOrUpdateSize(sizeEntity);
                         }
 
-                        System.out.println("PRODUCT SIZE: " + size);
 
-                        AvailableProductsKey availableProductsKey = new AvailableProductsKey(productEntity.getId(), sizeEntity.getId(), colorEntity.getId());
+                        AvailableProductKey availableProductsKey = new AvailableProductKey(productEntity.getId(), colorEntity.getId(), sizeEntity.getId());
                         int unitInOrder = random.nextInt(10);
-                        int unitInStock = unitInOrder + random.nextInt(30);
-                        AvailableProductsEntity availableProductsEntity = new AvailableProductsEntity(availableProductsKey, unitInOrder, unitInStock, productEntity, sizeEntity, colorEntity);
+                        int unitInStock = unitInOrder + random.nextInt(30) + 10;
+                        AvailableProductEntity availableProductsEntity = new AvailableProductEntity(availableProductsKey, unitInOrder, unitInStock, productColorEntity, sizeEntity);
 
-                        AvailableProductsEntity availableProductsEntityRes = availableProductService.createNewAvailableProduct(availableProductsEntity);
-                        productService.addNewAvailableProduct(productEntity.getId(), availableProductsEntityRes);
+                        AvailableProductEntity availableProductsEntityRes = availableProductService.createNewAvailableProduct(availableProductsEntity);
+                        productColorService.addNewAvailableProduct(productColorEntity.getId(), availableProductsEntity);
                         sizeService.addNewAvailableProduct(sizeEntity.getId(), availableProductsEntityRes);
-                        colorService.addNewAvailableProduct(colorEntity.getId(), availableProductsEntityRes);
 
                     }
-                    System.out.println();
                 }
 
 
             }
-
-            if (code == 1) {
-                CategoryEntity categoryEntity = categoryService.addNewProduct(id, productEntity);
-                productService.addNewCategory(productEntity.getId(), categoryEntity);
-
-            } else if (code == 2) {
-                SubCategoryEntity subCategoryEntity = subCategoryService.addNewProduct(id, productEntity);
-                productService.addNewSubCategory(productEntity.getId(), subCategoryEntity);
-            }
+//
+//            if (code == 1) {
+//                CategoryEntity categoryEntity = categoryService.addNewProduct(id, productEntity);
+//                productService.addNewCategory(productEntity.getId(), categoryEntity);
+//            } else if (code == 2) {
+//                SubCategoryEntity subCategoryEntity = subCategoryService.addNewProduct(id, productEntity);
+//                productService.addNewSubCategory(productEntity.getId(), subCategoryEntity);
+//            }
 
 
             //END DATABASE
@@ -705,8 +740,8 @@ public class CrawlDataService {
         String strImageName =
                 strImageURL.substring(strImageURL.lastIndexOf("/") + 1, strImageURL.lastIndexOf("?")) + ".jfif";
 
-        System.out.println("Saving: " + strImageName + ", from: " + strImageURL);
-        System.out.println(finalURL);
+//        System.out.println("Saving: " + strImageName + ", from: " + strImageURL);
+//        System.out.println(finalURL);
 
         try {
 
@@ -728,7 +763,7 @@ public class CrawlDataService {
             //close the stream
             os.close();
 
-            System.out.println("Image saved");
+//            System.out.println("Image saved");
 
         } catch (IOException e) {
             e.printStackTrace();

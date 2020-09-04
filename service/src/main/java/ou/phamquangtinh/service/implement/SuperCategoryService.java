@@ -47,7 +47,7 @@ public class SuperCategoryService implements ISuperCategoryService {
                 superCategoryEntity.getCategoryEntities().add(categoryEntity);
             }
         }
-        System.out.println("Added: " + categoryEntity.getCategoryName() + " to " + superCategoryEntity.getName());
+//        System.out.println("Added: " + categoryEntity.getCategoryName() + " to " + superCategoryEntity.getName());
         return superCategoryJPARepository.saveAndFlush(superCategoryEntity);
     }
 }

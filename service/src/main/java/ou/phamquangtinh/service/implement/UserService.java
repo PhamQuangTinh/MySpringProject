@@ -16,16 +16,16 @@ import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
+import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.entity.UserEntity;
 import ou.phamquangtinh.repository.UserJPARepository;
+import ou.phamquangtinh.service.component_service.IProductService;
 import ou.phamquangtinh.service.component_service.IRoleService;
 import ou.phamquangtinh.service.component_service.IUserService;
 import ou.phamquangtinh.service.util.CommonUtil;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,22 +42,35 @@ public class UserService implements IUserService {
     @Autowired
     private CommonUtil commonUtil;
 
+    @Autowired
+    private IProductService productService;
+
 
     @Override
     public UserEntity createUser(RegisterReq user) {
         Optional<UserEntity> userEntity = userJPARepository.findByUsername(user.getUsername());
         if (!userEntity.isPresent()) {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-            Collection<RoleEntity> roles = user.getRoles()
-                    .stream()
-                    .map(code -> roleService.findRoleByCode(code))
-                    .collect(Collectors.toList());
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userResponse = modelMapper.map(user, UserEntity.class);
-            userResponse.setRoles(roles);
-            return userJPARepository.saveAndFlush(userResponse);
+            UserEntity userEntityRes =  userJPARepository.saveAndFlush(userResponse);
+            userEntityRes = userJPARepository.getOne(userEntityRes.getId());
+            Collection<RoleEntity> roles = new HashSet<>();
+            RoleEntity roleEntity = null;
+            for (String role : user.getRoles()) {
+                roleEntity = roleService.findRoleByCode(role);
+                roleEntity = roleService.addNewUser(roleEntity.getId(),userEntityRes);
+                roles.add(roleEntity);
+            }
+            userEntityRes.setRoles(roles);
+            return userJPARepository.saveAndFlush(userEntityRes);
         }
         return null;
+    }
+
+    @Override
+    public UserEntity updateUser(UserEntity userEntity) {
+        return userJPARepository.saveAndFlush(userEntity);
     }
 
     @Override
@@ -79,16 +92,19 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findByUserNameResponse(String username) {
 
-        UserEntity userEntity = findByUsername(username);
+        return findByUsername(username);
 
-        return userEntity;
     }
 
 
     @Override
     public UserEntity findUserByIdResponse(Long id) {
-        UserEntity userEntity = findUserById(id);
-        return  userEntity;
+        return findUserById(id);
+    }
+
+    @Override
+    public UserEntity getUserToUpdate(Long id) {
+        return userJPARepository.getOne(id);
     }
 
 
@@ -144,9 +160,8 @@ public class UserService implements IUserService {
         Page<UserEntity> users = userJPARepository.findByRoles_Code(code, pageable);
 
 
-        ListResponsePagination res = commonUtil.getListResponsePagination(users);
+        return commonUtil.getListResponsePagination(users);
 
-        return res;
     }
 
 
@@ -162,9 +177,47 @@ public class UserService implements IUserService {
         Page<UserEntity> users = userJPARepository.findByFirstNameOrLastNameContaining(keyword,keyword, pageable);
 
 
-        ListResponsePagination res = commonUtil.getListResponsePagination(users);
+        return  commonUtil.getListResponsePagination(users);
+    }
 
-        return res;
+    @Override
+    public void likeProduct(Long userId, Long productId) {
+        UserEntity userEntity = getUserToUpdate(userId);
+        ProductEntity productEntity = productService.getProductToUpdate(productId);
+        if(userEntity.getLikeProductEntities() == null){
+            List<ProductEntity> productEntities = new ArrayList<>();
+            productEntities.add(productEntity);
+            userEntity.setLikeProductEntities(productEntities);
+        }else{
+            userEntity.getLikeProductEntities().add(productEntity);
+        }
+
+        if(productEntity.getProductLikeByUserEntities() == null){
+            List<UserEntity> userEntities = new ArrayList<>();
+            userEntities.add(userEntity);
+            productEntity.setProductLikeByUserEntities(userEntities);
+        }else{
+            productEntity.getProductLikeByUserEntities().add(userEntity);
+        }
+
+        productService.createNewOrUpdateProduct(productEntity);
+        userJPARepository.saveAndFlush(userEntity);
+    }
+
+    @Override
+    public void unLikeProduct(Long userId, Long proId) {
+        UserEntity userEntity = getUserToUpdate(userId);
+        ProductEntity productEntity = productService.getProductToUpdate(proId);
+
+        if(userEntity.getLikeProductEntities() == null){
+            return;
+        }else{
+            userEntity.getLikeProductEntities().remove(productEntity);
+            productEntity.getProductLikeByUserEntities().remove(userEntity);
+        }
+
+        productService.createNewOrUpdateProduct(productEntity);
+        updateUser(userEntity);
     }
 
     @Override
@@ -173,9 +226,7 @@ public class UserService implements IUserService {
         Pageable pageable = PageRequest.of(page - 1,size,sort);
         Page<UserEntity> userEntityList = userJPARepository.findAll(pageable);
 
-        ListResponsePagination res = commonUtil.getListResponsePagination(userEntityList);
+        return commonUtil.getListResponsePagination(userEntityList);
 
-
-        return res;
     }
 }

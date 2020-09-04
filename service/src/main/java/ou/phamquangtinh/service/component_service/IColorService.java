@@ -1,10 +1,9 @@
 package ou.phamquangtinh.service.component_service;
 
+import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.entity.ColorEntity;
 import ou.phamquangtinh.entity.ProductImagesEntity;
-import ou.phamquangtinh.entity.SizeEntity;
-import ou.phamquangtinh.entity.SubCategoryEntity;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 
 public interface IColorService {
 
@@ -14,8 +13,8 @@ public interface IColorService {
 
     ColorEntity getColorToUpdate(Long id);
 
-    ColorEntity addNewProductImage(Long colorId, ProductImagesEntity productImagesEntity);
+    ColorEntity addNewProductColor(Long colorId, ProductColorEntity productColorEntity);
 
-    ColorEntity addNewAvailableProduct(Long colorId, AvailableProductsEntity availableProductsEntity);
+    ListResponsePagination findColorByProductId(Long proId, int page, int size);
 
 }

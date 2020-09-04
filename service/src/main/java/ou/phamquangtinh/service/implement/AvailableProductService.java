@@ -2,7 +2,8 @@ package ou.phamquangtinh.service.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 import ou.phamquangtinh.repository.AvailableProductJPARepository;
 import ou.phamquangtinh.service.component_service.IAvailableProductService;
 
@@ -13,7 +14,7 @@ public class AvailableProductService implements IAvailableProductService {
     private AvailableProductJPARepository availableProductJPARepository;
 
     @Override
-    public AvailableProductsEntity createNewAvailableProduct(AvailableProductsEntity availableProductsEntity) {
-        return availableProductJPARepository.saveAndFlush(availableProductsEntity);
+    public AvailableProductEntity createNewAvailableProduct(AvailableProductEntity availableProductEntity) {
+        return availableProductJPARepository.saveAndFlush(availableProductEntity);
     }
 }

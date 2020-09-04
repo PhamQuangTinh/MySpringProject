@@ -17,6 +17,7 @@ import ou.phamquangtinh.controller.security.service.MyUserDetailService;
 import ou.phamquangtinh.controller.security.util.JwtUtil;
 import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
+import ou.phamquangtinh.dto.request.user_request.UserLikeProductReq;
 import ou.phamquangtinh.dto.request.user_request.UsernameAndPasswordAuthenticationRequest;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.RegisterResponse;
@@ -28,7 +29,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -47,7 +48,7 @@ public class UserController {
 
     //*******************************************POST USER**************************************************
 
-    @PostMapping("post/register")
+    @PostMapping("/post/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterReq user) throws Exception {
         UserEntity createUser = userService.createUser(user);
         RegisterResponse res = null;
@@ -60,7 +61,7 @@ public class UserController {
     }
 
 
-    @PostMapping("post/login")
+    @PostMapping("/post/login")
     public ResponseEntity<?> login(@RequestBody UsernameAndPasswordAuthenticationRequest req) throws Exception {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getUsername(),
@@ -84,10 +85,24 @@ public class UserController {
 
 
 
+    @PostMapping("/post/likination")
+    @PreAuthorize("hasAnyAuthority('USER','SUPER_ADMIN')")
+    public void userLikeProduct(@RequestBody UserLikeProductReq req){
+        userService.likeProduct(req.getUserId(),req.getProId());
+    }
+
+    @PostMapping("/post/unlikination")
+    @PreAuthorize("hasAnyAuthority('USER','SUPER_ADMIN')")
+    public void userUnLikeProduct(@RequestBody UserLikeProductReq req){
+        userService.unLikeProduct(req.getUserId(),req.getProId());
+    }
+
+
+
 
 
     //****************************************GET USER*******************************************
-    @GetMapping("get/user_name/{username}")
+    @GetMapping("/get/user_name/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String userName) {
 
         UserEntity res = userService.findByUserNameResponse(userName);
@@ -95,7 +110,7 @@ public class UserController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("get/id/{id}")
+    @GetMapping("/get/id/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable("id") Long id) {
 
         UserEntity res = userService.findUserByIdResponse(id);
@@ -103,7 +118,7 @@ public class UserController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("get/list_users/{code}")
+    @GetMapping("/get/list_users/{code}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getListUsersByRoleCode(@PathVariable("code") String code
             , @RequestParam("page") int page, @RequestParam("size") int size){
@@ -112,7 +127,7 @@ public class UserController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("get/last_name/{lastName}")
+    @GetMapping("/get/last_name/{lastName}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getUserByLastName(@PathVariable("lastName") String lastName){
 
@@ -121,14 +136,14 @@ public class UserController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("get/all_user/pagination")
+    @GetMapping("/get/all_user/pagination")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getAllUsersPagination(@RequestParam("page") int page,@RequestParam("size") int size){
         ListResponsePagination res = userService.findAllUsers(page,size);
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("get/first_name_or_last_name_constraining")
+    @GetMapping("/get/first_name_or_last_name_constraining")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getUserByFirstNameOrLastName(@RequestParam("page") int page
             ,@RequestParam("size") int size, @RequestParam("keyword") String keyword){
@@ -143,7 +158,7 @@ public class UserController {
 
 
     //**************************************************PUT USER*************************************************
-    @PutMapping("put/updation")
+    @PutMapping("/put/updation")
     public ResponseEntity<Object> updateUser(UpdateUserReq user) {
 
         UserEntity userOK = userService.updateUser(user);
@@ -155,16 +170,14 @@ public class UserController {
 
 
 
-
-
     //************************************************DELETE USER***********************************************
-    @DeleteMapping("delete/id/{id}")
+    @DeleteMapping("/delete/id/{id}")
     public void deleteById(@PathVariable("id") Long id) {
         userService.deleteUserByID(id);
     }
 
 
-    @DeleteMapping("delete/many_users")
+    @DeleteMapping("/delete/many_users")
     public void deleteManyUsers(@RequestBody Long[] ids) {
         for (Long id : ids) {
             userService.deleteUserByID(id);

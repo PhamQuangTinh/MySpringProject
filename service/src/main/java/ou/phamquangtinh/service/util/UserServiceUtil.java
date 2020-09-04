@@ -1,10 +1,7 @@
 package ou.phamquangtinh.service.util;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import ou.phamquangtinh.dto.response.PageMetadata;
-import ou.phamquangtinh.dto.response.user_response.ListUsersResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.UserEntity;
 
@@ -43,22 +40,5 @@ public class UserServiceUtil {
         return userRes;
     }
 
-    public ListUsersResponsePagination returnListUsersResponsePagination(Page<UserEntity> pageUserEntity){
 
-        ListUsersResponsePagination listUsers = new ListUsersResponsePagination();
-
-        PageMetadata pageMetadata = new PageMetadata();
-
-        pageMetadata.setPage(pageUserEntity.getNumber());
-        pageMetadata.setSize(pageUserEntity.getSize());
-        pageMetadata.setTotalElements(pageUserEntity.getTotalElements());
-        pageMetadata.setTotalPages(pageUserEntity.getTotalPages());
-
-        listUsers.setPageMetadata(pageMetadata);
-
-        listUsers.setUsers(pageUserEntity.getContent().stream().map(this::returnUserEntityResponse).collect(Collectors.toList()));
-
-        return listUsers;
-
-    }
 }

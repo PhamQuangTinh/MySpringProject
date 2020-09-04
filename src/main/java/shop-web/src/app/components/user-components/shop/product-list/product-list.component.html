@@ -1,0 +1,6 @@
+<div class="row">
+    <div class="col-lg-4 col-sm-6" *ngFor="let product of listProducts | paginate: configPagination">
+        <app-product-item [productItem] = "product"></app-product-item>
+    </div>
+
+</div>

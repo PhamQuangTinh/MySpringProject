@@ -1,0 +1,100 @@
+<!-- Breadcrumb Section Begin -->
+<div class="breacrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-text">
+                    <a href="#"><i class="fa fa-home"></i> Home</a>
+                    <span>Shop</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb Section Begin -->
+
+<!-- Product Shop Section Begin -->
+<section class="product-shop spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">
+
+                <app-menu></app-menu>
+
+            </div>
+            <div class="col-lg-9 order-1 order-lg-2">
+                <div class="product-show-option">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-7">
+                            <div class="select-option">
+
+                                <mat-form-field appearance="fill">
+                                    <mat-label>Items per page</mat-label>
+                                    <mat-select [(value)]="selected">
+                                        <mat-option *ngFor="let item of itemsPerPage" [value]="item.value">
+                                            {{item.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="fill" style="padding-left: 30px;">
+                                    <mat-label>Sort by</mat-label>
+                                    <mat-select [(value)]="selected">
+                                        <mat-option *ngFor="let sort of sortBy" [value]="sort.value">
+                                            {{sort.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 text-right">
+                            <p>Show 01- 09 Of 36 Product</p>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="product-list">
+                    <app-product-list (itemsNumber)=getPageMetadata($event)
+                        [eventPagination]="pageSubject.asObservable()" [configPagination]="config"></app-product-list>
+                </div>
+
+                <div style="text-align:center">
+
+                    <pagination-template #p="paginationApi" [id]="config.id" (responsive)="responsive"
+                        (pageChange)="onPageChange($event)">
+                        <div class="custom-pagination">
+                            <div class="pagination-previous" [class.disabled]="p.isFirstPage()">
+                                <a href="javascript:void(0)" *ngIf="!p.isFirstPage()" (click)="p.previous()">
+                                    Previous
+                                </a>
+                            </div>
+                            <div class="page-number" *ngFor="let page of p.pages"
+                                [class.current]="p.getCurrent() === page.value">
+                                <span (click)="p.setCurrent(page.value)"
+                                    *ngIf="p.getCurrent() !== page.value">{{ page.label }}</span>
+                                <div *ngIf="p.getCurrent() === page.value">
+                                    <span>{{ page.label }}</span>
+                                </div>
+                            </div>
+                            <div class="pagination-next" [class.disabled]="p.isLastPage()">
+                                <a href="javascript:void(0)" *ngIf="!p.isLastPage()" (click)="p.next()">
+                                    Next
+                                </a>
+                            </div>
+                        </div>
+
+                    </pagination-template>
+
+                </div>
+                <!-- <div class="loading-more">
+                        <i class="icon_loading"></i>
+                        <a href="#">
+                            Loading More
+                        </a>
+                    </div> -->
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Shop Section End -->

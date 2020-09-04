@@ -1,8 +1,9 @@
 package ou.phamquangtinh.service.component_service;
 
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 
 public interface IAvailableProductService {
 
-    AvailableProductsEntity createNewAvailableProduct(AvailableProductsEntity availableProductsEntity);
+    AvailableProductEntity createNewAvailableProduct(AvailableProductEntity availableProductEntity);
 }

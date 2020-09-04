@@ -12,9 +12,7 @@ import ou.phamquangtinh.entity.UserEntity;
 import ou.phamquangtinh.repository.RoleJPARepository;
 import ou.phamquangtinh.service.component_service.IRoleService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -66,8 +64,26 @@ public class RoleService implements IRoleService {
         return roleRepository.saveAndFlush(roleRes);
     }
 
+    @Override
+    public RoleEntity updateRole(RoleEntity roleEntity) {
+        return roleRepository.saveAndFlush(roleEntity);
+    }
+
+    @Override
+    public RoleEntity addNewUser(Long roleId, UserEntity userEntity) {
+        RoleEntity roleEntity = roleRepository.getOne(roleId);
+        if(roleEntity.getUsers() == null){
+            Collection<UserEntity> userEntities = new HashSet<>();
+            userEntities.add(userEntity);
+            roleEntity.setUsers(userEntities);
+        }else{
+            roleEntity.getUsers().add(userEntity);
+        }
+        return roleRepository.saveAndFlush(roleEntity);
+    }
+
     @Transactional(readOnly = true)
-    private RoleEntity findByCode(String code) {
+    RoleEntity findByCode(String code) {
 
         Optional<RoleEntity> role = roleRepository.findByCode(code);
 

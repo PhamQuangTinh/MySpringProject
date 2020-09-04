@@ -44,7 +44,7 @@ public class CategoryService implements ICategoryService {
                 categoryEntity.getSubCategoryEntities().add(subCategoryEntity);
             }
         }
-        System.out.println("Added: " + subCategoryEntity.getName() + " to " + categoryEntity.getCategoryName());
+//        System.out.println("Added: " + subCategoryEntity.getName() + " to " + categoryEntity.getCategoryName());
         return categoryJPARepository.saveAndFlush(categoryEntity);
     }
 
@@ -56,12 +56,15 @@ public class CategoryService implements ICategoryService {
             productEntities.add(productEntity);
             categoryEntity.setProductEntities(productEntities);
         }else{
-            Optional<CategoryEntity> findByProduct = categoryJPARepository.findByProductEntities_Id(productEntity.getId());
-            if(!findByProduct.isPresent()){
+            Collection<ProductEntity>  productEntities = categoryEntity.getProductEntities();
+            if(productEntities.contains(productEntity)){
+                System.out.println("EXIST PRODUCT " + productEntity.getProductName() + " IN CATEGORY " + categoryEntity.getCategoryName());
+                return null;
+            }else{
                 categoryEntity.getProductEntities().add(productEntity);
             }
         }
-        System.out.println("Added: " + productEntity.getProductName() + " to " + categoryEntity.getCategoryName());
+//        System.out.println("Added: " + productEntity.getProductName() + " to " + categoryEntity.getCategoryName());
         return categoryJPARepository.saveAndFlush(categoryEntity);
     }
 

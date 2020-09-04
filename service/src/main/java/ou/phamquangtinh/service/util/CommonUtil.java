@@ -51,7 +51,7 @@ public class CommonUtil {
 
     public <T> ListResponsePagination getListResponsePagination(Page<T> pageUserEntity){
 
-        ListResponsePagination listUsers = new ListResponsePagination<>();
+        ListResponsePagination listUsers = new ListResponsePagination<T>();
 
         PageMetadata pageMetadata = new PageMetadata();
 

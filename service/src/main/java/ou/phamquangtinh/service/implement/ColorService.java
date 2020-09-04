@@ -1,14 +1,17 @@
 package ou.phamquangtinh.service.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.entity.ColorEntity;
-import ou.phamquangtinh.entity.ProductImagesEntity;
-import ou.phamquangtinh.entity.SizeEntity;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 import ou.phamquangtinh.repository.ColorJPARepository;
-import ou.phamquangtinh.service.component_service.IAvailableProductService;
 import ou.phamquangtinh.service.component_service.IColorService;
+import ou.phamquangtinh.service.util.CommonUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,6 +22,9 @@ public class ColorService implements IColorService {
 
     @Autowired
     private ColorJPARepository colorJPARepository;
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @Override
     public ColorEntity findColorByColorLink(String colorLink) {
@@ -37,35 +43,29 @@ public class ColorService implements IColorService {
     }
 
     @Override
-    public ColorEntity addNewProductImage(Long colorId, ProductImagesEntity productImagesEntity) {
+    public ColorEntity addNewProductColor(Long colorId, ProductColorEntity productColorEntity) {
 
         ColorEntity colorEntity = colorJPARepository.getOne(colorId);
-        if(colorEntity.getProductImagesEntities() == null){
-            Collection<ProductImagesEntity> productImagesEntities = new HashSet<>();
-            productImagesEntities.add(productImagesEntity);
-            colorEntity.setProductImagesEntities(productImagesEntities);
+        if(colorEntity.getProductColorEntities() == null){
+            Collection<ProductColorEntity> productColorEntities = new HashSet<>();
+            productColorEntities.add(productColorEntity);
+            colorEntity.setProductColorEntities(productColorEntities);
         }else{
-            colorEntity.getProductImagesEntities().add(productImagesEntity);
+            colorEntity.getProductColorEntities().add(productColorEntity);
         }
-        ColorEntity colorEntityRes = colorJPARepository.saveAndFlush(colorEntity);
-
-        return colorEntity;
+        return colorJPARepository.saveAndFlush(colorEntity);
 
     }
 
     @Override
-    public ColorEntity addNewAvailableProduct(Long colorId, AvailableProductsEntity availableProductsEntity) {
-        ColorEntity colorEntity = colorJPARepository.getOne(colorId);
+    public ListResponsePagination findColorByProductId(Long proId, int page, int size) {
+        Sort sort = Sort.by("colorName");
+        Pageable pageable = PageRequest.of(page - 1, size , sort);
 
-        if(colorEntity.getAvailableProductsEntities() == null){
-            Collection<AvailableProductsEntity> availableProductsEntities = new HashSet<>();
-            availableProductsEntities.add(availableProductsEntity);
-            colorEntity.setAvailableProductsEntities(availableProductsEntities);
-        }else{
-            colorEntity.getAvailableProductsEntities().add(availableProductsEntity);
-        }
-        ColorEntity colorRes = colorJPARepository.saveAndFlush(colorEntity);
+        Page<ColorEntity> res = colorJPARepository.findByProductColorEntities_Id_ProductId(proId, pageable);
 
-        return colorRes;
+        return commonUtil.getListResponsePagination(res);
     }
+
+
 }

@@ -1,24 +1,39 @@
 package ou.phamquangtinh.service.implement;
 
-import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ou.phamquangtinh.entity.CategoryEntity;
-import ou.phamquangtinh.entity.ProductAvatarEntity;
-import ou.phamquangtinh.entity.ProductEntity;
-import ou.phamquangtinh.entity.SubCategoryEntity;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductsEntity;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
+import ou.phamquangtinh.dto.response.ProductInfoResponse;
+import ou.phamquangtinh.dto.response.model.ColorModel;
+import ou.phamquangtinh.dto.response.model.ProductImagesModel;
+import ou.phamquangtinh.dto.response.model.SizeModel;
+import ou.phamquangtinh.entity.*;
+import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 import ou.phamquangtinh.repository.ProductJPARepository;
+import ou.phamquangtinh.service.component_service.IProductColorService;
 import ou.phamquangtinh.service.component_service.IProductService;
+import ou.phamquangtinh.service.util.CommonUtil;
 
 import java.util.*;
 
 @Service
-
 public class ProductService implements IProductService {
 
     @Autowired
     private ProductJPARepository productJPARepository;
+
+    @Autowired
+    private IProductColorService productColorService;
+
+
+    @Autowired
+    private CommonUtil commonUtil;
 
     @Override
     public ProductEntity findProductByProductName(String productName) {
@@ -28,6 +43,12 @@ public class ProductService implements IProductService {
     @Override
     public ProductEntity createNewOrUpdateProduct(ProductEntity productEntity) {
         return productJPARepository.saveAndFlush(productEntity);
+    }
+
+    @Override
+    public ProductEntity findProductById(Long id) {
+        Optional<ProductEntity> productEntity = productJPARepository.findById(id);
+        return productEntity.orElse(null);
     }
 
     @Override
@@ -44,8 +65,11 @@ public class ProductService implements IProductService {
             categoryEntityCollection.add(categoryEntity);
             productEntity.setCategoryEntities(categoryEntityCollection);
         }else{
-            Optional<ProductEntity> findByCate = productJPARepository.findByCategoryEntities_Id(categoryEntity.getId());
-            if(!findByCate.isPresent()){
+            Collection<CategoryEntity> collection = productEntity.getCategoryEntities();
+            if(collection.contains(categoryEntity)){
+                System.out.println("EXIST CATEGORY " + categoryEntity.getCategoryName() + " IN PRODUCT " + productEntity.getProductName());
+                return null;
+            }else{
                 productEntity.getCategoryEntities().add(categoryEntity);
             }
         }
@@ -63,34 +87,164 @@ public class ProductService implements IProductService {
         }else{
             productEntity.getProductAvatarEntities().add(productAvatarEntity);
         }
-        ProductEntity proRes = productJPARepository.saveAndFlush(productEntity);
 
-        return proRes;
+        return productJPARepository.saveAndFlush(productEntity);
     }
 
     @Override
-    public ProductEntity addNewAvailableProduct(Long productId, AvailableProductsEntity availableProductsEntity) {
+    public ProductEntity addNewProductColor(Long productId, ProductColorEntity productColorEntity) {
         ProductEntity productEntity = productJPARepository.getOne(productId);
-
-        if(productEntity.getAvailableProductsEntities() == null){
-            Collection<AvailableProductsEntity> availableProductsEntities = new HashSet<>();
-            availableProductsEntities.add(availableProductsEntity);
-            productEntity.setAvailableProductsEntities(availableProductsEntities);
+        if(productEntity.getProductColorEntities() == null){
+            Collection<ProductColorEntity> productColorEntities = new HashSet<>();
+            productColorEntities.add(productColorEntity);
+            productEntity.setProductColorEntities(productColorEntities);
         }else{
-            productEntity.getAvailableProductsEntities().add(availableProductsEntity);
+            productEntity.getProductColorEntities().add(productColorEntity);
         }
-        ProductEntity proRes = productJPARepository.saveAndFlush(productEntity);
-
-        return proRes;
+        return productJPARepository.saveAndFlush(productEntity);
     }
 
     @Override
-    public void addNewSubCategory(Long productId, SubCategoryEntity subCategoryEntity) {
+    public ListResponsePagination getAllProductPagination(int page, int size) {
+
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findAll(pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+
+    @Override
+    public ProductEntity addNewSubCategory(Long productId, SubCategoryEntity subCategoryEntity) {
         ProductEntity productEntity = productJPARepository.getOne(productId);
         if(productEntity.getSubCategoryEntity() == null){
-            productEntity.setSubCategoryEntity(subCategoryEntity);
-            productJPARepository.saveAndFlush(productEntity);
+            Collection<SubCategoryEntity> subCategoryEntities = new HashSet<>();
+            subCategoryEntities.add(subCategoryEntity);
+            productEntity.setSubCategoryEntity(subCategoryEntities);
+        }else{
+            Collection<SubCategoryEntity> collection = productEntity.getSubCategoryEntity();
+            if(collection.contains(subCategoryEntity)){
+                System.out.println("EXIST SUB CATEGORY " + subCategoryEntity.getName() + " IN PRODUCT " + productEntity.getProductName());
+                return null;
+            }else{
+                productEntity.getSubCategoryEntity().add(subCategoryEntity);
+            }
         }
+        return productJPARepository.saveAndFlush(productEntity);
 
     }
+
+    //Tìm kiếm sản phẩm theo category Id
+    @Override
+    public ListResponsePagination findProductByCategoryId(Long cateId, int page, int size) {
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findByCategoryEntities_Id(cateId,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findProductByCategoryName(String categoryName, int page, int size) {
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findByCategoryEntities_CategoryName(categoryName,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findProductBySubCategoryId(Long subCateId, int page, int size) {
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findBySubCategoryEntity_Id(subCateId,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findProductBySubCategoryName(String subCategoryName, int page, int size) {
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findBySubCategoryEntity_Name(subCategoryName,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findProductByColorId(Long colorId, int page, int size) {
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findByProductColorEntities_Id_ColorId(colorId,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findProductBySizeId(Long sizeId, int page, int size) {
+        Sort sort = Sort.by("productName");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findByProductColorEntities_AvailableProductEntities_Id_SizeId(sizeId,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public List<ProductEntity> findProductProductNameOrDescription(String keyword) {
+        return productJPARepository.findTop10ByProductNameContaining(keyword);
+    }
+
+    @Override
+    public List<ProductEntity> findTop10LikeProduct(Long userId) {
+        return productJPARepository.findTop10ByProductLikeByUserEntities_Id(userId);
+    }
+
+    @Override
+    public ProductInfoResponse getProductInfo(Long proId) {
+        ProductInfoResponse productInfoResponse = new ProductInfoResponse();
+        ProductEntity productEntity = findProductById(proId);
+        ModelMapper modelMapper = new ModelMapper();
+        productInfoResponse = modelMapper.map(productEntity, ProductInfoResponse.class);
+        List<ColorModel> colors = new ArrayList<>();
+        List<SizeModel> sizes = new ArrayList<>();
+        List<ProductImagesModel> firstImgesColor = new ArrayList<>();
+        for (ProductColorEntity productColorEntity : productEntity.getProductColorEntities()) {
+            ColorModel colorModel = new ColorModel(productColorEntity.getColorEntity().getId(),
+                    productColorEntity.getColorEntity().getColorName(), productColorEntity.getColorEntity().getColorLink());
+            colors.add(colorModel);
+        }
+        List<ProductColorEntity> productColorEntities = productColorService.findProductColorByProductId(proId);
+        for (AvailableProductEntity availableProductEntity : productColorEntities.get(0).getAvailableProductEntities()) {
+            SizeModel sizeModel = new SizeModel(availableProductEntity.getSizeEntity().getId(),
+                    availableProductEntity.getSizeEntity().getSizeType());
+            sizes.add(sizeModel);
+        }
+
+        for (ProductColorEntity productColorEntity : productColorEntities) {
+            if(colors.get(0).getId().equals(productColorEntity.getId().getColorId())){
+                for (ProductImagesEntity productImagesEntity : productColorEntity.getProductImagesEntities()) {
+                    ProductImagesModel model = new ProductImagesModel(productImagesEntity.getId(), productImagesEntity.getImageLink());
+                    firstImgesColor.add(model);
+                }
+                break;
+            }
+
+        }
+
+        productInfoResponse.setColors(colors);
+        productInfoResponse.setSize(sizes);
+        productInfoResponse.setFirstImagesColor(firstImgesColor);
+
+        return productInfoResponse;
+
+    }
+
 }

@@ -1,6 +1,7 @@
 package ou.phamquangtinh.entity.middle_entity;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +48,7 @@ public class CommentEntity {
     @ManyToOne
     @MapsId("product_id")
     @JoinColumn(name = "product_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private ProductEntity productEntity;
 
     @ManyToOne

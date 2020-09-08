@@ -1,6 +1,6 @@
 <div class="product-item">
     <div class="pi-pic">
-        <img src="http://localhost:4200{{bigImage}}" alt="">
+        <img [src]="bigImage" alt="">
         <div class="sale pp-sale" *ngIf="productItem.discount > 0">Sale</div>
         <div class="icon">
             <i *ngIf="id === null || !isLiked" class="far fa-heart float-right" (click) = "likeProduct()"></i>
@@ -17,7 +17,9 @@
         <div class="colorProductPicker" *ngFor="let color of productItem.productAvatarEntities; let i = index">
             <ng-container *ngIf="i % 2 === 0" >
                 <a href="javascript:void(0)">
-                    <img (mouseover)="changeBigImage(productItem.productAvatarEntities[i + 1].imageLink)"  src="http://localhost:4200{{productItem.productAvatarEntities[i].imageLink}}">
+                    <img (mouseover)="changeBigImage(productItem.productAvatarEntities[i + 1])" 
+                    [class.chooseColorStyle]="checkColorChoosing(productItem.productAvatarEntities[i + 1].id)" 
+                    [src]="sanitize(productItem.productAvatarEntities[i].imageLink)">
                 </a>
             </ng-container>
         </div>

@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ListResponsePagination<T> {
-    private List<T> listResponse;
+public class ListResponsePagination {
+    private List<?> listResponse;
 
     private PageMetadata pageMetadata;
 

@@ -3,9 +3,7 @@ package ou.phamquangtinh.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import ou.phamquangtinh.entity.middle_entity.CommentEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -17,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "user")
-@JsonIgnoreProperties(value = {"orders","comments","roles"})
+@JsonIgnoreProperties(value = {"orders","comments","roles","password","accessToken","refreshToken","phone","email"})
 public class UserEntity extends BaseEntity<String> {
 
     @Column(name = "username")
@@ -52,7 +50,7 @@ public class UserEntity extends BaseEntity<String> {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<CommentEntity> comments;
+    private Collection<ProductCommentEntity> comments;
 
     @ManyToMany(mappedBy = "users")
     @EqualsAndHashCode.Exclude

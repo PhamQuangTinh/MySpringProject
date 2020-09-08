@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.service.component_service.IProductService;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
@@ -17,9 +19,11 @@ public class ProductController {
     private IProductService productService;
 
     @GetMapping("/get/all_product")
-    public ResponseEntity<Object> getAllProductsPagination(@RequestParam("page") int page, @RequestParam("size") int size){
+    public ResponseEntity<Object> getAllProductsPagination(@RequestParam("page") int page,
+                                                           @RequestParam("size") int size,
+                                                           @RequestParam("sort") String sort){
 
-        return ResponseEntity.ok(productService.getAllProductPagination(page,size));
+        return ResponseEntity.ok(productService.getAllProductPagination(page,size,sort));
 
     }
 
@@ -74,6 +78,16 @@ public class ProductController {
     @GetMapping("/get/product_info/{proId}")
     public ResponseEntity<Object> getProductInfo(@PathVariable("proId") Long proId){
         return ResponseEntity.ok(productService.getProductInfo(proId));
+    }
+
+    @GetMapping("/get/sex_type_and_price")
+    public ResponseEntity<Object> getProductBySexTypeAndPrice(@RequestParam("page") int page,
+                                                              @RequestParam("size") int size,
+                                                              @RequestParam("sort") String sort,
+                                                              @RequestParam("fPrice") double fPrice,
+                                                              @RequestParam("lPrice") double lPrice,
+                                                              @RequestParam("sexTypes") Set<String> sexTypes){
+        return ResponseEntity.ok(productService.findProductBySexTypeAndUnitPrice(sexTypes,fPrice,lPrice,page,size,sort));
     }
 
 }

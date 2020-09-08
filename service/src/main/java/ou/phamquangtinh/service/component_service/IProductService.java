@@ -7,6 +7,7 @@ import ou.phamquangtinh.entity.ProductAvatarEntity;
 import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.SubCategoryEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -27,7 +28,7 @@ public interface IProductService {
 
     ProductEntity addNewProductColor(Long productId, ProductColorEntity productColorEntity);
 
-    ListResponsePagination getAllProductPagination(int page, int size);
+    ListResponsePagination getAllProductPagination(int page, int size, String sortBy);
 
     ProductEntity addNewSubCategory(Long productId, SubCategoryEntity subCategoryEntity);
 
@@ -43,10 +44,15 @@ public interface IProductService {
 
     ListResponsePagination findProductBySizeId(Long sizeId, int page, int size);
 
+    ListResponsePagination findProductBySexTypeAndUnitPrice(Set<String> sexTypes, double fPrice, double lPrice,
+                                                            int page, int size, String sortBy);
+
     List<ProductEntity> findProductProductNameOrDescription(String keyword);
 
     List<ProductEntity> findTop10LikeProduct(Long userId);
 
     ProductInfoResponse getProductInfo(Long proId);
+
+    void addNewCommentToProduct(ProductEntity productEntity, ProductCommentEntity productCommentEntity);
 
 }

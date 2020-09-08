@@ -27,8 +27,10 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
 
   sortBy: Select[] = [
-    {value: 'productName', viewValue: 'Sort By Name'},
-    {value: 'unitPrice', viewValue: 'Sort By Price'},
+    {value: 'productName low', viewValue: 'Sort By Name'},
+    {value: 'unitPrice high', viewValue: 'Sort By High Price'},
+    {value: 'unitPrice low', viewValue: 'Sort By Low Price'},
+
   ];
 
   pageSubject: Subject<any> = new Subject<any>();
@@ -37,6 +39,9 @@ export class ShopComponent implements OnInit, AfterViewInit {
     itemsPerPage: 12,
     currentPage: 1,
     totalItems: 0,
+    sortBy: 'productName low',
+    code: 1,
+    filter: null
   };
   pageSize: number;
   public maxSize: number = 20;
@@ -57,17 +62,8 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
   }
 
-  selectOption(id: number) {
-    //getted from event
-    console.log(id);
-    //getted from binding
-    console.log(this.selected)
-  }
   ngAfterViewInit() {
-    $('.sorting, .p-show').niceSelect();
-    console.log("css work")
-    var x = $('p-show').val();
-    console.log(x);
+
   }
 
   getPageMetadata(pageMetadata) {
@@ -82,8 +78,19 @@ export class ShopComponent implements OnInit, AfterViewInit {
     window.scrollTo(0, 0)
   }
 
-  onChange(ok: any) {
-    console.log('work');
-    console.log(ok);
+  changeItemPerPage(event){
+    this.config.itemsPerPage = event.value;
+    this.onPageChange(1);
+  }
+
+  changeSort(event){
+    this.config.sortBy = event.value;
+    this.onPageChange(1);
+  }
+
+  filterProduct(event){
+    this.config.filter = event;
+    this.config.code = 2;
+    this.onPageChange(1);
   }
 }

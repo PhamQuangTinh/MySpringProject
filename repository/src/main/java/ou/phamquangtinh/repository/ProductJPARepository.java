@@ -9,6 +9,7 @@ import ou.phamquangtinh.entity.ProductEntity;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ProductJPARepository extends JpaRepository<ProductEntity, Long> {
 
@@ -34,4 +35,6 @@ public interface ProductJPARepository extends JpaRepository<ProductEntity, Long>
     List<ProductEntity> findTop10ByProductNameContaining(String productName);
 
     List<ProductEntity> findTop10ByProductLikeByUserEntities_Id(Long userId);
+
+    Page<ProductEntity> findBySexTypeInAndUnitPriceBetween(Set<String> sexTypes, double fPrice, double lPrice, Pageable page);
 }

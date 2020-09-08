@@ -41,5 +41,5 @@ public interface IUserService {
 
     void unLikeProduct(Long userId, Long proId);
 
-
+    UserEntity addNewComment(Long userId, Long productId, String content);
 }

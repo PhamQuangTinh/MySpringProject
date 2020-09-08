@@ -22,4 +22,6 @@ public interface IProductColorService {
 
     ProductColorEntity addNewProductImages(ProductColorKey id, ProductImagesEntity productImagesEntity);
 
+    List<String> finProductColorByProductIdAndColorId(Long proId, Long colorId);
+
 }

@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">
 
-                <app-menu></app-menu>
+                <app-menu (filterEvent) = "filterProduct($event)"></app-menu>
 
             </div>
             <div class="col-lg-9 order-1 order-lg-2">
@@ -30,7 +30,7 @@
 
                                 <mat-form-field appearance="fill">
                                     <mat-label>Items per page</mat-label>
-                                    <mat-select [(value)]="selected">
+                                    <mat-select (selectionChange)="changeItemPerPage($event)">
                                         <mat-option *ngFor="let item of itemsPerPage" [value]="item.value">
                                             {{item.viewValue}}
                                         </mat-option>
@@ -39,7 +39,7 @@
 
                                 <mat-form-field appearance="fill" style="padding-left: 30px;">
                                     <mat-label>Sort by</mat-label>
-                                    <mat-select [(value)]="selected">
+                                    <mat-select (selectionChange)="changeSort($event)" >
                                         <mat-option *ngFor="let sort of sortBy" [value]="sort.value">
                                             {{sort.viewValue}}
                                         </mat-option>
@@ -49,11 +49,14 @@
                             </div>
                         </div>
                         <div class="col-lg-5 col-md-5 text-right">
-                            <p>Show 01- 09 Of 36 Product</p>
+                            <p>Show {{config.itemsPerPage}} Of {{config.totalItems}} Product</p>
                         </div>
                         
                     </div>
                 </div>
+
+                <!--config: Thông tin danh sách sản phẩm(có thể điều chỉnh được)-->
+                <!--eventPagination: chọn trang-->
                 <div class="product-list">
                     <app-product-list (itemsNumber)=getPageMetadata($event)
                         [eventPagination]="pageSubject.asObservable()" [configPagination]="config"></app-product-list>

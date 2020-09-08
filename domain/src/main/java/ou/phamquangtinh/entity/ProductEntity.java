@@ -1,16 +1,13 @@
 package ou.phamquangtinh.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
-import ou.phamquangtinh.entity.middle_entity.CommentEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 
 import javax.persistence.*;
@@ -48,7 +45,7 @@ public class ProductEntity extends BaseEntity<String> {
     @OneToMany(mappedBy = "productEntity")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Collection<CommentEntity> comments;
+    private Collection<ProductCommentEntity> comments;
 
     @OneToMany(mappedBy = "productEntity",cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude

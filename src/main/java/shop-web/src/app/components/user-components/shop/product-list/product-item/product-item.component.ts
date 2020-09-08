@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MessengerService } from './../../../../../services/messenger.service';
 import { ProductItemService } from './product-item.service';
 import { Component, OnInit, Input } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-item',
@@ -12,19 +13,21 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ProductItemComponent implements OnInit {
   @Input() productItem: any;
 
-  bigImage: string = '';
+  bigImage: any;
   id: any = null;
   isLiked: boolean = false;
-
+  checkColor: any;
   constructor(
     private productItemService: ProductItemService,
     private msg: MessengerService,
     private router: Router,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private sanitizer: DomSanitizer,
+
   ) {}
 
   ngOnInit(): void {
-    this.bigImage = this.productItem.productAvatarEntities[1].imageLink;
+    this.bigImage = this.sanitize(this.productItem.productAvatarEntities[1].imageLink);
     try {
       this.id = this.tokenStorage.getUser().id;
 
@@ -40,6 +43,11 @@ export class ProductItemComponent implements OnInit {
     } catch {}
   }
 
+  //fix unsafe image
+  sanitize(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
   addProductToCart() {
     this.msg.sendMsg(this.productItem);
   }
@@ -48,15 +56,15 @@ export class ProductItemComponent implements OnInit {
     this.router.navigate(['/products', this.productItem.id]);
   }
 
-  getColor(color): string {
-    console.log(color.imageLink);
-    return color.imageLink;
-  }
 
+  //change image when hover color
   changeBigImage(newBigImage) {
-    this.bigImage = newBigImage;
+    this.bigImage = this.sanitize(newBigImage.imageLink);
+    this.checkColor = newBigImage.id;
+    
   }
 
+  //like product
   likeProduct() {
     if (this.id != null) {
       this.productItemService
@@ -78,5 +86,12 @@ export class ProductItemComponent implements OnInit {
           this.isLiked = false;
         });
     }
+  }
+
+  checkColorChoosing(colorId){   
+    if(this.checkColor === colorId){
+      return true;
+    }
+    return false;
   }
 }

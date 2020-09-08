@@ -15,6 +15,7 @@ import ou.phamquangtinh.dto.response.model.SizeModel;
 import ou.phamquangtinh.entity.*;
 import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 import ou.phamquangtinh.repository.ProductJPARepository;
 import ou.phamquangtinh.service.component_service.IProductColorService;
 import ou.phamquangtinh.service.component_service.IProductService;
@@ -105,9 +106,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ListResponsePagination getAllProductPagination(int page, int size) {
+    public ListResponsePagination getAllProductPagination(int page, int size, String sortBy) {
+        Sort sort = commonUtil.getSort(sortBy);
 
-        Sort sort = Sort.by("productName");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
         Page<ProductEntity> pageRes = productJPARepository.findAll(pageable);
@@ -198,6 +199,17 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public ListResponsePagination findProductBySexTypeAndUnitPrice(Set<String> sexType, double fPrice,
+                                                                   double lPrice, int page, int size, String sortBy) {
+        Sort sort = commonUtil.getSort(sortBy);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository.findBySexTypeInAndUnitPriceBetween(sexType,fPrice,lPrice,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
     public List<ProductEntity> findProductProductNameOrDescription(String keyword) {
         return productJPARepository.findTop10ByProductNameContaining(keyword);
     }
@@ -245,6 +257,18 @@ public class ProductService implements IProductService {
 
         return productInfoResponse;
 
+    }
+
+    @Override
+    public void addNewCommentToProduct(ProductEntity productEntity, ProductCommentEntity productCommentEntity) {
+        if(productEntity.getComments() == null){
+            Collection<ProductCommentEntity> productCommentEntities = new ArrayList<>();
+            productCommentEntities.add(productCommentEntity);
+            productEntity.setComments(productCommentEntities);
+        }else{
+            productEntity.getComments().add(productCommentEntity);
+        }
+        createNewOrUpdateProduct(productEntity);
     }
 
 }

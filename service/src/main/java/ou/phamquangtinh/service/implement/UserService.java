@@ -19,7 +19,10 @@ import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.entity.UserEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
+import ou.phamquangtinh.entity.middle_entity.embaddableEntity.CommentKey;
 import ou.phamquangtinh.repository.UserJPARepository;
+import ou.phamquangtinh.service.component_service.IProductCommentService;
 import ou.phamquangtinh.service.component_service.IProductService;
 import ou.phamquangtinh.service.component_service.IRoleService;
 import ou.phamquangtinh.service.component_service.IUserService;
@@ -45,6 +48,8 @@ public class UserService implements IUserService {
     @Autowired
     private IProductService productService;
 
+    @Autowired
+    private IProductCommentService productCommentService;
 
     @Override
     public UserEntity createUser(RegisterReq user) {
@@ -221,6 +226,24 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserEntity addNewComment(Long userId, Long productId, String content) {
+        UserEntity userEntity = getUserToUpdate(userId);
+        ProductEntity productEntity = productService.getProductToUpdate(productId);
+
+        ProductCommentEntity productCommentEntity = new ProductCommentEntity();
+        productCommentEntity.setCommentKey(new CommentKey(productId, userId));
+        productCommentEntity.setUserEntity(userEntity);
+        productCommentEntity.setProductEntity(productEntity);
+        productCommentEntity.setCommentContent(content);
+
+        productCommentEntity = productCommentService.createNewComment(productCommentEntity);
+
+        checkCommentUser(userEntity, productCommentEntity);
+        productService.addNewCommentToProduct(productEntity, productCommentEntity);
+        return userEntity;
+    }
+
+    @Override
     public ListResponsePagination findAllUsers(int page, int size) {
         Sort sort = Sort.by("lastName").descending();
         Pageable pageable = PageRequest.of(page - 1,size,sort);
@@ -228,5 +251,18 @@ public class UserService implements IUserService {
 
         return commonUtil.getListResponsePagination(userEntityList);
 
+    }
+
+
+    public void checkCommentUser(UserEntity userEntity, ProductCommentEntity productCommentEntity){
+
+        if(userEntity.getComments() == null){
+            Collection<ProductCommentEntity> productCommentEntities = new ArrayList<>();
+            productCommentEntities.add(productCommentEntity);
+            userEntity.setComments(productCommentEntities);
+        }else{
+            userEntity.getComments().add(productCommentEntity);
+        }
+        updateUser(userEntity);
     }
 }

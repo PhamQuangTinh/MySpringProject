@@ -1,7 +1,16 @@
+import { TokenStorageService } from './../../../services/token-storage.service';
 import { ProductService } from './product.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { DomSanitizer } from '@angular/platform-browser';
+
 declare const $: any;
 
 @Component({
@@ -10,59 +19,45 @@ declare const $: any;
   styleUrls: ['./product.component.css'],
 })
 export class ProductComponent implements OnInit, AfterViewInit {
+  @ViewChild('numProduct') numProduct: ElementRef;
+  @ViewChild('textComment') textComment: ElementRef;
+  isFirstSmallImage: boolean;
 
-  
+  isPicked: boolean = false;
+  checkBigImage: any = '';
+  checkColor: any;
+  checkSize:any;
+
   customOptions: OwlOptions = {
-    loop: true,
-    mouseDrag: false,
-    touchDrag: false,
-    pullDrag: false,
+    loop: false,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
     dots: false,
     navSpeed: 700,
-    navText: ['Previous', 'Next'],
-    responsive: {
-      0: {
-        items: 1 
-      },
-      400: {
-        items: 2
-      },
-      740: {
-        items: 3
-      },
-      940: {
-        items: 4
-      }
-    },
-    nav: true
-  }
+    items: 3,
+    navText: ['', ''],
+
+    nav: true,
+  };
 
   productId: number;
+  userId: number;
   productInfo: any;
   productImages: any = [];
+  productComments: any = [];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private productService: ProductService
-  ) {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      let id = parseInt(params.get('id'));
-      this.productId = id;
-    });
+    private productService: ProductService,
+    private sanitizer: DomSanitizer,
+    private token: TokenStorageService
+  ) {}
 
-    this.productInfo = this.productService
-      .getProductInfo(this.productId)
-      .subscribe(
-        (res) => {
-          if (res.data !== null) {
-            this.productInfo = res.data.body;
-            console.log(this.productInfo);
-          }
-        },
-        (err) => {}
-      );
+  //fix unsafe image
+  sanitize(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
   }
-
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
       let id = parseInt(params.get('id'));
@@ -79,66 +74,107 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
             var proInfo = this.productInfo.firstImagesColor;
             for (var i = 0; i < proInfo.length; i++) {
-              let img = proInfo[i].imageLink.split('\\').join('/');
-              this.productImages.push(img);
+              this.productImages.push(proInfo[i].imageLink);
             }
-            console.log(this.productImages)
+            this.checkBigImage = this.sanitize(this.productImages[0]);
+            this.checkColor = this.productInfo.colors[0].colorLink;
           }
         },
         (err) => {}
       );
+    try {
+      this.userId = this.token.getUser().id;
+    } catch {}
   }
 
   ngAfterViewInit() {
-    //Jquery
-    $('.product-thumbs-track .pt').on('click', function () {
-      $('.product-thumbs-track .pt').removeClass('active');
-      $(this).addClass('active');
-      var imgurl = $(this).data('imgbigurl');
-      var bigImg = $('.product-big-img').attr('src');
-      if (imgurl != bigImg) {
-        $('.product-big-img').attr({ src: imgurl });
-        $('.zoomImg').attr({ src: imgurl });
-      }
-    });
+    console.log(this.numProduct.nativeElement.value);
+  }
 
-    $('.product-pic-zoom').zoom();
+  //change big image
+  changeViewProduct(image) {
+    this.checkBigImage = this.sanitize(image);
+    this.isFirstSmallImage = false;
+  }
 
-    /*-----------------------
-   Product Single Slider
--------------------------*/
-    $('.ps-slider').owlCarousel({
-      loop: false,
-      margin: 10,
-      nav: true,
-      items: 3,
-      dots: false,
-      navText: [
-        '<i class="fa fa-angle-left"></i>',
-        '<i class="fa fa-angle-right"></i>',
-      ],
-      smartSpeed: 1200,
-      autoHeight: false,
-      autoplay: true,
-    });
-
-    var proQty = $('.pro-qty');
-    proQty.prepend('<span class="dec qtybtn">-</span>');
-    proQty.append('<span class="inc qtybtn">+</span>');
-    proQty.on('click', '.qtybtn', function () {
-      var $button = $(this);
-      var oldValue = $button.parent().find('input').val();
-      if ($button.hasClass('inc')) {
-        var newVal = parseFloat(oldValue) + 1;
-      } else {
-        // Don't allow decrementing below zero
-        if (oldValue > 0) {
-          var newVal = parseFloat(oldValue) - 1;
-        } else {
-          newVal = 0;
+  //change image when choose color
+  chooseColorImage(color) {
+    this.productService
+      .getColorProductImages(this.productId, color.id)
+      .subscribe((res: any) => {
+        if (res.data != null) {
+          this.productImages = res.data.body;
+          this.checkBigImage = this.sanitize(this.productImages[0]);
+          this.checkColor = color.colorLink;
         }
-      }
-      $button.parent().find('input').val(newVal);
-    });
+      });
+  }
+
+  chooseSize(size){
+    this.checkSize = size
+  }
+
+  //check what small image is picking
+  checkSmallImageChossing(image): boolean {
+    if (this.checkBigImage.changingThisBreaksApplicationSecurity === image) {
+      return true;
+    }
+    return false;
+  }
+  //Check what color is piking
+  checkColorChoosing(colorLink): boolean {
+    if(this.checkColor === colorLink){
+      return true;
+    }
+    return false;
+  }
+
+  checkSizeChoosing(size) : boolean{
+    if(this.checkSize === size){
+      return true;
+    }
+    return false;
+  }
+
+  //increase num order of product
+  increaseNumPro() {
+    this.numProduct.nativeElement.value++;
+  }
+
+  //decrease num order of product
+  decreaseNumPro() {
+    if (this.numProduct.nativeElement.value > 1)
+      this.numProduct.nativeElement.value--;
+  }
+
+  //clik comment tab
+  tabComment() {
+    this.productService
+      .getCommentsProduct(this.productId, 1)
+      .subscribe((res: any) => {
+        this.productComments = res.data.body.listResponse;
+      });
+  }
+
+  //user comment product
+  comment() {
+    var text = this.textComment.nativeElement.value;
+    if (this.userId != null && text !== '') {
+      this.productService
+        .commentProduct(this.userId, this.productId, text)
+        .subscribe(
+          (res: any) => {
+            this.tabComment();
+            this.textComment.nativeElement.value = '';
+          },
+          (err: any) => {
+            console.log(err);
+          }
+        );
+    } else if (this.userId == null) {
+      alert('you have to login first');
+    } else if (text == '') {
+      alert('write some text pls');
+    }
   }
 }

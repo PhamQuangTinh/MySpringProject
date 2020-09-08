@@ -2,6 +2,7 @@ package ou.phamquangtinh.service.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.PageMetadata;
@@ -51,7 +52,7 @@ public class CommonUtil {
 
     public <T> ListResponsePagination getListResponsePagination(Page<T> pageUserEntity){
 
-        ListResponsePagination listUsers = new ListResponsePagination<T>();
+        ListResponsePagination listUsers = new ListResponsePagination();
 
         PageMetadata pageMetadata = new PageMetadata();
 
@@ -68,6 +69,24 @@ public class CommonUtil {
 
         return listUsers;
 
+    }
+
+    public Sort getSort(String sortBy){
+        String[] getSort = null;
+        try{
+            getSort = sortBy.split(" ");
+        }catch (Exception ignored){}
+        Sort sort = null;
+        if(getSort != null){
+            if(getSort[1].equals("high")){
+                sort = Sort.by(Sort.Direction.DESC, getSort[0]);
+            }else{
+                sort = Sort.by(Sort.Direction.ASC, getSort[0]);
+            }
+        }else{
+            sort = Sort.by("");
+        }
+        return sort;
     }
 
 

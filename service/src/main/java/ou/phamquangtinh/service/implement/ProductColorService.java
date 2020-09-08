@@ -9,6 +9,7 @@ import ou.phamquangtinh.entity.middle_entity.embaddableEntity.ProductColorKey;
 import ou.phamquangtinh.repository.ProductColorJPARepository;
 import ou.phamquangtinh.service.component_service.IProductColorService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -62,5 +63,18 @@ public class ProductColorService implements IProductColorService {
         }
 
         return productColorJPARepository.saveAndFlush(productColorEntity);
+    }
+
+    @Override
+    public List<String> finProductColorByProductIdAndColorId(Long proId, Long colorId) {
+        ProductColorEntity productColorEntity= productColorJPARepository.findById_ProductIdAndId_ColorId(proId, colorId).orElse(null);
+        if(productColorEntity != null){
+            List<String> listImage = new ArrayList<>();
+            productColorEntity.getProductImagesEntities().forEach(x->{
+                listImage.add(x.getImageLink());
+            });
+            return listImage;
+        }
+        return null;
     }
 }

@@ -6,6 +6,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { HeaderService } from './header.service';
 import { Subscription } from 'rxjs';
+
 declare const $: any;
 
 @Component({
@@ -30,7 +31,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private tokenService: TokenStorageService,
     private sessionStorage: SessionStorageService,
     private msg: MessengerService,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    private router: Router,
   ) {
   }
 
@@ -109,5 +111,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  viewProduct(product){
+    $('.searchProductUl').slideUp('fast');
+    this.router.navigate(['/products', product.id]).then(()=>{window.location.reload()});  
   }
 }

@@ -15,10 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ou.phamquangtinh.controller.security.service.MyUserDetailService;
 import ou.phamquangtinh.controller.security.util.JwtUtil;
-import ou.phamquangtinh.dto.request.user_request.RegisterReq;
-import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
-import ou.phamquangtinh.dto.request.user_request.UserLikeProductReq;
-import ou.phamquangtinh.dto.request.user_request.UsernameAndPasswordAuthenticationRequest;
+import ou.phamquangtinh.dto.request.user_request.*;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.RegisterResponse;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
@@ -84,21 +81,25 @@ public class UserController {
     }
 
 
-
     @PostMapping("/post/likination")
     @PreAuthorize("hasAnyAuthority('USER','SUPER_ADMIN')")
-    public void userLikeProduct(@RequestBody UserLikeProductReq req){
-        userService.likeProduct(req.getUserId(),req.getProId());
+    public void userLikeProduct(@RequestBody UserLikeProductReq req) {
+        userService.likeProduct(req.getUserId(), req.getProId());
     }
 
     @PostMapping("/post/unlikination")
     @PreAuthorize("hasAnyAuthority('USER','SUPER_ADMIN')")
-    public void userUnLikeProduct(@RequestBody UserLikeProductReq req){
-        userService.unLikeProduct(req.getUserId(),req.getProId());
+    public void userUnLikeProduct(@RequestBody UserLikeProductReq req) {
+        userService.unLikeProduct(req.getUserId(), req.getProId());
     }
 
+    @PostMapping("/post/comment")
+    @PreAuthorize("hasAnyAuthority('USER','SUPER_ADMIN')")
+    public void userCommentProduct(@RequestBody UserCommentReq userCommentReq) {
 
-
+        userService.addNewComment(userCommentReq.getUserId(), userCommentReq.getProductId()
+                , userCommentReq.getContent());
+    }
 
 
     //****************************************GET USER*******************************************
@@ -121,15 +122,15 @@ public class UserController {
     @GetMapping("/get/list_users/{code}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getListUsersByRoleCode(@PathVariable("code") String code
-            , @RequestParam("page") int page, @RequestParam("size") int size){
-        ListResponsePagination res = userService.findUsersByRoleCodePagination(code,page,size);
+            , @RequestParam("page") int page, @RequestParam("size") int size) {
+        ListResponsePagination res = userService.findUsersByRoleCodePagination(code, page, size);
 
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/get/last_name/{lastName}")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<Object> getUserByLastName(@PathVariable("lastName") String lastName){
+    public ResponseEntity<Object> getUserByLastName(@PathVariable("lastName") String lastName) {
 
         List<UserEntity> res = userService.findByLastName(lastName);
 
@@ -138,23 +139,18 @@ public class UserController {
 
     @GetMapping("/get/all_user/pagination")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<Object> getAllUsersPagination(@RequestParam("page") int page,@RequestParam("size") int size){
-        ListResponsePagination res = userService.findAllUsers(page,size);
+    public ResponseEntity<Object> getAllUsersPagination(@RequestParam("page") int page, @RequestParam("size") int size) {
+        ListResponsePagination res = userService.findAllUsers(page, size);
         return ResponseEntity.ok(res);
     }
 
     @GetMapping("/get/first_name_or_last_name_constraining")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     public ResponseEntity<Object> getUserByFirstNameOrLastName(@RequestParam("page") int page
-            ,@RequestParam("size") int size, @RequestParam("keyword") String keyword){
+            , @RequestParam("size") int size, @RequestParam("keyword") String keyword) {
         ListResponsePagination res = userService.findByLastNameOrFirstNameContaining(keyword, page, size);
         return ResponseEntity.ok(res);
     }
-
-
-
-
-
 
 
     //**************************************************PUT USER*************************************************
@@ -165,9 +161,6 @@ public class UserController {
 
         return ResponseEntity.ok(userOK);
     }
-
-
-
 
 
     //************************************************DELETE USER***********************************************

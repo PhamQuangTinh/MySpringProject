@@ -18,6 +18,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { ProductItemComponent } from './product-list/product-item/product-item.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { MatSelectModule } from '@angular/material/select';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MatSelectModule } from '@angular/material/select';
     NgxPaginationModule,
     CarouselModule,
     ShopRoutingModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxImageZoomModule
   ]
 })
 export class ShopModule { }

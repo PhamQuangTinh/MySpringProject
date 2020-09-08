@@ -13,15 +13,28 @@ export class ProductListService {
 
   }
 
-  findAllProductsPaginationService(page, size): Observable<any>
+  findAllProductsPaginationService(page, size, sortBy): Observable<any>
     {
         const params = new HttpParams()
                     .set('page', page)
-                    .set('size', size);
+                    .set('size', size)
+                    .set('sort',sortBy);
         return this.http.get(productsUrl + '/get/all_product', {params})
         .pipe(catchError(this.errorHandler));
 
     }
+
+  findProductsFilter(page, size, sortBy, fPrice, lPrice, sexTypes): Observable<any>
+  {
+    const params = new HttpParams()
+                    .set('page', page)
+                    .set('size', size)
+                    .set('sort', sortBy)
+                    .set('fPrice', fPrice)
+                    .set('lPrice', lPrice)
+                    .set('sexTypes', sexTypes);
+    return this.http.get(productsUrl + '/get/sex_type_and_price', {params})
+  }
 
   // tslint:disable-next-line:typedef
     errorHandler(error: HttpErrorResponse){

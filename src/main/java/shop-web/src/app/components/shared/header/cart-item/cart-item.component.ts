@@ -1,3 +1,4 @@
+import { RemoveCartItem } from './../../../../models/reomve-cart-item';
 import { CartItem } from './../../../../models/cart-item';
 import { MessengerService } from './../../../../services/messenger.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
@@ -18,10 +19,11 @@ export class CartItemComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
   }
 
   removeCartItem(){
-    this.deleteEvent.emit(this.cartItem.productId);  
+    this.deleteEvent.emit(new RemoveCartItem(this.cartItem.productId, this.cartItem.colorId, this.cartItem.sizeId));  
   }
 
 }

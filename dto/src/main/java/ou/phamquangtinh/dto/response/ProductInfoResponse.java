@@ -19,10 +19,12 @@ public class ProductInfoResponse {
     private String description;
     private double unitPrice;
     private double discount;
+    private boolean isUserLikeProducts;
 
     private List<ColorModel> colors;
     private List<SizeModel> size;
     private List<ProductImagesModel> firstImagesColor;
+
 }
 
 

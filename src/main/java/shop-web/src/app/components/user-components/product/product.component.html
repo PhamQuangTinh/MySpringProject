@@ -39,7 +39,8 @@
                             <ng-container *ngFor="let image of productImages">
                                 <ng-template carouselSlide>
                                     <a href="javascript:void(0)" (click)="changeViewProduct(image)">
-                                        <img style="width: 95%;" [class.activeProductInfo]="checkSmallImageChossing(image)"
+                                        <img style="width: 95%;"
+                                            [class.activeProductInfo]="checkSmallImageChossing(image)"
                                             [src]="sanitize(image)">
                                     </a>
 
@@ -55,7 +56,10 @@
                         <div class="product-details">
                             <div class="pd-title">
                                 <h3>{{productInfo.productName}}</h3>
-                                <a href="#" class="heart-icon"><i class="icon_heart_alt"></i></a>
+                                <i *ngIf="userId === 0 || !isLiked" class="far fa-heart float-right"
+                                    (click)="likeProduct()"></i>
+                                <i *ngIf="userId !== 0 && isLiked" class="fas fa-heart float-right"
+                                    (click)="unLikeProduct()"></i>
                             </div>
 
                             <div class="pd-desc">
@@ -72,8 +76,8 @@
                                 <div class="pd-color-choose">
                                     <div class="colorProductPicker" *ngFor="let color of productInfo.colors">
                                         <a href="javascript:void(0)" (click)="chooseColorImage(color)">
-                                            <img title="{{color.colorName}}"
-                                                [src]=sanitize(color.colorLink) [class.chooseColorStyle]="checkColorChoosing(color.colorLink)">
+                                            <img title="{{color.colorName}}" [src]=sanitize(color.colorLink)
+                                                [class.chooseColorStyle]="checkColorChoosing(color.colorLink)">
                                         </a>
 
                                     </div>
@@ -84,17 +88,19 @@
                             <div class="pd-size-choose">
                                 <div class="sc-item" *ngFor="let size of productInfo.size">
                                     <!-- <input type="radio" id="sm-size"> -->
-                                    <label (click)="chooseSize(size.sizeType)" [class.chooseSizeProduct]="checkSizeChoosing(size.sizeType)" for="sm-size">{{size.sizeType}}</label>
+                                    <label (click)="chooseSize(size)"
+                                        [class.chooseSizeProduct]="checkSizeChoosing(size.id)"
+                                        for="sm-size">{{size.sizeType}}</label>
                                 </div>
 
                             </div>
                             <div class="quantity">
                                 <div class="pro-qty">
                                     <span class="dec qtybtn" (click)="decreaseNumPro()">-</span>
-                                    <input #numProduct type="text" value="1">
+                                    <input #numProduct type="text" [(ngModel)] = "qty">
                                     <span class="inc qtybtn" (click)="increaseNumPro()">+</span>
                                 </div>
-                                <a href="#" class="primary-btn pd-cart">Add To Cart</a>
+                                <a href="javascript:void(0)" (click)="addToCart()" class="primary-btn pd-cart">Add To Cart</a>
                             </div>
 
 

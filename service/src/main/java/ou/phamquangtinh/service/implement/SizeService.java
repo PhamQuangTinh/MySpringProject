@@ -10,6 +10,7 @@ import ou.phamquangtinh.service.component_service.ISizeService;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,5 +49,10 @@ public class SizeService implements ISizeService {
 
         return sizeJPARepository.saveAndFlush(sizeEntity);
 
+    }
+
+    @Override
+    public List<SizeEntity> findSizeByProductId(Long proId) {
+        return sizeJPARepository.findByAvailableProductsEntities_Id_ProductId(proId);
     }
 }

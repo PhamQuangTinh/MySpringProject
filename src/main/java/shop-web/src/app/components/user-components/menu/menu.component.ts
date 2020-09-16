@@ -1,10 +1,19 @@
+import { Router } from '@angular/router';
+import { SessionStorageService } from './../../../services/session-storage.service';
 import { FilterObject } from './../../../models/filter-object';
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+
 import { MenuService } from './menu.servicce';
 
-
 declare const $: any;
-
 
 @Component({
   selector: 'app-menu',
@@ -12,15 +21,18 @@ declare const $: any;
   styleUrls: ['./menu.component.css'],
 })
 export class MenuComponent implements OnInit, AfterViewInit {
- 
-  @Output() filterEvent = new EventEmitter<any>();
   filterOb: FilterObject;
   checkedMen: boolean;
   checkedWomen: boolean;
   checkedKid: boolean;
+
+  colorPicking: string = '';
+
   constructor(
     private menuService: MenuService,
-  ) {}
+    private session: SessionStorageService,
+    private router: Router,
+    ) {}
 
   ngOnInit(): void {
     this.checkedMen = false;
@@ -70,37 +82,47 @@ export class MenuComponent implements OnInit, AfterViewInit {
     maxamount.val('$' + rangeSlider.slider('values', 1));
   }
 
-  editCheckbox(sex){
-    if(sex === 'men'){
+  editCheckbox(sex) {
+    if (sex === 'men') {
       this.checkedMen = !this.checkedMen;
-    }else if(sex === 'women'){
+    } else if (sex === 'women') {
       this.checkedWomen = !this.checkedWomen;
-    }else if(sex ==='kid'){
+    } else if (sex === 'kid') {
       this.checkedKid = !this.checkedKid;
     }
   }
 
-  filter(){
+  filter() {
     var sexTypes = [];
     var minPrice = $('#minamount').val();
     var maxPrice = $('#maxamount').val();
 
-    var fPrice = parseFloat(minPrice.replace('$',''));
-    var lPrice = parseFloat(maxPrice.replace('$',''));
-    
+    var fPrice = parseFloat(minPrice.replace('$', ''));
+    var lPrice = parseFloat(maxPrice.replace('$', ''));
+
     this.checkedKid ? sexTypes.push('KID') : '';
     this.checkedMen ? sexTypes.push('MEN') : '';
     this.checkedWomen ? sexTypes.push('WOMEN') : '';
 
-    this.filterOb = new FilterObject(fPrice,lPrice,sexTypes);
-    this.filterEvent.emit(this.filterOb);
+    if (sexTypes.length > 0) {
+      this.filterOb = new FilterObject(
+        fPrice,
+        lPrice,
+        this.colorPicking,
+        sexTypes
+      );
+      this.router.navigateByUrl('/filter').then(()=>this.session.saveFilter(this.filterOb));
+      // this.filterEvent.emit(this.filterOb);
+    } else {
+      alert('choose sex type pls');
+    }
+  }
 
-    // this.menuService.filterService(sexTypes,fPrice,lPrice,1,12).subscribe(
-    //   (res:any)=>{
-    //     console.log(res.data.body);
-    //   },err=>{console.log(err);}
-    // )
+  isColorChoosing(colorName) {
+    return this.colorPicking === colorName;
+  }
+
+  checkColorChoosing(colorName) {
+    this.colorPicking = colorName;
   }
 }
-
-

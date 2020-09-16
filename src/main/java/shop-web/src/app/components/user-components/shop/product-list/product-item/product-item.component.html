@@ -3,8 +3,8 @@
         <img [src]="bigImage" alt="">
         <div class="sale pp-sale" *ngIf="productItem.discount > 0">Sale</div>
         <div class="icon">
-            <i *ngIf="id === null || !isLiked" class="far fa-heart float-right" (click) = "likeProduct()"></i>
-            <i *ngIf="id !== null && isLiked" class="fas fa-heart float-right" (click) = "unLikeProduct()"></i>
+            <i *ngIf="id === null || !isLiked" class="far fa-heart float-right" (click)="likeProduct()"></i>
+            <i *ngIf="id !== null && isLiked" class="fas fa-heart float-right" (click)="unLikeProduct()"></i>
         </div>
         <ul>
             <li class="w-icon active"><a href="javascript:void(0)" (click)="addProductToCart()"><i
@@ -12,14 +12,14 @@
             <li class="quick-view"><a href="javascript:void(0)" (click)="moveToProductInfo()">+ Quick View</a></li>
             <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
         </ul>
-    </div>  
+    </div>
     <div class="pi-text">
         <div class="colorProductPicker" *ngFor="let color of productItem.productAvatarEntities; let i = index">
-            <ng-container *ngIf="i % 2 === 0" >
+            <ng-container *ngIf="i % 2 === 0">
                 <a href="javascript:void(0)">
-                    <img (mouseover)="changeBigImage(productItem.productAvatarEntities[i + 1])" 
-                    [class.chooseColorStyle]="checkColorChoosing(productItem.productAvatarEntities[i + 1].id)" 
-                    [src]="sanitize(productItem.productAvatarEntities[i].imageLink)">
+                    <img (mouseover)="changeBigImage(productItem.productAvatarEntities[i],productItem.productAvatarEntities[i + 1])"
+                        [class.chooseColorStyle]="checkColorChoosing(productItem.productAvatarEntities[i].id)"
+                        [src]="sanitize(productItem.productAvatarEntities[i].imageLink)">
                 </a>
             </ng-container>
         </div>
@@ -33,6 +33,35 @@
         <div class="product-price" *ngIf="productItem.discount === 0">
             {{productItem.unitPrice | currency: "USD"}}
 
+        </div>
+    </div>
+    <div class="modal" [id]="getIdModal()" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add To Cart Property</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body sizeChoose">
+                    <h5>Color: </h5>
+                    <div class="sizeProduct" *ngFor="let size of listSizes">
+                        <label class="labelSize" (click)="chooseSize(size)"
+                            [class.chooseSizeProduct]="checkSizeChoosing(size.id)"
+                            for="sm-size">{{size.sizeType}}</label>
+                    </div>
+                    
+                    <h5 style="margin-top:10px">Quantity: </h5>
+                    <input class="inputQTY" type="number" [(ngModel)]="qty" />
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="addToCart()">Add To Cart</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

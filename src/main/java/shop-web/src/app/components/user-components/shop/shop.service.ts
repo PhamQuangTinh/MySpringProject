@@ -1,8 +1,10 @@
+import { orderUrl } from './../../../config/api';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+
 const URL = 'http://localhost:8080/api/product';
 
 @Injectable({
@@ -24,8 +26,21 @@ export class ShopService {
 
     }
 
+
+
+    paymentService(): Observable<any>{
+        var x = {
+            currency: "USD",
+            description: "shopping",
+            unitPrice: 21
+        }
+        return this.http.post(orderUrl + "/payment/make/payment", x);
+    }
+
   // tslint:disable-next-line:typedef
     errorHandler(error: HttpErrorResponse){
         return throwError(error.error.error.body.message || 'Server Error');
     }
+
+
 }

@@ -1,5 +1,7 @@
+import { ShopService } from './shop.service';
+import { Router } from '@angular/router';
 import { MessengerService } from './../../../services/messenger.service';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable, Subscription } from 'rxjs';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 declare const $: any;
@@ -15,9 +17,11 @@ interface Select {
 
 export class ShopComponent implements OnInit, AfterViewInit {
   //start pagination
+  subscription: Subscription;
   selected:string = '';
   oksize: string = '12';
   selectedOption: string;
+  userId: any;
   itemsPerPage: Select[] = [
     {value: '12', viewValue: '12'},
     {value: '18', viewValue: '18'},
@@ -39,6 +43,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
     itemsPerPage: 12,
     currentPage: 1,
     totalItems: 0,
+    numberOfElements:0,
     sortBy: 'productName low',
     code: 1,
     filter: null
@@ -56,10 +61,14 @@ export class ShopComponent implements OnInit, AfterViewInit {
     screenReaderCurrentLabel: `You're on page`,
   };
   //end pagination
-  constructor(private msg: MessengerService) {}
+  constructor(
+    private msg: MessengerService,
+    private router: Router,
+    private shopService: ShopService
+    ) {}
 
   ngOnInit(): void {
-
+    
   }
 
   ngAfterViewInit() {
@@ -69,6 +78,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
   getPageMetadata(pageMetadata) {
     this.config.currentPage = pageMetadata.page;
     this.config.itemsPerPage = pageMetadata.size;
+    this.config.numberOfElements = pageMetadata.numberOfElements;
     this.config.totalItems = pageMetadata.totalElements;
   }
 
@@ -88,9 +98,31 @@ export class ShopComponent implements OnInit, AfterViewInit {
     this.onPageChange(1);
   }
 
-  filterProduct(event){
-    this.config.filter = event;
-    this.config.code = 2;
-    this.onPageChange(1);
+  currentItem(): any{
+    var firstIndex = 0;
+    if(this.config.numberOfElements > 0){
+      firstIndex = (this.config.currentPage - 1) * this.config.itemsPerPage + 1;
+    }
+    var lastIndex = 0;
+    if(firstIndex > 0){
+      lastIndex = firstIndex + this.config.numberOfElements - 1;
+    }
+    var res = firstIndex + ' - ' + lastIndex;
+    return res;
+  }
+
+  payment(){
+  
+    var url = ''
+    this.shopService.paymentService().subscribe(
+      (res)=>{
+        url = res.data.body.stringRes;
+        window.location.href = url;
+      },
+      err=>{console.log(err)
+        
+      }
+    );
+
   }
 }

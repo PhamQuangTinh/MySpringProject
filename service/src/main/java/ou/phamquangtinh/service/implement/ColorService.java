@@ -33,6 +33,11 @@ public class ColorService implements IColorService {
     }
 
     @Override
+    public ColorEntity findColorByColorLinkContaining(String colorLink) {
+        return colorJPARepository.findByColorLinkContaining(colorLink);
+    }
+
+    @Override
     public ColorEntity createNewOrUpdateColor(ColorEntity colorEntity) {
         return colorJPARepository.saveAndFlush(colorEntity);
     }

@@ -11,6 +11,8 @@
         </div>
     </div>
 </div>
+<button (click) = "payment()">Payment</button>
+
 <!-- Breadcrumb Section Begin -->
 
 <!-- Product Shop Section Begin -->
@@ -19,7 +21,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">
 
-                <app-menu (filterEvent) = "filterProduct($event)"></app-menu>
+                <app-menu></app-menu>
 
             </div>
             <div class="col-lg-9 order-1 order-lg-2">
@@ -49,7 +51,7 @@
                             </div>
                         </div>
                         <div class="col-lg-5 col-md-5 text-right">
-                            <p>Show {{config.itemsPerPage}} Of {{config.totalItems}} Product</p>
+                            <p>Show {{currentItem()}} Of {{config.totalItems}} Product</p>
                         </div>
                         
                     </div>

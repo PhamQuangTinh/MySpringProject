@@ -89,6 +89,8 @@ subprojects {
         // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
         compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.3.0.RELEASE'
 
+        // https://mvnrepository.com/artifact/com.paypal.sdk/rest-api-sdk
+        compile group: 'com.paypal.sdk', name: 'rest-api-sdk', version: '1.14.0'
 
 
 

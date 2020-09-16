@@ -39,6 +39,7 @@ public class ProductCommentEntity {
     @CreatedBy
     private String createdBy;
 
+
     @Column
     @CreatedDate
     private LocalDateTime createdDate;

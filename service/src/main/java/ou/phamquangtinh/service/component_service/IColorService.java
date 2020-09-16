@@ -9,6 +9,8 @@ public interface IColorService {
 
     ColorEntity findColorByColorLink(String colorLink);
 
+    ColorEntity findColorByColorLinkContaining(String colorLink);
+
     ColorEntity createNewOrUpdateColor(ColorEntity colorEntity);
 
     ColorEntity getColorToUpdate(Long id);

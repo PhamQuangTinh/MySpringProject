@@ -1,4 +1,4 @@
-import { userUrl, productCommentUrl } from './../../../config/api';
+import { userUrl, productCommentUrl, availableProductUrl } from './../../../config/api';
 import { Observable, throwError } from 'rxjs';
 import {
   HttpClient,
@@ -8,6 +8,7 @@ import {
 import { Injectable } from '@angular/core';
 import { productsUrl, productColorUrl } from 'src/app/config/api';
 import { catchError } from 'rxjs/operators';
+import { CheckOut } from 'src/app/models/check-out';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +16,11 @@ import { catchError } from 'rxjs/operators';
 export class ProductService {
   constructor(private http: HttpClient) {}
 
-  getProductInfo(id: number): Observable<any> {
-    return this.http.get(productsUrl + '/get/product_info/' + id);
+  getProductInfo(proId, userId): Observable<any> {
+    const params = new HttpParams()
+      .set('pro_id', proId)
+      .set('user_id', userId);
+    return this.http.get(productsUrl + '/get/product_info',{params});
   }
 
   getColorProductImages(proId, colorId) {
@@ -35,13 +39,39 @@ export class ProductService {
   }
 
   commentProduct(userId, proId, contentProduct): Observable<any> {
-    console.log(typeof(userId), typeof(proId), typeof(contentProduct));
     return this.http.post(userUrl + '/post/comment', 
     {
       content: contentProduct,
       productId: proId,
       userId: userId
     });
+  }
+
+  likeProductSerVice(userId, proId): Observable<any>{
+    return this.http.post(userUrl + '/post/likination',{
+      'proId': proId,
+      'userId': userId
+    });
+  }
+
+  unLikeProductSerVice(userId: any, proId: any) {
+    return this.http.post(userUrl + '/post/unlikination',{
+      'proId': proId,
+      'userId': userId
+    });
+  }
+
+
+  checkCartItem(item: CheckOut): Observable<any>{
+
+    var x = 
+    {
+      colorLink: item.colorLink,
+      proId: item.proId,
+      sizeId: item.sizeId,
+      unitInOrder: item.unitInOrder
+    }
+    return this.http.post(availableProductUrl + "/post/cart_checking", x);
   }
 
   errorHandler(error: HttpErrorResponse) {

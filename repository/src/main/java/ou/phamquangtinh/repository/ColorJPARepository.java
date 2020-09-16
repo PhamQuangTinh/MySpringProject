@@ -11,5 +11,7 @@ public interface ColorJPARepository extends JpaRepository<ColorEntity,Long> {
 
     Optional<ColorEntity> findByColorLink(String colorLink);
 
+    ColorEntity findByColorLinkContaining(String colorLink);
+
     Page<ColorEntity> findByProductColorEntities_Id_ProductId(Long Id, Pageable page);
 }

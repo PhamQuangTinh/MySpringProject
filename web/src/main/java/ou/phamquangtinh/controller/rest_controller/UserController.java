@@ -1,6 +1,7 @@
 package ou.phamquangtinh.controller.rest_controller;
 
 
+import com.paypal.api.payments.Payment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.RegisterResponse;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.UserEntity;
+import ou.phamquangtinh.service.component_service.IPaypalService;
 import ou.phamquangtinh.service.component_service.IUserService;
 
 import java.util.List;
@@ -32,9 +34,11 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
     @Autowired
     private IUserService userService;
+
+
+
 
     @Autowired
     private MyUserDetailService userDetailsService;
@@ -68,6 +72,7 @@ public class UserController {
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username or password");
         }
+
 
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(req.getUsername());

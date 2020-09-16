@@ -50,38 +50,41 @@
                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
             </div>
         </div>
-        <a href="javascript:void(0)" (click)="filter()" class="filter-btn">Filter</a>
+       
     </div>
     <div class="filter-widget">
         <h4 class="fw-title">Color</h4>
         <div class="fw-color-choose">
-            <div class="cs-item">
-                <input type="radio" id="cs-black">
-                <label class="cs-black" for="cs-black">Black</label>
+            <div class="cs-item" [class.chooseColorMenu]="isColorChoosing('black')">
+                <input type="radio" id="cs-black" (click)="checkColorChoosing('black')" class="" >
+                <label class="cs-black" for="cs-black" >Black</label>
             </div>
-            <div class="cs-item">
-                <input type="radio" id="cs-violet">
-                <label class="cs-violet" for="cs-violet">Violet</label>
+            <div class="cs-item" [class.chooseColorMenu]="isColorChoosing('pink')">
+                <input type="radio" id="cs-violet" (click)="checkColorChoosing('pink')">
+                <label class="cs-violet" for="cs-violet" >Pink</label>
             </div>
-            <div class="cs-item">
-                <input type="radio" id="cs-blue">
+            <div class="cs-item" [class.chooseColorMenu]="isColorChoosing('blue')">
+                <input type="radio" id="cs-blue" (click)="checkColorChoosing('blue')" >
                 <label class="cs-blue" for="cs-blue">Blue</label>
             </div>
-            <div class="cs-item">
-                <input type="radio" id="cs-yellow">
+            <div class="cs-item" [class.chooseColorMenu]="isColorChoosing('yellow')">   
+                <input type="radio" id="cs-yellow" (click)="checkColorChoosing('yellow')">
                 <label class="cs-yellow" for="cs-yellow">Yellow</label>
             </div>
-            <div class="cs-item">
-                <input type="radio" id="cs-red">
+            <div class="cs-item" [class.chooseColorMenu]="isColorChoosing('red')">
+                <input type="radio" id="cs-red" (click)="checkColorChoosing('red')" >
                 <label class="cs-red" for="cs-red">Red</label>
             </div>
-            <div class="cs-item">
-                <input type="radio" id="cs-green">
+            <div class="cs-item" [class.chooseColorMenu]="isColorChoosing('green')">
+                <input type="radio" id="cs-green" (click)="checkColorChoosing('green')" >
                 <label class="cs-green" for="cs-green">Green</label>
             </div>
         </div>
+        <a href="javascript:void(0)" (click)="filter()" class="filter-btn">Filter</a>
     </div>
-    <div class="filter-widget">
+
+
+    <!-- <div class="filter-widget">
         <h4 class="fw-title">Size</h4>
         <div class="fw-size-choose">
             <div class="sc-item">
@@ -101,7 +104,9 @@
                 <label for="xs-size">xs</label>
             </div>
         </div>
-    </div>
+    </div> -->
+
+
     <div class="filter-widget">
         <h4 class="fw-title">Tags</h4>
         <div class="fw-tags">

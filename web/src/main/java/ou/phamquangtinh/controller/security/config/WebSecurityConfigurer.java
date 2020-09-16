@@ -80,8 +80,10 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/product/get/color/{id}",
                         "/api/product/get/size/{id}",
                         "/api/product/get/product_name_or_description",
-                        "/api/product/get/product_info/{proId}",
+                        "/api/product/get/product_info",
                         "/api/product/get/sex_type_and_price",
+                        "/api/product/get/product_name",
+
 
                         //Product Color
                         "/api/product_color/get/proId_and_color_id",
@@ -95,8 +97,16 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/product_comment/get/product_comment/{proId}",
 
                         //Color
-                        "/api/color/get/pro_id/{id}"
+                        "/api/color/get/pro_id/{id}",
 
+
+                        //size
+                        "/api/size//get/pro_id",
+
+                        //Available Product
+                        "/api/available_product/post/cart_checking",
+                        "https://localhost:8080/api/order/paypal/success",
+                        "https://localhost:8080/api/order/paypal/cancel"
 
 //                        "/api/role/post/data-crawling"
                 )

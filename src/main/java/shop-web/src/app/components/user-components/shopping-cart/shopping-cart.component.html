@@ -25,6 +25,8 @@
                             <tr>
                                 <th>Image</th>
                                 <th class="p-name">Product Name</th>
+                                <th style="text-align: center;">Color</th>
+                                <th style="text-align: center;">Size</th>
                                 <th>Price</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
@@ -35,9 +37,16 @@
                             <tr *ngFor="let cartItem of cartItems; index as i">
                                 <!-- <app-shopping-cart-item [cartItem] = "item"></app-shopping-cart-item>                                 -->
                                 <td class="cart-pic" ><img
-                                        src="http://localhost:4200{{cartItem.productImage}}" alt=""></td>
+                                        src="http://localhost:4200{{cartItem.productImage}}" alt="">
+                                </td>
                                 <td class="cart-title">
                                     <h3>{{cartItem.productName}}</h3>
+                                </td>
+                                <td>
+                                   <img src="http://localhost:4200{{cartItem.colorLink}}" >
+                                </td>
+                                <td >
+                                    <h3>{{cartItem.sizeType}}</h3>
                                 </td>
                                 <td class="p-price">${{cartItem.price}}</td>
                                 <td class="qua-col">
@@ -50,7 +59,7 @@
                                     </div>
                                 </td>
                                 <td class="total-price">${{cartItem.qty * cartItem.price | number:'1.2-3'}}</td>
-                                <td class="close-td"><i class="ti-close"></i></td>
+                                <td class="close-td" (click)="removeCartItem(cartItem)"><i class="ti-close"></i></td>
 
                             </tr>
                         </tbody>
@@ -60,13 +69,12 @@
                     <div class="col-lg-4">
                         <div class="cart-buttons">
                             <a href="javascript:void(0)" routerLink="/products/women" class="primary-btn continue-shop">Continue shopping</a>
-                            <!-- <a href="javascript:void(0)" (click)="updateCart()" class="primary-btn up-cart">Update cart</a> -->
                         </div>
                         <div class="discount-coupon">
                             <h6>Discount Codes</h6>
                             <form action="#" class="coupon-form">
-                                <input type="text" placeholder="Enter your codes">
-                                <button type="submit" class="site-btn coupon-btn">Apply</button>
+                                <input type="text" placeholder="Enter your codes" #code>
+                                <button type="submit" class="site-btn coupon-btn" (click) = "enterCode(code.value)">Apply</button>
                             </form>
                         </div>
                     </div>
@@ -74,9 +82,9 @@
                         <div class="proceed-checkout">
                             <ul>
                                 <li class="subtotal">Subtotal <span>${{subTotal | number:'1.2-3'}}</span></li>
-                                <li class="cart-total">Total <span>$240.00</span></li>
+                                <li class="cart-total">Total <span>${{subTotal | number:'1.2-3'}}</span></li>
                             </ul>
-                            <a href="#" class="proceed-btn">PROCEED TO CHECK OUT</a>
+                            <a href="javascript:void(0)" class="proceed-btn">PROCEED TO CHECK OUT</a>
                         </div>
                     </div>
                 </div>

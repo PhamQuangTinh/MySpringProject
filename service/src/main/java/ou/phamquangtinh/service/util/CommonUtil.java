@@ -60,6 +60,7 @@ public class CommonUtil {
         pageMetadata.setSize(pageUserEntity.getSize());
         pageMetadata.setTotalElements(pageUserEntity.getTotalElements());
         pageMetadata.setTotalPages(pageUserEntity.getTotalPages());
+        pageMetadata.setNumberOfElements(pageUserEntity.getNumberOfElements());
 
         listUsers.setPageMetadata(pageMetadata);
 

@@ -1,3 +1,5 @@
+import { MessengerService } from './../../../services/messenger.service';
+import { CartItem } from './../../../models/cart-item';
 import { TokenStorageService } from './../../../services/token-storage.service';
 import { ProductService } from './product.service';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
@@ -10,6 +12,8 @@ import {
 } from '@angular/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CheckOut } from 'src/app/models/check-out';
+import { PlatformLocation } from '@angular/common' 
 
 declare const $: any;
 
@@ -23,11 +27,17 @@ export class ProductComponent implements OnInit, AfterViewInit {
   @ViewChild('textComment') textComment: ElementRef;
   isFirstSmallImage: boolean;
 
+  page: number;
+  qty: number = 1;
+  cartItem: CartItem;
   isPicked: boolean = false;
   checkBigImage: any = '';
-  checkColor: any;
-  checkSize:any;
-
+  checkColorLink: any;
+  checkColorId: any;
+  checkSizeType: any;
+  checkSizeId: any;
+  isLiked: boolean;
+  checkOutItem: CheckOut;
   customOptions: OwlOptions = {
     loop: false,
     mouseDrag: true,
@@ -51,8 +61,14 @@ export class ProductComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private sanitizer: DomSanitizer,
-    private token: TokenStorageService
-  ) {}
+    private token: TokenStorageService,
+    private msg: MessengerService,
+    private location: PlatformLocation
+  ) {
+    location.onPopState(()=>{
+      this.msg.sendMsgPage(this.page);
+    })
+  }
 
   //fix unsafe image
   sanitize(url: string) {
@@ -60,36 +76,39 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe((params: ParamMap) => {
-      let id = parseInt(params.get('id'));
-      this.productId = id;
+      let id = this.productId = parseInt(params.get('id'));
+      let page = this.page =  parseInt(params.get('page'));
+      
     });
 
+    try {
+      this.userId = this.token.getUser().id;
+    } catch {
+      this.userId = 0;
+    }
+
     this.productInfo = this.productService
-      .getProductInfo(this.productId)
+      .getProductInfo(this.productId, this.userId)
       .subscribe(
         (res) => {
           if (res.data !== null) {
             this.productInfo = res.data.body;
-            console.log(this.productInfo);
 
             var proInfo = this.productInfo.firstImagesColor;
             for (var i = 0; i < proInfo.length; i++) {
               this.productImages.push(proInfo[i].imageLink);
             }
             this.checkBigImage = this.sanitize(this.productImages[0]);
-            this.checkColor = this.productInfo.colors[0].colorLink;
+            this.checkColorLink = this.productInfo.colors[0].colorLink;
+            this.checkColorId = this.productInfo.colors[0].id;
+            this.isLiked = this.productInfo.userLikeProducts;
           }
         },
         (err) => {}
       );
-    try {
-      this.userId = this.token.getUser().id;
-    } catch {}
   }
 
-  ngAfterViewInit() {
-    console.log(this.numProduct.nativeElement.value);
-  }
+  ngAfterViewInit() {}
 
   //change big image
   changeViewProduct(image) {
@@ -105,13 +124,15 @@ export class ProductComponent implements OnInit, AfterViewInit {
         if (res.data != null) {
           this.productImages = res.data.body;
           this.checkBigImage = this.sanitize(this.productImages[0]);
-          this.checkColor = color.colorLink;
+          this.checkColorLink = color.colorLink;
+          this.checkColorId = color.id;
         }
       });
   }
 
-  chooseSize(size){
-    this.checkSize = size
+  chooseSize(size) {
+    this.checkSizeType = size.sizeType;
+    this.checkSizeId = size.id;
   }
 
   //check what small image is picking
@@ -123,14 +144,14 @@ export class ProductComponent implements OnInit, AfterViewInit {
   }
   //Check what color is piking
   checkColorChoosing(colorLink): boolean {
-    if(this.checkColor === colorLink){
+    if (this.checkColorLink === colorLink) {
       return true;
     }
     return false;
   }
 
-  checkSizeChoosing(size) : boolean{
-    if(this.checkSize === size){
+  checkSizeChoosing(sizeId): boolean {
+    if (this.checkSizeId === sizeId) {
       return true;
     }
     return false;
@@ -138,13 +159,12 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
   //increase num order of product
   increaseNumPro() {
-    this.numProduct.nativeElement.value++;
+    this.qty++;
   }
 
   //decrease num order of product
   decreaseNumPro() {
-    if (this.numProduct.nativeElement.value > 1)
-      this.numProduct.nativeElement.value--;
+    if (this.qty > 1) this.qty--;
   }
 
   //clik comment tab
@@ -159,7 +179,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
   //user comment product
   comment() {
     var text = this.textComment.nativeElement.value;
-    if (this.userId != null && text !== '') {
+    if (this.userId > 0 && text !== '') {
       this.productService
         .commentProduct(this.userId, this.productId, text)
         .subscribe(
@@ -171,10 +191,71 @@ export class ProductComponent implements OnInit, AfterViewInit {
             console.log(err);
           }
         );
-    } else if (this.userId == null) {
-      alert('you have to login first');
-    } else if (text == '') {
+    } else if(this.userId === 0){
+      alert("you have to login first");
+    } 
+    else if (text == '') {
       alert('write some text pls');
+    }
+  }
+
+  //Add product to cart
+  addToCart() {
+    if (this.checkSizeType !== undefined && this.qty > 0) {
+      let quantity = parseInt(this.qty.toString());
+      this.checkOutItem = new CheckOut(
+        this.productId,
+        this.checkSizeId,
+        this.checkColorLink,
+        quantity
+      );
+
+      this.productService.checkCartItem(this.checkOutItem).subscribe(
+        (res: any) => {
+          if (res.data.body == this.qty) {
+            this.cartItem = new CartItem(
+              this.productId,
+              this.productInfo.productName,
+              this.checkColorId,
+              this.checkColorLink,
+              this.checkSizeId,
+              this.checkSizeType,
+              this.checkBigImage.changingThisBreaksApplicationSecurity,
+              quantity,
+              this.productInfo.unitPrice
+            );
+            this.msg.sendMsg(this.cartItem);
+            alert('Add product to cart success');
+          } else {
+            alert('Still have ' + res.data.body + ' in stock');
+          }
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    } else {
+      alert('choose size pls');
+    }
+  }
+
+  likeProduct() {
+    if (this.userId != null) {
+      this.productService
+        .likeProductSerVice(this.userId, this.productId)
+        .subscribe((res) => {
+          this.isLiked = true;
+        });
+    }
+  }
+
+  unLikeProduct() {
+    if (this.userId != null) {
+      this.productService
+        .unLikeProductSerVice(this.userId, this.productId)
+        .subscribe((res) => {
+          this.isLiked = false;
+        });
     }
   }
 }

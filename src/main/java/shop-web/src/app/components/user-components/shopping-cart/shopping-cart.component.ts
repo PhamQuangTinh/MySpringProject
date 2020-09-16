@@ -1,3 +1,5 @@
+import { HeaderService } from './../../shared/header/header.service';
+import { CheckOut } from './../../../models/check-out';
 import { SessionStorageService } from './../../../services/session-storage.service';
 import { CartItem } from './../../../models/cart-item';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
@@ -10,7 +12,10 @@ declare const $: any;
   styleUrls: ['./shopping-cart.component.css'],
 })
 export class ShoppingCartComponent implements OnInit, AfterViewInit {
-  constructor(private sessionStorage: SessionStorageService) {}
+  constructor(
+    private sessionStorage: SessionStorageService,
+    private headerService: HeaderService
+    ) {}
 
   cartItems: CartItem[];
   subTotal: any;
@@ -68,5 +73,17 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit {
                     }
                   });
     this.subtotalMethod();
+  }
+
+  removeCartItem(cart: CartItem){
+    this.cartItems = this.headerService.removeProductFromCart(cart.productId, cart.colorId, cart.sizeId);
+    if (this.cartItems.length !== 0) {
+      this.subtotalMethod();
+    }
+  }
+
+
+  enterCode(code){
+    console.log(code);
   }
 }

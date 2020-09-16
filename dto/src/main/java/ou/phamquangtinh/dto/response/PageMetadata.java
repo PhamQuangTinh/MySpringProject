@@ -13,4 +13,6 @@ public class PageMetadata {
     private Long totalElements;
 
     private int totalPages;
+
+    private int numberOfElements;
 }

@@ -45,13 +45,17 @@ public interface IProductService {
     ListResponsePagination findProductBySizeId(Long sizeId, int page, int size);
 
     ListResponsePagination findProductBySexTypeAndUnitPrice(Set<String> sexTypes, double fPrice, double lPrice,
-                                                            int page, int size, String sortBy);
+                                                            String colorName, int page, int size, String sortBy);
+
+    ListResponsePagination findListLikeProduct(int page, int size, String sortBy, Long userId);
+
+    ListResponsePagination findProductByProductNamePagination(int page, int size, String sortBy, String keyword);
 
     List<ProductEntity> findProductProductNameOrDescription(String keyword);
 
     List<ProductEntity> findTop10LikeProduct(Long userId);
 
-    ProductInfoResponse getProductInfo(Long proId);
+    ProductInfoResponse getProductInfo(Long proId, Long userId);
 
     void addNewCommentToProduct(ProductEntity productEntity, ProductCommentEntity productCommentEntity);
 

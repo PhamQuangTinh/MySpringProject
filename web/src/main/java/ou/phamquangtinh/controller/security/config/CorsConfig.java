@@ -19,7 +19,6 @@ public class CorsConfig{
                 registry.addMapping("/**")
                         .allowedMethods("PUT","POST","DELETE","GET")
                         .allowedOrigins("http://localhost:4200")
-
                         .exposedHeaders("Token")
                         .allowedHeaders("*")
                 ;

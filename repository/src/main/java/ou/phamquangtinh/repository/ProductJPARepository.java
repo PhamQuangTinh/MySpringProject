@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Repository;
 import ou.phamquangtinh.entity.ProductEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,8 @@ public interface ProductJPARepository extends JpaRepository<ProductEntity, Long>
     Optional<ProductEntity> findByProductName(String productName);
 
     Optional<ProductEntity> findById(Long id);
+
+    Optional<ProductEntity> findByIdAndProductLikeByUserEntities_Id(Long proId, Long userId);
 
 
     Page<ProductEntity> findByUnitPriceBetween(double fPrice, double lPrice, Pageable page);
@@ -36,5 +39,12 @@ public interface ProductJPARepository extends JpaRepository<ProductEntity, Long>
 
     List<ProductEntity> findTop10ByProductLikeByUserEntities_Id(Long userId);
 
-    Page<ProductEntity> findBySexTypeInAndUnitPriceBetween(Set<String> sexTypes, double fPrice, double lPrice, Pageable page);
+    Page<ProductEntity> findBySexTypeInAndUnitPriceBetweenAndProductColorEntities_ColorEntity_ColorNameContaining
+            (Set<String> sexTypes, double fPrice, double lPrice, String colorName, Pageable page);
+
+    Page<ProductEntity> findByProductLikeByUserEntities_Id(Long id, Pageable page);
+
+    Page<ProductEntity> findByProductNameContaining(String productName, Pageable page);
+
+
 }

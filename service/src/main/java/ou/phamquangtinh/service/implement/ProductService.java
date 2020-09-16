@@ -200,11 +200,34 @@ public class ProductService implements IProductService {
 
     @Override
     public ListResponsePagination findProductBySexTypeAndUnitPrice(Set<String> sexType, double fPrice,
-                                                                   double lPrice, int page, int size, String sortBy) {
+                                                                   double lPrice, String colorName, int page, int size, String sortBy) {
         Sort sort = commonUtil.getSort(sortBy);
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        Page<ProductEntity> pageRes = productJPARepository.findBySexTypeInAndUnitPriceBetween(sexType,fPrice,lPrice,pageable);
+        Page<ProductEntity> pageRes = productJPARepository
+                .findBySexTypeInAndUnitPriceBetweenAndProductColorEntities_ColorEntity_ColorNameContaining(sexType,fPrice,lPrice,colorName,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findListLikeProduct(int page, int size, String sortBy, Long userId) {
+        Sort sort = commonUtil.getSort(sortBy);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository
+                .findByProductLikeByUserEntities_Id(userId,pageable);
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public ListResponsePagination findProductByProductNamePagination(int page, int size, String sortBy, String keyword) {
+        Sort sort = commonUtil.getSort(sortBy);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<ProductEntity> pageRes = productJPARepository
+                .findByProductNameContaining(keyword,pageable);
 
         return commonUtil.getListResponsePagination(pageRes);
     }
@@ -220,7 +243,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductInfoResponse getProductInfo(Long proId) {
+    public ProductInfoResponse getProductInfo(Long proId, Long userId) {
         ProductInfoResponse productInfoResponse = new ProductInfoResponse();
         ProductEntity productEntity = findProductById(proId);
         ModelMapper modelMapper = new ModelMapper();
@@ -254,6 +277,12 @@ public class ProductService implements IProductService {
         productInfoResponse.setColors(colors);
         productInfoResponse.setSize(sizes);
         productInfoResponse.setFirstImagesColor(firstImgesColor);
+        if(userId == 0){
+            productInfoResponse.setUserLikeProducts(false);
+        }else{
+            Optional<ProductEntity> productEntity1 = productJPARepository.findByIdAndProductLikeByUserEntities_Id(proId,userId);
+            productInfoResponse.setUserLikeProducts(productEntity1.isPresent());
+        }
 
         return productInfoResponse;
 

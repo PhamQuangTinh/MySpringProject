@@ -5,3 +5,8 @@ export const productsUrl = baseUrl + '/product'
 export const userUrl = baseUrl + '/user'
 export const productColorUrl = baseUrl + '/product_color'
 export const productCommentUrl = baseUrl + '/product_comment'
+export const sizeUrl = baseUrl + '/size'
+export const availableProductUrl = baseUrl + '/available_product'
+
+export const orderUrl = baseUrl + '/order'
+

@@ -1,3 +1,4 @@
+import { RemoveCartItem } from './../../../models/reomve-cart-item';
 import { SessionStorageService } from './../../../services/session-storage.service';
 import { CartItem } from './../../../models/cart-item';
 import { MessengerService } from './../../../services/messenger.service';
@@ -5,7 +6,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { HeaderService } from './header.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
+
 
 declare const $: any;
 
@@ -17,6 +19,9 @@ declare const $: any;
 export class HeaderComponent implements OnInit, OnDestroy {
   lastName = '';
   isLoggedIn = false;
+  userId: any;
+
+  keyword: any ='';
 
   value = '';
   cartItems = [];
@@ -33,10 +38,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private msg: MessengerService,
     private headerService: HeaderService,
     private router: Router,
+    private session: SessionStorageService
   ) {
   }
 
   ngOnInit(): void {
+    try{
+      this.userId = this.tokenService.getUser().id;
+    }catch{
+      this.userId = null;
+    }
+    
     $('.mobile-menu').slicknav({
       prependTo: '#mobile-menu-wrap',
       allowParentLinks: true,
@@ -60,19 +72,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.lastName = this.tokenService.getUser().lastName;
     }
 
-    this.subscription = this.msg.getMsg().subscribe((product) => {
-      this.cartItems = this.headerService.addProductToCartService(product);
+    this.subscription = this.msg.getMsg().subscribe((cartItem: CartItem) => {
+      this.cartItems = this.headerService.addProductToCartService(cartItem);
       this.calcCartTotal();
     });
-
+    
     this.cartItems = this.sessionStorage.getCartItems();
     if (this.cartItems.length !== 0) {
       this.calcCartTotal();
     }
+    
   }
 
+
+
   signOut() {
-    this.tokenService.signOut();
+    this.tokenService.removeUser();
+    this.tokenService.removeToken();
   }
 
   //calc products total
@@ -84,8 +100,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   //Delete item from cart item
-  deleteItem(proId: number) {
-    this.cartItems = this.headerService.removeProductFromCart(proId);
+  deleteItem(cart: RemoveCartItem) {
+    this.cartItems = this.headerService.removeProductFromCart(cart.proId, cart.colorId, cart.sizeId);
     if (this.cartItems.length !== 0) {
       this.calcCartTotal();
     }
@@ -116,5 +132,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   viewProduct(product){
     $('.searchProductUl').slideUp('fast');
     this.router.navigate(['/products', product.id]).then(()=>{window.location.reload()});  
+  }
+
+  getLikeList(){
+    if(this.router.url === '/filter'){
+      this.router.navigateByUrl('/home').then(()=>this.router.navigateByUrl('/filter'));
+    }else{
+      this.router.navigateByUrl('/filter');
+    }
+  }
+
+  getProductsSearching(){
+    // this.msg.sendMsgSearching(this.keyword);
+    if(this.router.url === '/filter'){
+      this.router.navigateByUrl('/home').then(()=>this.router.navigateByUrl('/filter')).then(()=>this.session.saveKeyword(this.keyword))
+    }else{
+      this.router.navigateByUrl('/filter').then(()=>this.session.saveKeyword(this.keyword));   
+    }
   }
 }

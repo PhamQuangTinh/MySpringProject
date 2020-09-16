@@ -1,0 +1,13 @@
+<div class="row">
+    <ng-container *ngIf="listProducts.length > 0">
+        <div class="col-lg-3 col-sm-6" *ngFor="let product of listProducts | paginate: configPagination">
+            <app-filter-item [productItem] = "product"></app-filter-item>
+        </div>
+    </ng-container>
+
+    <div *ngIf="listProducts.length === 0">
+        <h1>No Products Found</h1>
+    </div>
+    
+
+</div>

@@ -19,7 +19,6 @@ public class Application{
             SpringApplication.run(Application.class, args);
         }
 
-
 //    @Autowired
 //    private UserDetails userDetails;
 //

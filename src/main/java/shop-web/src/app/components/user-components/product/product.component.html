@@ -58,7 +58,7 @@
                                 <h3>{{productInfo.productName}}</h3>
                                 <i *ngIf="userId === 0 || !isLiked" class="far fa-heart float-right"
                                     (click)="likeProduct()"></i>
-                                <i *ngIf="userId !== 0 && isLiked" class="fas fa-heart float-right"
+                                <i *ngIf="userId !== 0 && isLiked" class="fas fa-heart float-right" style="color: #f0005c"
                                     (click)="unLikeProduct()"></i>
                             </div>
 

@@ -1,6 +1,7 @@
 package ou.phamquangtinh.entity.middle_entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import ou.phamquangtinh.entity.SizeEntity;
 import ou.phamquangtinh.entity.middle_entity.embaddableEntity.AvailableProductKey;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(value = {"productColorEntity","sizeEntity"})
 public class AvailableProductEntity {
 
     @EmbeddedId

@@ -5,6 +5,7 @@ import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
+import ou.phamquangtinh.entity.OrderEntity;
 import ou.phamquangtinh.entity.UserEntity;
 
 import java.util.List;
@@ -42,4 +43,6 @@ public interface IUserService {
     void unLikeProduct(Long userId, Long proId);
 
     UserEntity addNewComment(Long userId, Long productId, String content);
+
+    UserEntity addNewOrder(Long userId, OrderEntity orderEntity);
 }

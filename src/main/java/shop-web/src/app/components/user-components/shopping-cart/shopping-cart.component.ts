@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HeaderService } from './../../shared/header/header.service';
 import { CheckOut } from './../../../models/check-out';
 import { SessionStorageService } from './../../../services/session-storage.service';
@@ -14,7 +15,8 @@ declare const $: any;
 export class ShoppingCartComponent implements OnInit, AfterViewInit {
   constructor(
     private sessionStorage: SessionStorageService,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    private router: Router
     ) {}
 
   cartItems: CartItem[];
@@ -85,5 +87,9 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit {
 
   enterCode(code){
     console.log(code);
+  }
+
+  checkOut(){
+    this.router.navigateByUrl('/check-out');
   }
 }

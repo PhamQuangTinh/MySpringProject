@@ -16,9 +16,7 @@ import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
-import ou.phamquangtinh.entity.ProductEntity;
-import ou.phamquangtinh.entity.RoleEntity;
-import ou.phamquangtinh.entity.UserEntity;
+import ou.phamquangtinh.entity.*;
 import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 import ou.phamquangtinh.entity.middle_entity.embaddableEntity.CommentKey;
 import ou.phamquangtinh.repository.UserJPARepository;
@@ -28,6 +26,7 @@ import ou.phamquangtinh.service.component_service.IRoleService;
 import ou.phamquangtinh.service.component_service.IUserService;
 import ou.phamquangtinh.service.util.CommonUtil;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,16 +80,13 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findByUsername(String username) {
         Optional<UserEntity> user = userJPARepository.findByUsername(username);
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found user: " + username));
-
-        return user.get();
+        return user.orElse(null);
     }
 
     @Override
     public UserEntity findUserById(Long id) {
         Optional<UserEntity> user = userJPARepository.findById(id);
-        user.orElseThrow(() -> new UsernameNotFoundException("Not found user id: " + id));
-        return user.get();
+        return user.orElse(null);
     }
 
     //Tìm kiếm User theo tên
@@ -226,6 +222,22 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserEntity addNewOrder(Long userId, OrderEntity orderEntity) {
+        UserEntity userEntity = getUserToUpdate(userId);
+        if(userEntity != null){
+            if(userEntity.getOrders() == null){
+                Collection<OrderEntity> orderEntities = new ArrayList<>();
+                orderEntities.add(orderEntity);
+                userEntity.setOrders(orderEntities);
+            }else{
+                userEntity.getOrders().add(orderEntity);
+            }
+            return userJPARepository.saveAndFlush(userEntity);
+        }
+        return null;
+    }
+
+    @Override
     public UserEntity addNewComment(Long userId, Long productId, String content) {
         UserEntity userEntity = getUserToUpdate(userId);
         ProductEntity productEntity = productService.getProductToUpdate(productId);
@@ -238,8 +250,8 @@ public class UserService implements IUserService {
 
         productCommentEntity = productCommentService.createNewComment(productCommentEntity);
 
-        checkCommentUser(userEntity, productCommentEntity);
-        productService.addNewCommentToProduct(productEntity, productCommentEntity);
+//        checkCommentUser(userEntity, productCommentEntity);
+//        productService.addNewCommentToProduct(productEntity, productCommentEntity);
         return userEntity;
     }
 
@@ -256,6 +268,7 @@ public class UserService implements IUserService {
 
     public void checkCommentUser(UserEntity userEntity, ProductCommentEntity productCommentEntity){
 
+        Collection<ProductCommentEntity> productCommentEntities1 = userEntity.getComments();
         if(userEntity.getComments() == null){
             Collection<ProductCommentEntity> productCommentEntities = new ArrayList<>();
             productCommentEntities.add(productCommentEntity);

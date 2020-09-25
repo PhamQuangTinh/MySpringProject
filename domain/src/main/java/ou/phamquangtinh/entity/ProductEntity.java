@@ -27,7 +27,6 @@ public class ProductEntity extends BaseEntity<String> {
     @Column
     private double unitPrice;
 
-
     @Column(nullable = true, columnDefinition = "TEXT")
     private String description;
 

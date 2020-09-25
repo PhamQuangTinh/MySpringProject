@@ -38,11 +38,8 @@ public class ProductCommentEntity {
     @Column
     @CreatedBy
     private String createdBy;
+    
 
-
-    @Column
-    @CreatedDate
-    private LocalDateTime createdDate;
 
     @Column
     @LastModifiedBy
@@ -62,5 +59,10 @@ public class ProductCommentEntity {
     @MapsId("user_id")
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
+
+
+    @Column
+    @CreatedDate
+    private LocalDateTime createdDate;
 
 }

@@ -608,7 +608,7 @@ public class CrawlDataService {
                         int unitInStock = unitInOrder + random.nextInt(30) + 10;
                         AvailableProductEntity availableProductsEntity = new AvailableProductEntity(availableProductsKey, unitInOrder, unitInStock, productColorEntity, sizeEntity);
 
-                        AvailableProductEntity availableProductsEntityRes = availableProductService.createNewAvailableProduct(availableProductsEntity);
+                        AvailableProductEntity availableProductsEntityRes = availableProductService.createNewOrUpdateAvailableProduct(availableProductsEntity);
                         productColorService.addNewAvailableProduct(productColorEntity.getId(), availableProductsEntity);
                         sizeService.addNewAvailableProduct(sizeEntity.getId(), availableProductsEntityRes);
 
@@ -778,9 +778,8 @@ public class CrawlDataService {
         if (bool) {
             System.out.println("Directory " + path + ": created successfully");
         } else {
-            System.out.println("Couldnt create directory: " + path);
+            System.out.println("Couldn't create directory: " + path);
         }
     }
-
 
 }

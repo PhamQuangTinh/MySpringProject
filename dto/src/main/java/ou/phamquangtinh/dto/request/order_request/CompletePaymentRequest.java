@@ -8,4 +8,5 @@ import lombok.Setter;
 public class CompletePaymentRequest {
     private String payerId;
     private String paymentId;
+    private Long orderId;
 }

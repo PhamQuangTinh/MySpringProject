@@ -14,6 +14,7 @@ import ou.phamquangtinh.dto.response.model.ProductImagesModel;
 import ou.phamquangtinh.dto.response.model.SizeModel;
 import ou.phamquangtinh.entity.*;
 import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
+import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 import ou.phamquangtinh.repository.ProductJPARepository;
@@ -298,6 +299,21 @@ public class ProductService implements IProductService {
             productEntity.getComments().add(productCommentEntity);
         }
         createNewOrUpdateProduct(productEntity);
+    }
+
+    @Override
+    public void addNewOrderDetail(Long proId, OrderDetailEntity orderDetailEntity) {
+        ProductEntity productEntity = getProductToUpdate(proId);
+        if(productEntity != null){
+            if(productEntity.getOrderDetail() == null){
+                Collection<OrderDetailEntity> orderDetailEntities = new HashSet<>();
+                orderDetailEntities.add(orderDetailEntity);
+                productEntity.setOrderDetail(orderDetailEntities);
+            }else{
+                productEntity.getOrderDetail().add(orderDetailEntity);
+            }
+            createNewOrUpdateProduct(productEntity);
+        }
     }
 
 }

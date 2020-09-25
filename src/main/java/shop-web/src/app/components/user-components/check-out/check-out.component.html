@@ -82,11 +82,14 @@
                         <div class="order-total">
                             <ul class="order-table">
                                 <li>Product <span>Total</span></li>
-                                <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
+                                <li class="fw-normal" *ngFor="let cart of cartItems" >
+                                    {{cart.productName}} x {{cart.qty}} <span>${{cart.price}}</span>
+                                </li>
+                                <!-- <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
                                 <li class="fw-normal">Combination x 1 <span>$60.00</span></li>
                                 <li class="fw-normal">Combination x 1 <span>$120.00</span></li>
-                                <li class="fw-normal">Subtotal <span>$240.00</span></li>
-                                <li class="total-price">Total <span>$240.00</span></li>
+                                <li class="fw-normal">Subtotal <span>$240.00</span></li> -->
+                                <li class="total-price">Total <span>${{getTotal() | number:'1.2-3'}}</span></li>
                             </ul>
                             <div class="payment-check">
                                 <div class="pc-item">
@@ -105,7 +108,7 @@
                                 </div>
                             </div>
                             <div class="order-btn">
-                                <button type="submit" class="site-btn place-btn">Place Order</button>
+                                <button type="submit" class="site-btn place-btn" (click) = "order()">Place Order</button>
                             </div>
                         </div>
                     </div>

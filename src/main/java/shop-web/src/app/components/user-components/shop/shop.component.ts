@@ -72,7 +72,13 @@ export class ShopComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.msg.getMsgPage().subscribe(
+      x=>{
+        console.log(x);
+        this.onPageChange(x);
+      });
 
+    console.log(this.config.currentPage)
   }
 
   getPageMetadata(pageMetadata) {
@@ -84,7 +90,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
 
   onPageChange(event) {
     this.config.currentPage = event;
-    this.pageSubject.next(event);
+    this.pageSubject.next();
     window.scrollTo(0, 0)
   }
 
@@ -111,18 +117,4 @@ export class ShopComponent implements OnInit, AfterViewInit {
     return res;
   }
 
-  payment(){
-  
-    var url = ''
-    this.shopService.paymentService().subscribe(
-      (res)=>{
-        url = res.data.body.stringRes;
-        window.location.href = url;
-      },
-      err=>{console.log(err)
-        
-      }
-    );
-
-  }
 }

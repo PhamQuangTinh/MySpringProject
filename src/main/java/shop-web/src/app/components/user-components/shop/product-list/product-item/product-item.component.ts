@@ -86,7 +86,7 @@ export class ProductItemComponent implements OnInit {
   }
 
   moveToProductInfo() {
-    this.router.navigate(['/products',this.page,this.productItem.id]);
+    this.router.navigate(['/products/product-detail',{page:this.page, id: this.productItem.id}]);
   }
 
   //like product
@@ -102,6 +102,8 @@ export class ProductItemComponent implements OnInit {
             console.log(err);
           }
         );
+    }else{
+      alert("You have to login first");
     }
   }
 
@@ -151,14 +153,15 @@ export class ProductItemComponent implements OnInit {
     if (this.checkSizeType !== undefined && this.qty > 0) {
 
       this.checkOutItem = new CheckOut(this.productItem.id, this.checkSizeId, this.checkColorLink, this.qty);
+
       this.productItemService.checkCartItem(this.checkOutItem).subscribe(
         (res: any)=>{
 
-          if(res.data.body == this.qty){
+          if(res.data.body.qty == this.qty){
             this.cartItem = new CartItem(
               this.productItem.id,
               this.productItem.productName,
-              this.checkColorId,
+              res.data.body.colorId,
               this.checkColorLink,
               this.checkSizeId,
               this.checkSizeType,
@@ -172,7 +175,7 @@ export class ProductItemComponent implements OnInit {
             alert('Add product to cart success');
             $('.modal').modal('hide');
           }else{
-            alert("Still have " + res.data.body + " in stock")
+            alert("Still have " + res.data.body.qty + " in stock")
           }
         }
       )      

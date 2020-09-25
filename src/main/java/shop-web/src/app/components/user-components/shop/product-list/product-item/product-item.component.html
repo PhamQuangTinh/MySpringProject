@@ -4,7 +4,7 @@
         <div class="sale pp-sale" *ngIf="productItem.discount > 0">Sale</div>
         <div class="icon">
             <i *ngIf="id === null || !isLiked" class="far fa-heart float-right" (click)="likeProduct()"></i>
-            <i *ngIf="id !== null && isLiked" class="fas fa-heart float-right" (click)="unLikeProduct()"></i>
+            <i *ngIf="id !== null && isLiked" class="fas fa-heart float-right" style="color: #f0005c" (click)="unLikeProduct()"></i>
         </div>
         <ul>
             <li class="w-icon active"><a href="javascript:void(0)" (click)="addProductToCart()"><i

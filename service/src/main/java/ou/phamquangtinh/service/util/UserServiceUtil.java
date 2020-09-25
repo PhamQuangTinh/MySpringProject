@@ -3,6 +3,7 @@ package ou.phamquangtinh.service.util;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
+import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.entity.UserEntity;
 
 import java.lang.reflect.Type;
@@ -13,25 +14,23 @@ import java.util.stream.Collectors;
 public class UserServiceUtil {
 
     //Chuyển UserEntity thành object
-    public <T extends Object> T mapUserEntityToObject(UserEntity userEntity, T ok) {
+    public <T> T mapUserEntityToObject(UserEntity userEntity, T ok) {
         ModelMapper mapper = new ModelMapper();
-        T objectMapping = mapper.map(userEntity, (Type) ok.getClass());
-        return objectMapping;
+        return mapper.map(userEntity, (Type) ok.getClass());
     }
 
 
     //Chuyển Object thành User Entity
     public UserEntity mapObjectToUserEntity(Object objectMapping) {
         ModelMapper mapper = new ModelMapper();
-        UserEntity userEntityRes = mapper.map(objectMapping, UserEntity.class);
-        return userEntityRes;
+        return mapper.map(objectMapping, UserEntity.class);
     }
 
     //Chuyển UserEntity về UserEntityResponse
     public UserEntityResponse returnUserEntityResponse(UserEntity userEntity){
         List<String> rolesResponse = userEntity.getRoles()
                 .stream()
-                .map(roleEntity -> roleEntity.getCode())
+                .map(RoleEntity::getCode)
                 .collect(Collectors.toList());
 
         UserEntityResponse userRes = new UserEntityResponse();

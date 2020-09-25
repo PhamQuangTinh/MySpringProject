@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
+import ou.phamquangtinh.entity.middle_entity.embaddableEntity.CommentKey;
 import ou.phamquangtinh.repository.ProductCommentJPARepository;
 import ou.phamquangtinh.service.component_service.IProductCommentService;
 import ou.phamquangtinh.service.util.CommonUtil;
@@ -24,6 +25,22 @@ public class ProductCommentService implements IProductCommentService {
     @Override
     public ProductCommentEntity createNewComment(ProductCommentEntity productCommentEntity) {
         return productCommentJPARepository.saveAndFlush(productCommentEntity);
+//        if(findProductByCommentKey(productCommentEntity.getCommentKey()) == null){
+//            return productCommentJPARepository.saveAndFlush(productCommentEntity);
+//        }else{
+//            ProductCommentEntity productComment = new ProductCommentEntity();
+//            productComment.setCommentKey(productCommentEntity.getCommentKey());
+//            productComment.setUserEntity(productCommentEntity.getUserEntity());
+//            productComment.setProductEntity(productCommentEntity.getProductEntity());
+//            productComment.setCommentContent(productCommentEntity.getCommentContent());
+//            return productCommentJPARepository.saveAndFlush(productComment);
+//        }
+
+    }
+
+    @Override
+    public ProductCommentEntity findProductByCommentKey(CommentKey commentKey) {
+        return productCommentJPARepository.findByCommentKey(commentKey).orElse(null);
     }
 
     @Override

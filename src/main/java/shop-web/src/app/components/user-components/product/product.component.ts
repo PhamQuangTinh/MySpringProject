@@ -1,3 +1,4 @@
+import { throwError } from 'rxjs';
 import { MessengerService } from './../../../services/messenger.service';
 import { CartItem } from './../../../models/cart-item';
 import { TokenStorageService } from './../../../services/token-storage.service';
@@ -67,7 +68,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
   ) {
     location.onPopState(()=>{
       this.msg.sendMsgPage(this.page);
-    })
+    }
+    )
   }
 
   //fix unsafe image
@@ -209,10 +211,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
         this.checkColorLink,
         quantity
       );
-
+    
       this.productService.checkCartItem(this.checkOutItem).subscribe(
         (res: any) => {
-          if (res.data.body == this.qty) {
+          console.log(res);
+          if (res.data.body.qty == this.qty) {
             this.cartItem = new CartItem(
               this.productId,
               this.productInfo.productName,
@@ -224,10 +227,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
               quantity,
               this.productInfo.unitPrice
             );
+            console.log(this.cartItem);
             this.msg.sendMsg(this.cartItem);
             alert('Add product to cart success');
           } else {
-            alert('Still have ' + res.data.body + ' in stock');
+            alert('Still have ' + res.data.body.qty + ' in stock');
           }
         },
         (err) => {
@@ -246,6 +250,8 @@ export class ProductComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           this.isLiked = true;
         });
+    }else{
+      alert("You have to login first");
     }
   }
 

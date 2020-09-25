@@ -4,10 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Embeddable
 @Getter
@@ -21,5 +26,7 @@ public class CommentKey implements Serializable {
 
     @Column(name = "user_id")
     private Long userId;
+
+
     
 }

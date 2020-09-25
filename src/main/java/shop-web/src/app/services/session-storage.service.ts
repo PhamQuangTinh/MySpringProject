@@ -7,7 +7,7 @@ import { JsonPipe } from '@angular/common';
 const CART_KEY = "cart_key"
 const KEYWORD = "keyword"
 const FILTER = "filter";
-
+const ORDER_ID = "orderId";
 @Injectable({
   providedIn: 'root',
 })
@@ -60,4 +60,14 @@ export class SessionStorageService {
     window.sessionStorage.removeItem(FILTER);
   }
 
+  public saveOrderId(orderId: number){
+    this.removeOrderId();
+    window.sessionStorage.setItem(ORDER_ID, orderId.toString());
+  }
+  public removeOrderId(){
+    window.sessionStorage.removeItem(ORDER_ID);
+  }
+  public getOrderId(): string{
+    return window.sessionStorage.getItem(ORDER_ID);
+  }
 }

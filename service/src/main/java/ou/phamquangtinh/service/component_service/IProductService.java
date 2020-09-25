@@ -6,6 +6,7 @@ import ou.phamquangtinh.entity.CategoryEntity;
 import ou.phamquangtinh.entity.ProductAvatarEntity;
 import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.SubCategoryEntity;
+import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
 
@@ -58,5 +59,7 @@ public interface IProductService {
     ProductInfoResponse getProductInfo(Long proId, Long userId);
 
     void addNewCommentToProduct(ProductEntity productEntity, ProductCommentEntity productCommentEntity);
+
+    void addNewOrderDetail(Long proId, OrderDetailEntity orderDetailEntity);
 
 }

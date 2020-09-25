@@ -32,6 +32,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtTokenVerifier jwtTokenVerifier;
 
+    
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -48,6 +49,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 
 
     @Override

@@ -26,9 +26,7 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private service: ProductListService,
-    private token: TokenStorageService,
-    private msg: MessengerService,
-    private router: Router
+
   ) {
     
   }
@@ -40,7 +38,7 @@ export class ProductListComponent implements OnInit {
       this.configPagination.sortBy,
       this.configPagination.code,
     );
-    this.eventPagination.subscribe((page) => {
+    this.eventPagination.subscribe(() => {
       this.findAllProductsPagination(
         this.configPagination.currentPage,
         this.configPagination.itemsPerPage,
@@ -49,7 +47,6 @@ export class ProductListComponent implements OnInit {
       );
     });
 
-    this.msg.getMsgPage().subscribe(x=>{this.configPagination.page = x, alert(x)});
   }
 
   

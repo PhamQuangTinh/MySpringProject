@@ -20,7 +20,6 @@ import java.util.*;
 @Service
 public class CrawlDataService {
 
-    private final Set<String> categoryNames = new HashSet<String>();
     private final String webURL = "https://www.esprit.eu";
     private String finalURL = "";
     private String sexType = "";
@@ -45,11 +44,6 @@ public class CrawlDataService {
 
     private final ISubCategoryService subCategoryService;
 
-    {
-        categoryNames.add("Magazine");
-        categoryNames.add("#Throwback collection");
-        categoryNames.add("Accessories");
-    }
 
     public CrawlDataService(IProductService productService, IProductAvatarService productAvatarService, ISizeService sizeService, IColorService colorService, IProductImagesService productImagesService, IAvailableProductService availableProductService, ISuperCategoryService superCategoryService, ICategoryService categoryService, IProductColorService productColorService, ISubCategoryService subCategoryService) {
         this.productService = productService;
@@ -146,50 +140,51 @@ public class CrawlDataService {
 
             //Lấy tất cả SUPER CATEGORY ủa ul > li
             Elements superCategories = menuSuperCategory.select(".sidenavigation__level-1 > li");
+//            for (Element cate : superCategories) {
+            if(superCategories.size() > 4){
+                for (int i = 0; i < 4; i++) {
 
-            for (Element cate : superCategories) {
+                    //SUPER CATEGORY NAME lưu vào database
+                    String superCategoryDB = superCategories.get(i).getElementsByTag("a").first().text();
 
-                //SUPER CATEGORY NAME lưu vào database
-                String superCategoryDB = cate.getElementsByTag("a").first().text();
+                    superCategoryDB = superCategoryDB.replaceAll("[\\/:*?\"<>|]", "");
 
-                superCategoryDB = superCategoryDB.replaceAll("[\\/:*?\"<>|]", "");
 
-                if (categoryNames.contains(superCategoryDB))
-                    continue;
+                    //URL SUPER CATEGORY
+                    String folderSuperCategoryURL = folder + "\\" + superCategoryDB;
 
-                //URL SUPER CATEGORY
-                String folderSuperCategoryURL = folder + "\\" + superCategoryDB;
+                    //Lưu Database
+                    SuperCategoryEntity superCategoryEntity = superCategoryService.findSuperCategoryByName(superCategoryDB);
+                    if (superCategoryEntity == null) {
+                        superCategoryEntity = new SuperCategoryEntity();
+                        superCategoryEntity.setName(superCategoryDB);
+                        superCategoryEntity = superCategoryService.createNewOrUpdateSuperCategory(superCategoryEntity);
+                    }
 
-                //Lưu Database
-                SuperCategoryEntity superCategoryEntity = superCategoryService.findSuperCategoryByName(superCategoryDB);
-                if (superCategoryEntity == null) {
-                    superCategoryEntity = new SuperCategoryEntity();
-                    superCategoryEntity.setName(superCategoryDB);
-                    superCategoryEntity = superCategoryService.createNewOrUpdateSuperCategory(superCategoryEntity);
+
+                    //Tạo folder SUPER CATEGORY
+                    createFolder(folderSuperCategoryURL);
+
+                    //Đường link cơ bản dẫn tới CATEGORY
+                    String categoryLink = superCategories.get(i).getElementsByTag("a").attr("href");
+
+
+                    System.out.println();
+//                System.out.println("******************************************************************************************************************************");
+                    System.out.println("*************************************START ACCESSING SUPER CATEGORY: " + superCategoryDB + "**************************************");
+//                System.out.println("******************************************************************************************************************************");
+
+                    //Tạo đường link tới CATEGORY
+                    String fullLinkToCategory = webURL + categoryLink;
+                    System.out.println("LINK SUPER CATEGORY: " + fullLinkToCategory);
+                    crawlDataCategory(fullLinkToCategory, folderSuperCategoryURL, superCategoryEntity);
+
+//                System.out.println("******************************************************************************************************************************");
+                    System.out.println("*************************************END ACCESSING SUPER CATEGORY: " + superCategoryDB + "**************************************");
+//                System.out.println("******************************************************************************************************************************");
                 }
-
-
-                //Tạo folder SUPER CATEGORY
-                createFolder(folderSuperCategoryURL);
-
-                //Đường link cơ bản dẫn tới CATEGORY
-                String categoryLink = cate.getElementsByTag("a").attr("href");
-
-
-                System.out.println();
-//                System.out.println("******************************************************************************************************************************");
-                System.out.println("*************************************START ACCESSING SUPER CATEGORY: " + superCategoryDB + "**************************************");
-//                System.out.println("******************************************************************************************************************************");
-
-                //Tạo đường link tới CATEGORY
-                String fullLinkToCategory = webURL + categoryLink;
-                System.out.println("LINK SUPER CATEGORY: " + fullLinkToCategory);
-                crawlDataCategory(fullLinkToCategory, folderSuperCategoryURL, superCategoryEntity);
-
-//                System.out.println("******************************************************************************************************************************");
-                System.out.println("*************************************END ACCESSING SUPER CATEGORY: " + superCategoryDB + "**************************************");
-//                System.out.println("******************************************************************************************************************************");
             }
+
 
         } catch (NullPointerException | IOException e) {
             e.printStackTrace();
@@ -215,52 +210,56 @@ public class CrawlDataService {
 
             Elements categoryLink = menuCategory.select("li");
 
+            if(categoryLink.size() > 3){
+                for (int i = 0; i < 3; i++) {
 
-            for (Element subCate : categoryLink) {
+                    //CATEGORY NAME lưu vào database
+                    String categoryDBName = categoryLink.get(i).getElementsByTag("a").first().text();
 
-                //CATEGORY NAME lưu vào database
-                String categoryDBName = subCate.getElementsByTag("a").first().text();
+                    if (categoryDBName.contains("SALE world")) {
+                        continue;
+                    }
 
-                if (categoryDBName.contains("SALE world")) {
-                    continue;
-                }
+                    categoryDBName = categoryDBName.replaceAll("[\\/:*?\"<>|]", "");
 
-                categoryDBName = categoryDBName.replaceAll("[\\/:*?\"<>|]", "");
+                    //URL CATEGORY
+                    String folderCategoryURL = folder + "\\" + categoryDBName;
 
-                //URL CATEGORY
-                String folderCategoryURL = folder + "\\" + categoryDBName;
-
-                //DATABASE
-
-                CategoryEntity categoryEntity = new CategoryEntity();
-                categoryEntity.setCategoryName(categoryDBName);
-                categoryEntity.setSuperCategoryEntity(superCategory);
-                categoryEntity = categoryService.createNewOrUpdateCategory(categoryEntity);
-
-                superCategoryService.addNewCategory(superCategory.getId(), categoryEntity);
+                    //DATABASE
+                    CategoryEntity categoryEntity = categoryService.findCategoryByName(categoryDBName);
+                    if(categoryEntity == null){
+                        categoryEntity.setCategoryName(categoryDBName);
+                        categoryEntity.setSuperCategoryEntity(superCategory);
+                        categoryEntity = categoryService.createNewOrUpdateCategory(categoryEntity);
+//                        superCategoryService.addNewCategory(superCategory.getId(), categoryEntity);
+                    }
 
 
-                //END DATABASE
 
-                //Tạo folder CATEGORY
-                createFolder(folderCategoryURL);
 
-                //Đường link cơ bản dẫn tới SUB CATEGORY
-                String subCategoryLink = subCate.getElementsByTag("a").attr("href");
+                    //END DATABASE
+
+                    //Tạo folder CATEGORY
+                    createFolder(folderCategoryURL);
+
+                    //Đường link cơ bản dẫn tới SUB CATEGORY
+                    String subCategoryLink = categoryLink.get(i).getElementsByTag("a").attr("href");
 
 
 //                System.out.println();
-                System.out.println("*********************************START ACCESSING CATEGORY: " + categoryDBName + "**********************************");
+                    System.out.println("*********************************START ACCESSING CATEGORY: " + categoryDBName + "**********************************");
 
-                //Tạo đường link tới SUB CATEGORY
-                String fullLinkToSubCategory = webURL + subCategoryLink;
-                System.out.println("LINK TO CATEGORY: " + fullLinkToSubCategory);
+                    //Tạo đường link tới SUB CATEGORY
+                    String fullLinkToSubCategory = webURL + subCategoryLink;
+                    System.out.println("LINK TO CATEGORY: " + fullLinkToSubCategory);
 
-                crawlDataSubCategory(fullLinkToSubCategory, folderCategoryURL, categoryEntity);
+                    crawlDataSubCategory(fullLinkToSubCategory, folderCategoryURL, categoryEntity);
 
-                System.out.println("***********************************END ACCESSING CATEGORY: " + categoryDBName + "************************************");
+                    System.out.println("***********************************END ACCESSING CATEGORY: " + categoryDBName + "************************************");
 
+                }
             }
+
 
 
         } catch (NullPointerException | IOException e) {
@@ -292,56 +291,57 @@ public class CrawlDataService {
 
             //Lấy tất cả SUB CATEGORY ủa ul > li
             Elements subCategory = menuSubCategory.select("li");
+            if(subCategory.size() > 4){
+                for (int i = 0; i < 3; i++) {
 
-            for (Element subCate : subCategory) {
+                    //SUB CATEGORY NAME lưu vào database
+                    String subCategoryDBName = subCategory.get(i).getElementsByTag("a").first().text();
 
-                //SUB CATEGORY NAME lưu vào database
-                String subCategoryDBName = subCate.getElementsByTag("a").first().text();
-
-                if (subCategoryDBName.contains("SALE world")) {
-                    continue;
-                }
-                subCategoryDBName = subCategoryDBName.replaceAll("[\\/:*?\"<>|]", "");
+                    if (subCategoryDBName.contains("SALE world")) {
+                        continue;
+                    }
+                    subCategoryDBName = subCategoryDBName.replaceAll("[\\/:*?\"<>|]", "");
 
 
-                //URL CATEGORY
-                String folderSubCategoryURL = folder + "\\" + subCategoryDBName;
+                    //URL CATEGORY
+                    String folderSubCategoryURL = folder + "\\" + subCategoryDBName;
 
-                //DATABASE
-                SubCategoryEntity subCategoryEntity = subCategoryService.findSubCategoryByName(subCategoryDBName);
-                if (subCategoryEntity == null) {
-                    subCategoryEntity = new SubCategoryEntity();
-                    subCategoryEntity.setName(subCategoryDBName);
-                    subCategoryEntity.setCategoryEntity(categoryEntity);
-                    subCategoryEntity = subCategoryService.createNewOrUpdateSubCategory(subCategoryEntity);
+                    //DATABASE
+                    SubCategoryEntity subCategoryEntity = subCategoryService.findSubCategoryByName(subCategoryDBName);
+                    if (subCategoryEntity == null) {
+                        subCategoryEntity = new SubCategoryEntity();
+                        subCategoryEntity.setName(subCategoryDBName);
+                        subCategoryEntity.setCategoryEntity(categoryEntity);
+                        subCategoryEntity = subCategoryService.createNewOrUpdateSubCategory(subCategoryEntity);
 
-                    categoryService.addNewSubCategory(categoryEntity.getId(), subCategoryEntity);
+//                        categoryService.addNewSubCategory(categoryEntity.getId(), subCategoryEntity);
 
-                }
+                    }
 
-                categoryService.addNewSubCategory(categoryEntity.getId(), subCategoryEntity);
-                //END DATABASE
-                //Tạo folder CATEGORY
-                createFolder(folderSubCategoryURL);
+                    //END DATABASE
+                    //Tạo folder CATEGORY
+                    createFolder(folderSubCategoryURL);
 
-                finalURL = folderSubCategoryURL;
+                    finalURL = folderSubCategoryURL;
 
-                //Đường link cơ bản dẫn tới PRODUCTS
-                String productLink = subCate.getElementsByTag("a").attr("href");
+                    //Đường link cơ bản dẫn tới PRODUCTS
+                    String productLink = subCategory.get(i).getElementsByTag("a").attr("href");
 
 
 //                System.out.println();
-                System.out.println("*********************************START ACCESSING SUB CATEGORY: " + subCategoryDBName + "**********************************");
+                    System.out.println("*********************************START ACCESSING SUB CATEGORY: " + subCategoryDBName + "**********************************");
 
-                //Tạo đường link tới SUB CATEGORY
-                String fullLinkToSubCategory = webURL + productLink;
-                System.out.println("LINK TO SUB CATEGORY: " + fullLinkToSubCategory);
+                    //Tạo đường link tới SUB CATEGORY
+                    String fullLinkToSubCategory = webURL + productLink;
+                    System.out.println("LINK TO SUB CATEGORY: " + fullLinkToSubCategory);
 
-                crawlDataProduct(fullLinkToSubCategory, subCategoryEntity.getId(), 2);
+                    crawlDataProduct(fullLinkToSubCategory, subCategoryEntity.getId(), 2);
 
-                System.out.println("***********************************END ACCESSING SUB CATEGORY: " + subCategoryDBName + "************************************");
+                    System.out.println("***********************************END ACCESSING SUB CATEGORY: " + subCategoryDBName + "************************************");
 
+                }
             }
+
 
 
         } catch (NullPointerException | IOException ignored) {
@@ -372,10 +372,10 @@ public class CrawlDataService {
             if (pageNumber == 0) {
                 crawlDataProductInfo(link, id, code);
                 System.out.println("********************************NO PAGINATION*********************************");
-            } else if (pageNumber > 4) {
+            } else if (pageNumber > 2) {
                 System.out.println("PAGE NUMBER: " + pageNumber);
                 //Duyệt từng page của 1 trang product
-                for (int i = 1; i < 4; i++) {
+                for (int i = 1; i < 2; i++) {
                     page = page + i;
                     System.out.println("PAGE: " + page);
 

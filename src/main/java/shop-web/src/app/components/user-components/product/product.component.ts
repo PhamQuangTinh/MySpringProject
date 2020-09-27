@@ -174,7 +174,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.productService
       .getCommentsProduct(this.productId, 1)
       .subscribe((res: any) => {
-        this.productComments = res.data.body.listResponse;
+        this.productComments = res.data.body;
       });
   }
 
@@ -186,6 +186,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
         .commentProduct(this.userId, this.productId, text)
         .subscribe(
           (res: any) => {
+            
             this.tabComment();
             this.textComment.nativeElement.value = '';
           },

@@ -8,27 +8,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Streamable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
-import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.*;
-import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
-import ou.phamquangtinh.entity.middle_entity.embaddableEntity.CommentKey;
+import ou.phamquangtinh.entity.middle_entity.UserCommentEntity;
 import ou.phamquangtinh.repository.UserJPARepository;
-import ou.phamquangtinh.service.component_service.IProductCommentService;
 import ou.phamquangtinh.service.component_service.IProductService;
 import ou.phamquangtinh.service.component_service.IRoleService;
 import ou.phamquangtinh.service.component_service.IUserService;
 import ou.phamquangtinh.service.util.CommonUtil;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -47,8 +41,6 @@ public class UserService implements IUserService {
     @Autowired
     private IProductService productService;
 
-    @Autowired
-    private IProductCommentService productCommentService;
 
     @Override
     public UserEntity createUser(RegisterReq user) {
@@ -184,6 +176,7 @@ public class UserService implements IUserService {
     @Override
     public void likeProduct(Long userId, Long productId) {
         UserEntity userEntity = getUserToUpdate(userId);
+
         ProductEntity productEntity = productService.getProductToUpdate(productId);
         if(userEntity.getLikeProductEntities() == null){
             List<ProductEntity> productEntities = new ArrayList<>();
@@ -222,6 +215,19 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void addNewUserComment(Long userId, UserCommentEntity userCommentEntity) {
+        UserEntity userEntity = getUserToUpdate(userId);
+        if(userEntity.getUserCommentEntities() == null){
+            Collection<UserCommentEntity> userCommentEntities = new ArrayList<>();
+            userCommentEntities.add(userCommentEntity);
+            userEntity.setUserCommentEntities(userCommentEntities);
+        }else{
+            userEntity.getUserCommentEntities().add(userCommentEntity);
+        }
+        userJPARepository.saveAndFlush(userEntity);
+    }
+
+    @Override
     public UserEntity addNewOrder(Long userId, OrderEntity orderEntity) {
         UserEntity userEntity = getUserToUpdate(userId);
         if(userEntity != null){
@@ -239,20 +245,21 @@ public class UserService implements IUserService {
 
     @Override
     public UserEntity addNewComment(Long userId, Long productId, String content) {
-        UserEntity userEntity = getUserToUpdate(userId);
-        ProductEntity productEntity = productService.getProductToUpdate(productId);
-
-        ProductCommentEntity productCommentEntity = new ProductCommentEntity();
-        productCommentEntity.setCommentKey(new CommentKey(productId, userId));
-        productCommentEntity.setUserEntity(userEntity);
-        productCommentEntity.setProductEntity(productEntity);
-        productCommentEntity.setCommentContent(content);
-
-        productCommentEntity = productCommentService.createNewComment(productCommentEntity);
-
-//        checkCommentUser(userEntity, productCommentEntity);
-//        productService.addNewCommentToProduct(productEntity, productCommentEntity);
-        return userEntity;
+//        UserEntity userEntity = getUserToUpdate(userId);
+//        ProductEntity productEntity = productService.getProductToUpdate(productId);
+//
+//        UserCommentEntity productCommentEntity = new UserCommentEntity();
+//        productCommentEntity.setCommentKey(new CommentDetailKey(productId, userId));
+//        productCommentEntity.setUserEntity(userEntity);
+//        productCommentEntity.setProductEntity(productEntity);
+//        productCommentEntity.setCommentContent(content);
+//
+//        productCommentEntity = productCommentService.createNewComment(productCommentEntity);
+//
+////        checkCommentUser(userEntity, productCommentEntity);
+////        productService.addNewCommentToProduct(productEntity, productCommentEntity);
+//        return userEntity;
+        return null;
     }
 
     @Override
@@ -266,16 +273,4 @@ public class UserService implements IUserService {
     }
 
 
-    public void checkCommentUser(UserEntity userEntity, ProductCommentEntity productCommentEntity){
-
-        Collection<ProductCommentEntity> productCommentEntities1 = userEntity.getComments();
-        if(userEntity.getComments() == null){
-            Collection<ProductCommentEntity> productCommentEntities = new ArrayList<>();
-            productCommentEntities.add(productCommentEntity);
-            userEntity.setComments(productCommentEntities);
-        }else{
-            userEntity.getComments().add(productCommentEntity);
-        }
-        updateUser(userEntity);
-    }
 }

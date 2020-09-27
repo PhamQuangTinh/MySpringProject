@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
-import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentDetailEntity;
+import ou.phamquangtinh.entity.middle_entity.UserCommentEntity;
 import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "Products")
-@JsonIgnoreProperties(value = {"orderDetail","comments","productColorEntities","categoryEntities","subCategoryEntity"})
+@JsonIgnoreProperties(value = {"orderDetail","productCommentDetailEntities","productColorEntities","categoryEntities","subCategoryEntity"})
 public class ProductEntity extends BaseEntity<String> {
 
     @Column(columnDefinition = "TEXT")
@@ -41,10 +42,6 @@ public class ProductEntity extends BaseEntity<String> {
     @ToString.Exclude
     private Collection<OrderDetailEntity> orderDetail;
 
-    @OneToMany(mappedBy = "productEntity")
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Collection<ProductCommentEntity> comments;
 
     @OneToMany(mappedBy = "productEntity",cascade = CascadeType.ALL)
     @EqualsAndHashCode.Exclude
@@ -72,5 +69,8 @@ public class ProductEntity extends BaseEntity<String> {
     @ToString.Exclude
     private List<UserEntity> productLikeByUserEntities;
 
-
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<ProductCommentDetailEntity> productCommentDetailEntities;
 }

@@ -14,6 +14,7 @@ declare const $:any;
 })
 export class FilterItemComponent implements OnInit {
   @Input() productItem: any;
+  @Input() page: number;
 
   qty: number = 1;
   bigImage: any;
@@ -81,7 +82,7 @@ export class FilterItemComponent implements OnInit {
   }
 
   moveToProductInfo() {
-    this.router.navigate(['/products', this.productItem.id]);
+    this.router.navigate(['/products/product-detail',{page:this.page, id: this.productItem.id}]);
   }
 
   //like product

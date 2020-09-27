@@ -89,6 +89,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   signOut() {
     this.tokenService.removeUser();
     this.tokenService.removeToken();
+    this.router.navigateByUrl('/home').then(()=>{window.location.reload()});
   }
 
   //calc products total
@@ -131,7 +132,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   viewProduct(product){
     $('.searchProductUl').slideUp('fast');
-    this.router.navigate(['/products', product.id]).then(()=>{window.location.reload()});  
+    this.router.navigate(['/products/product-detail',{page: 0, id: product.id}]).then(()=>{window.location.reload()});  
   }
 
   getLikeList(){
@@ -150,4 +151,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/filter').then(()=>this.session.saveKeyword(this.keyword));   
     }
   }
+
 }

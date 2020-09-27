@@ -19,13 +19,13 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentKey implements Serializable {
+public class CommentDetailKey implements Serializable {
 
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "user_comment_id")
+    private Long userCommentId;
 
 
     

@@ -96,7 +96,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/product_images/get/color_id_and_pro_id",
 
                         //Product Comment
-                        "/api/product_comment/get/product_comment/{proId}",
+                        "/api/product_comment/get/all-comment",
 
                         //Color
                         "/api/color/get/pro_id/{id}",
@@ -106,9 +106,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/size//get/pro_id",
 
                         //Available Product
-                        "/api/available_product/post/cart_checking",
-                        "https://localhost:8080/api/order/paypal/success",
-                        "https://localhost:8080/api/order/paypal/cancel"
+                        "/api/available_product/post/cart_checking"
+//                        "https://localhost:8080/api/order/paypal/success",
+//                        "https://localhost:8080/api/order/paypal/cancel"
 
 //                        "/api/role/post/data-crawling"
                 )

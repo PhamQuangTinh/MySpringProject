@@ -45,13 +45,15 @@ public class SubCategoryService implements ISubCategoryService {
             collection.add(productEntity);
             subCategoryEntity.setProductEntities(collection);
         }else{
-            Collection<ProductEntity>  productEntities = subCategoryEntity.getProductEntities();
-            if(productEntities.contains(productEntity)){
-                System.out.println("EXIST PRODUCT " + productEntity.getProductName() + " IN SUB CATEGORY " + subCategoryEntity.getName());
-                return null;
-            }else{
-                subCategoryEntity.getProductEntities().add(productEntity);
-            }
+//            Collection<ProductEntity>  productEntities = subCategoryEntity.getProductEntities();
+//            if(productEntities.contains(productEntity)){
+//                System.out.println("EXIST PRODUCT " + productEntity.getProductName() + " IN SUB CATEGORY " + subCategoryEntity.getName());
+//                return null;
+//            }else{
+//                subCategoryEntity.getProductEntities().add(productEntity);
+//            }
+            subCategoryEntity.getProductEntities().add(productEntity);
+
         }
         //        System.out.println("Added: " + productEntity.getProductName() + " to " + subCategoryEntity.getName());
         return subCategoryJPARepository.saveAndFlush(subCategoryEntity);

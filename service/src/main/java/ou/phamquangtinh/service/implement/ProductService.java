@@ -13,10 +13,7 @@ import ou.phamquangtinh.dto.response.model.ColorModel;
 import ou.phamquangtinh.dto.response.model.ProductImagesModel;
 import ou.phamquangtinh.dto.response.model.SizeModel;
 import ou.phamquangtinh.entity.*;
-import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
-import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
-import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
-import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
+import ou.phamquangtinh.entity.middle_entity.*;
 import ou.phamquangtinh.repository.ProductJPARepository;
 import ou.phamquangtinh.service.component_service.IProductColorService;
 import ou.phamquangtinh.service.component_service.IProductService;
@@ -67,13 +64,7 @@ public class ProductService implements IProductService {
             categoryEntityCollection.add(categoryEntity);
             productEntity.setCategoryEntities(categoryEntityCollection);
         }else{
-            Collection<CategoryEntity> collection = productEntity.getCategoryEntities();
-            if(collection.contains(categoryEntity)){
-                System.out.println("EXIST CATEGORY " + categoryEntity.getCategoryName() + " IN PRODUCT " + productEntity.getProductName());
-                return null;
-            }else{
                 productEntity.getCategoryEntities().add(categoryEntity);
-            }
         }
         return productJPARepository.saveAndFlush(productEntity);
     }
@@ -126,13 +117,15 @@ public class ProductService implements IProductService {
             subCategoryEntities.add(subCategoryEntity);
             productEntity.setSubCategoryEntity(subCategoryEntities);
         }else{
-            Collection<SubCategoryEntity> collection = productEntity.getSubCategoryEntity();
-            if(collection.contains(subCategoryEntity)){
-                System.out.println("EXIST SUB CATEGORY " + subCategoryEntity.getName() + " IN PRODUCT " + productEntity.getProductName());
-                return null;
-            }else{
-                productEntity.getSubCategoryEntity().add(subCategoryEntity);
-            }
+//            Collection<SubCategoryEntity> collection = productEntity.getSubCategoryEntity();
+//            if(collection.contains(subCategoryEntity)){
+//                System.out.println("EXIST SUB CATEGORY " + subCategoryEntity.getName() + " IN PRODUCT " + productEntity.getProductName());
+//                return null;
+//            }else{
+//                productEntity.getSubCategoryEntity().add(subCategoryEntity);
+//            }
+            productEntity.getSubCategoryEntity().add(subCategoryEntity);
+
         }
         return productJPARepository.saveAndFlush(productEntity);
 
@@ -289,17 +282,8 @@ public class ProductService implements IProductService {
 
     }
 
-    @Override
-    public void addNewCommentToProduct(ProductEntity productEntity, ProductCommentEntity productCommentEntity) {
-        if(productEntity.getComments() == null){
-            Collection<ProductCommentEntity> productCommentEntities = new ArrayList<>();
-            productCommentEntities.add(productCommentEntity);
-            productEntity.setComments(productCommentEntities);
-        }else{
-            productEntity.getComments().add(productCommentEntity);
-        }
-        createNewOrUpdateProduct(productEntity);
-    }
+
+
 
     @Override
     public void addNewOrderDetail(Long proId, OrderDetailEntity orderDetailEntity) {
@@ -314,6 +298,20 @@ public class ProductService implements IProductService {
             }
             createNewOrUpdateProduct(productEntity);
         }
+    }
+
+    @Override
+    public void addNewProductCommentDetail(Long proId, ProductCommentDetailEntity productCommentDetailEntity) {
+        ProductEntity productEntity = getProductToUpdate(proId);
+        if(productEntity.getProductCommentDetailEntities() == null){
+            List<ProductCommentDetailEntity> productCommentDetailEntities = new ArrayList<>();
+            productCommentDetailEntities.add(productCommentDetailEntity);
+            productEntity.setProductCommentDetailEntities(productCommentDetailEntities);
+        }
+        else{
+            productEntity.getProductCommentDetailEntities().add(productCommentDetailEntity);
+        }
+        createNewOrUpdateProduct(productEntity);
     }
 
 }

@@ -7,6 +7,7 @@ import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.OrderEntity;
 import ou.phamquangtinh.entity.UserEntity;
+import ou.phamquangtinh.entity.middle_entity.UserCommentEntity;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public interface IUserService {
     void likeProduct(Long userId, Long productId);
 
     void unLikeProduct(Long userId, Long proId);
+
+    void addNewUserComment(Long userId, UserCommentEntity userCommentEntity);
 
     UserEntity addNewComment(Long userId, Long productId, String content);
 

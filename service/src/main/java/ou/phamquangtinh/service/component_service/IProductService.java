@@ -8,7 +8,8 @@ import ou.phamquangtinh.entity.ProductEntity;
 import ou.phamquangtinh.entity.SubCategoryEntity;
 import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 import ou.phamquangtinh.entity.middle_entity.ProductColorEntity;
-import ou.phamquangtinh.entity.middle_entity.ProductCommentEntity;
+import ou.phamquangtinh.entity.middle_entity.ProductCommentDetailEntity;
+import ou.phamquangtinh.entity.middle_entity.UserCommentEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,7 @@ public interface IProductService {
     ProductEntity findProductById(Long id);
 
     ProductEntity getProductToUpdate(Long id);
+
 
     ProductEntity addNewCategory(Long productId, CategoryEntity categoryEntity);
 
@@ -58,8 +60,8 @@ public interface IProductService {
 
     ProductInfoResponse getProductInfo(Long proId, Long userId);
 
-    void addNewCommentToProduct(ProductEntity productEntity, ProductCommentEntity productCommentEntity);
 
     void addNewOrderDetail(Long proId, OrderDetailEntity orderDetailEntity);
 
+    void addNewProductCommentDetail(Long proId, ProductCommentDetailEntity productCommentDetailEntity);
 }

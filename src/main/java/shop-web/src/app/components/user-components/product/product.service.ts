@@ -35,11 +35,12 @@ export class ProductService {
   getCommentsProduct(proId, page){
     const params = new HttpParams()
       .set('page', page)
-    return this.http.get(productCommentUrl + '/get/product_comment/'+ proId,{params});
+      .set('proId', proId)
+    return this.http.get(productCommentUrl + '/get/all-comment',{params});
   }
 
   commentProduct(userId, proId, contentProduct): Observable<any> {
-    return this.http.post(userUrl + '/post/comment', 
+    return this.http.post(productCommentUrl + '/post/comment-creation', 
     {
       content: contentProduct,
       productId: proId,

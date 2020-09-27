@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ou.phamquangtinh.entity.ProductEntity;
+import ou.phamquangtinh.service.component_service.ICommentDetailService;
 import ou.phamquangtinh.service.component_service.IProductService;
 
 import java.util.Set;
@@ -17,6 +18,7 @@ public class ProductController {
 
     @Autowired
     private IProductService productService;
+
     @GetMapping("/get/all_product")
     public ResponseEntity<Object> getAllProductsPagination(@RequestParam("page") int page,
                                                            @RequestParam("size") int size,

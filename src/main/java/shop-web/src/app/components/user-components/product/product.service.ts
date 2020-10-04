@@ -14,6 +14,12 @@ import { CheckOut } from 'src/app/models/check-out';
   providedIn: 'root',
 })
 export class ProductService {
+  
+  getRelatedProduct(category): Observable<any> {
+    const params = new HttpParams()
+      .set('cates', category)
+    return this.http.get(productsUrl + '/get/related_product_by_category', {params});
+  }
   constructor(private http: HttpClient) {}
 
   getProductInfo(proId, userId): Observable<any> {

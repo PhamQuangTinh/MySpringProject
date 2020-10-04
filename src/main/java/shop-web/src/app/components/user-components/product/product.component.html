@@ -4,8 +4,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb-text product-more">
-                    <a href="./home.html"><i class="fa fa-home"></i> Home</a>
-                    <a href="./shop.html">Shop</a>
+                    <a href="javascript:void(0)" routerLink="/home"><i class="fa fa-home"></i> Home</a>
+                    <a href="javascript:void(0)" (click) = "routerToCate()">{{type}}</a>
                     <span>Detail</span>
                 </div>
             </div>
@@ -58,8 +58,8 @@
                                 <h3>{{productInfo.productName}}</h3>
                                 <i *ngIf="userId === 0 || !isLiked" class="far fa-heart float-right"
                                     (click)="likeProduct()"></i>
-                                <i *ngIf="userId !== 0 && isLiked" class="fas fa-heart float-right" style="color: #f0005c"
-                                    (click)="unLikeProduct()"></i>
+                                <i *ngIf="userId !== 0 && isLiked" class="fas fa-heart float-right"
+                                    style="color: #f0005c" (click)="unLikeProduct()"></i>
                             </div>
 
                             <div class="pd-desc">
@@ -86,6 +86,7 @@
                             </div>
                             <!--SIZE PRODUCT-->
                             <div class="pd-size-choose">
+                                <h6 style="font: bold">Size:</h6>
                                 <div class="sc-item" *ngFor="let size of productInfo.size">
                                     <!-- <input type="radio" id="sm-size"> -->
                                     <label (click)="chooseSize(size)"
@@ -97,12 +98,24 @@
                             <div class="quantity">
                                 <div class="pro-qty">
                                     <span class="dec qtybtn" (click)="decreaseNumPro()">-</span>
-                                    <input #numProduct type="text" [(ngModel)] = "qty">
+                                    <input #numProduct type="text" [(ngModel)]="qty">
                                     <span class="inc qtybtn" (click)="increaseNumPro()">+</span>
                                 </div>
-                                <a href="javascript:void(0)" (click)="addToCart()" class="primary-btn pd-cart">Add To Cart</a>
+                                <a href="javascript:void(0)" (click)="addToCart()" class="primary-btn pd-cart">Add To
+                                    Cart</a>
                             </div>
 
+                            <!--CATEGORY PRODUCT-->
+                            <div class="pd-color">
+                                <h6>category:</h6>
+                                <div class="pd-color-choose">
+                                    <div *ngFor="let category of productInfo.category">
+                                        <!-- <input type="radio" id="sm-size"> -->
+                                        <label for="sm-size" style="font-style:italic">{{category}} </label>
+                                    </div>
+
+                                </div>
+                            </div>
 
                         </div>
                     </div>
@@ -249,100 +262,29 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-3 col-sm-6" *ngFor="let rProduct of relatedProduct">
                 <div class="product-item">
                     <div class="pi-pic">
-                        <img src="assets/img/products/women-1.jpg" alt="">
-                        <div class="sale">Sale</div>
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
+                        <img [src]=sanitize(rProduct.productAvatarEntities[1].imageLink) alt="">
+                        <div class="sale pp-sale" *ngIf="rProduct.discount > 0">Sale</div>
+                        <!-- <div class="icon">
+                            <i *ngIf="id === null || !isLiked" class="far fa-heart float-right"
+                                (click)="likeRelatedProduct(rProduct.id)"></i>
+                            <i *ngIf="id !== null && isLiked" class="fas fa-heart float-right" style="color: #f0005c"
+                                (click)="unLikeRelatedProduct(rProduct.id)"></i>
+                        </div> -->
                         <ul>
-                            <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="#">+ Quick View</a></li>
-                            <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
+                            <li class="w-icon active"><a href="javascript:void(0)"><i class="icon_bag_alt"></i></a></li>
+                            <li class="quick-view"><a href="javascript:void(0)" (click)='movetoProduct(rProduct)'>+ Quick View</a></li>
+                            <li class="w-icon"><a href="javascript:void(0)" (click)='movetoProduct(rProduct)'><i class="fa fa-random"></i></a></li>
                         </ul>
                     </div>
                     <div class="pi-text">
-                        <div class="catagory-name">Coat</div>
-                        <a href="#">
-                            <h5>Pure Pineapple</h5>
+                        <a href="javascript:void(0)" (click)='movetoProduct(rProduct.id)'>
+                            <h5 style="font-style: italic; size: 18px;">{{rProduct.productName}}</h5>
                         </a>
                         <div class="product-price">
-                            $14.00
-                            <span>$35.00</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="assets/img/products/women-2.jpg" alt="">
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="#">+ Quick View</a></li>
-                            <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Shoes</div>
-                        <a href="#">
-                            <h5>Guangzhou sweater</h5>
-                        </a>
-                        <div class="product-price">
-                            $13.00
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="assets/img/products/women-3.jpg" alt="">
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="#">+ Quick View</a></li>
-                            <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Towel</div>
-                        <a href="#">
-                            <h5>Pure Pineapple</h5>
-                        </a>
-                        <div class="product-price">
-                            $34.00
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="product-item">
-                    <div class="pi-pic">
-                        <img src="assets/img/products/women-4.jpg" alt="">
-                        <div class="icon">
-                            <i class="icon_heart_alt"></i>
-                        </div>
-                        <ul>
-                            <li class="w-icon active"><a href="#"><i class="icon_bag_alt"></i></a></li>
-                            <li class="quick-view"><a href="#">+ Quick View</a></li>
-                            <li class="w-icon"><a href="#"><i class="fa fa-random"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="pi-text">
-                        <div class="catagory-name">Towel</div>
-                        <a href="#">
-                            <h5>Converse Shoes</h5>
-                        </a>
-                        <div class="product-price">
-                            $34.00
+                            ${{rProduct.unitPrice}}
                         </div>
                     </div>
                 </div>

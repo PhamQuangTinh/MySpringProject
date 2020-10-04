@@ -132,7 +132,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   viewProduct(product){
     $('.searchProductUl').slideUp('fast');
-    this.router.navigate(['/products/product-detail',{page: 0, id: product.id}]).then(()=>{window.location.reload()});  
+    let st = ''
+    if(product.sexType == 'WOMAN'){
+      st = 'women'
+    }else if(product.sexType == 'MAN'){
+      st = 'man'
+    }else if(product.sexType == 'Girls'){
+      st = 'girl'
+    }else if(product.sexType == 'Boys'){
+      st = 'boy'
+    }
+    this.router.navigate(['/products/product-detail',{id: product.id, type: st}]).then(()=>{window.location.reload()});  
   }
 
   getLikeList(){

@@ -24,8 +24,8 @@ export class MenuComponent implements OnInit, AfterViewInit {
   filterOb: FilterObject;
   checkedMen: boolean;
   checkedWomen: boolean;
-  checkedKid: boolean;
-
+  checkedGirl: boolean;
+  checkedBoy: boolean;
   colorPicking: string = '';
 
   constructor(
@@ -37,7 +37,8 @@ export class MenuComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.checkedMen = false;
     this.checkedWomen = false;
-    this.checkedKid = false;
+    this.checkedGirl = false;
+    this.checkedBoy = false;
   }
 
   ngAfterViewInit() {
@@ -83,12 +84,14 @@ export class MenuComponent implements OnInit, AfterViewInit {
   }
 
   editCheckbox(sex) {
-    if (sex === 'men') {
+    if (sex === 'man') {
       this.checkedMen = !this.checkedMen;
-    } else if (sex === 'women') {
+    } else if (sex === 'woman') {
       this.checkedWomen = !this.checkedWomen;
-    } else if (sex === 'kid') {
-      this.checkedKid = !this.checkedKid;
+    } else if (sex === 'girl') {
+      this.checkedGirl = !this.checkedGirl;
+    } else if (sex === 'boy'){
+      this.checkedBoy = !this.checkedBoy;
     }
   }
 
@@ -100,9 +103,10 @@ export class MenuComponent implements OnInit, AfterViewInit {
     var fPrice = parseFloat(minPrice.replace('$', ''));
     var lPrice = parseFloat(maxPrice.replace('$', ''));
 
-    this.checkedKid ? sexTypes.push('KID') : '';
-    this.checkedMen ? sexTypes.push('MEN') : '';
-    this.checkedWomen ? sexTypes.push('WOMEN') : '';
+    this.checkedGirl ? sexTypes.push('Girls') : '';
+    this.checkedGirl ? sexTypes.push('Boys') : '';
+    this.checkedMen ? sexTypes.push('MAN') : '';
+    this.checkedWomen ? sexTypes.push('WOMAN') : '';
 
     if (sexTypes.length > 0) {
       this.filterOb = new FilterObject(

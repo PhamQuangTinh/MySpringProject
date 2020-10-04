@@ -20,6 +20,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
   subscription: Subscription;
   selected:string = '';
   oksize: string = '12';
+  currentRouter: string;
   selectedOption: string;
   userId: any;
   itemsPerPage: Select[] = [
@@ -46,7 +47,8 @@ export class ShopComponent implements OnInit, AfterViewInit {
     numberOfElements:0,
     sortBy: 'productName low',
     code: 1,
-    filter: null
+    filter: null,
+    sType: '',
   };
   pageSize: number;
   public maxSize: number = 20;
@@ -65,20 +67,19 @@ export class ShopComponent implements OnInit, AfterViewInit {
     private msg: MessengerService,
     private router: Router,
     private shopService: ShopService
-    ) {}
+    ) {
+      this.currentRouter = this.config.sType = this.router.url.replace("/products/","");
+    }
 
   ngOnInit(): void {
-    
   }
 
   ngAfterViewInit() {
     this.msg.getMsgPage().subscribe(
       x=>{
-        console.log(x);
         this.onPageChange(x);
       });
 
-    console.log(this.config.currentPage)
   }
 
   getPageMetadata(pageMetadata) {

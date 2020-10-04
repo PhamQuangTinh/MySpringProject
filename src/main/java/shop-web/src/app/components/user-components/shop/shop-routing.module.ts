@@ -14,6 +14,18 @@ const routes: Routes = [
     component: ShopComponent,
   },
   {
+    path:'men',
+    component: ShopComponent,
+  },
+  {
+    path:'girl',
+    component: ShopComponent,
+  },
+  {
+    path:'boy',
+    component: ShopComponent,
+  },
+  {
     path:'product-detail',
     component:ProductComponent,
   },

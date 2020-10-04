@@ -17,8 +17,7 @@ public class CrawlDataController {
 
     @PostMapping("post/data-crawling")
     private String crawlDataController(){
-        String link = "https://www.esprit.eu";
-        crawlDataService.crawlDataSexType(link);
+        crawlDataService.crawlDataSuperCategory();
 
         return "Success";
     }

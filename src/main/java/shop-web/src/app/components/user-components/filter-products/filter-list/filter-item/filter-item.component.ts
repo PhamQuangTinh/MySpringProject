@@ -82,7 +82,17 @@ export class FilterItemComponent implements OnInit {
   }
 
   moveToProductInfo() {
-    this.router.navigate(['/products/product-detail',{page:this.page, id: this.productItem.id}]);
+    let st = ''
+    if(this.productItem.sexType == 'WOMAN'){
+      st = 'women'
+    }else if(this.productItem.sexType == 'MAN'){
+      st = 'men'
+    }else if(this.productItem.sexType == 'Girls'){
+      st = 'girl'
+    }else if(this.productItem.sexType == 'Boys'){
+      st = 'boy'
+    }
+    this.router.navigate(['/products/product-detail',{page:this.page, id: this.productItem.id, type: st}]);
   }
 
   //like product

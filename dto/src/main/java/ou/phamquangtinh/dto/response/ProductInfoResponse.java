@@ -24,7 +24,7 @@ public class ProductInfoResponse {
     private List<ColorModel> colors;
     private List<SizeModel> size;
     private List<ProductImagesModel> firstImagesColor;
-
+    private List<String> category;
 }
 
 

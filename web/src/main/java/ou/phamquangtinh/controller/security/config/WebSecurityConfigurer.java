@@ -106,11 +106,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/size//get/pro_id",
 
                         //Available Product
-                        "/api/available_product/post/cart_checking"
+                        "/api/available_product/post/cart_checking",
 //                        "https://localhost:8080/api/order/paypal/success",
 //                        "https://localhost:8080/api/order/paypal/cancel"
 
-//                        "/api/role/post/data-crawling"
+                        "/api/role/post/data-crawling"
                 )
                 .permitAll()
                 .antMatchers("/api/user/post/postmapping")

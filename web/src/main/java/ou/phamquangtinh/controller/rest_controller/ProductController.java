@@ -2,12 +2,9 @@ package ou.phamquangtinh.controller.rest_controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ou.phamquangtinh.entity.ProductEntity;
-import ou.phamquangtinh.service.component_service.ICommentDetailService;
 import ou.phamquangtinh.service.component_service.IProductService;
 
 import java.util.Set;
@@ -47,6 +44,12 @@ public class ProductController {
     @GetMapping("/get/sub_cate_id/{id}")
     public ResponseEntity<Object> getProductBySubCategoryId(@PathVariable("id") Long id, @RequestParam("page") int page, @RequestParam("size") int size) {
         return ResponseEntity.ok(productService.findProductBySubCategoryId(id, page, size));
+    }
+
+    @GetMapping("/get/all_product_by_sType")
+    public ResponseEntity<?> getProductBySexType(@RequestParam("sType") String sType, @RequestParam("page") int page,
+                                                 @RequestParam("size") int size, @RequestParam("sort") String sort){
+        return ResponseEntity.ok(productService.findProductBySexType(sType, page, size, sort));
     }
 
     @GetMapping("/get/sub_cate_name/{name}")
@@ -108,6 +111,17 @@ public class ProductController {
                                                        @RequestParam("sort") String sort,
                                                        @RequestParam("keyword") String keyword) {
         return ResponseEntity.ok(productService.findProductByProductNamePagination( page, size, sort, keyword));
+    }
+
+    @GetMapping("/get/super_category_products_and_sex_type")
+    public ResponseEntity<?> getProductByCategoryNameAndSType(@RequestParam("super_category_name") String categoryName,
+                                                              @RequestParam("sType") String sType){
+        return ResponseEntity.ok(productService.findTop10SuperCategoryProduct(categoryName, sType));
+    }
+
+    @GetMapping("/get/related_product_by_category")
+    public ResponseEntity<?> getRelatedProductByCategory(@RequestParam("cates") Set<String> cates){
+        return ResponseEntity.ok(productService.findTop12ProductsByCategory(cates));
     }
 
 }

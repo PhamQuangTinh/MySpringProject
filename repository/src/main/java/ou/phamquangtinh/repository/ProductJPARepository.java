@@ -43,6 +43,13 @@ public interface ProductJPARepository extends JpaRepository<ProductEntity, Long>
 
     Page<ProductEntity> findByProductNameContaining(String productName, Pageable page);
 
+    Page<ProductEntity> findBySexTypeIgnoreCase(String sType, Pageable page);
 
+
+    List<ProductEntity> findTop10BySexTypeAndCategoryEntities_SuperCategoryEntity_NameIgnoreCase(String sType, String superCategoryName);
+
+    Page<ProductEntity> findBySexTypeInAndUnitPriceBetween(Set<String> sexType, double fPrice, double lPrice, Pageable page);
+
+    List<ProductEntity> findTop12ByCategoryEntities_CategoryNameInOrSubCategoryEntity_NameIn(Set<String> cates, Set<String> subCates);
 
 }

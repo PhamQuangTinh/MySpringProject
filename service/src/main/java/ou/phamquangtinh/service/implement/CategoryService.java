@@ -56,13 +56,11 @@ public class CategoryService implements ICategoryService {
             productEntities.add(productEntity);
             categoryEntity.setProductEntities(productEntities);
         }else{
-//            Collection<ProductEntity>  productEntities = categoryEntity.getProductEntities();
-//            if(productEntities.contains(productEntity)){
-//                System.out.println("EXIST PRODUCT " + productEntity.getProductName() + " IN CATEGORY " + categoryEntity.getCategoryName());
-//                return null;
-//            }else{
-//                categoryEntity.getProductEntities().add(productEntity);
-//            }
+            Collection<ProductEntity>  productEntities = categoryEntity.getProductEntities();
+            if(productEntities.contains(productEntity)){
+                System.out.println("EXIST PRODUCT " + productEntity.getProductName() + " IN CATEGORY " + categoryEntity.getCategoryName());
+                return null;
+            }
             categoryEntity.getProductEntities().add(productEntity);
         }
 //        System.out.println("Added: " + productEntity.getProductName() + " to " + categoryEntity.getCategoryName());

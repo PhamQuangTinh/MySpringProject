@@ -64,4 +64,10 @@ public interface IProductService {
     void addNewOrderDetail(Long proId, OrderDetailEntity orderDetailEntity);
 
     void addNewProductCommentDetail(Long proId, ProductCommentDetailEntity productCommentDetailEntity);
+
+    ListResponsePagination findProductBySexType(String sType, int page, int size, String sortBy);
+
+    List<ProductEntity> findTop10SuperCategoryProduct(String categoryName, String sType);
+
+    List<ProductEntity> findTop12ProductsByCategory(Set<String> cates);
 }

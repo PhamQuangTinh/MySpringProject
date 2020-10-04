@@ -54,9 +54,11 @@ export class ProductComponent implements OnInit, AfterViewInit {
 
   productId: number;
   userId: number;
+  type: string;
   productInfo: any;
   productImages: any = [];
   productComments: any = [];
+  relatedProduct: any = [];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -80,7 +82,7 @@ export class ProductComponent implements OnInit, AfterViewInit {
     this.route.paramMap.subscribe((params: ParamMap) => {
       let id = this.productId = parseInt(params.get('id'));
       let page = this.page =  parseInt(params.get('page'));
-      
+      let type = this.type = params.get('type');
     });
 
     try {
@@ -104,13 +106,27 @@ export class ProductComponent implements OnInit, AfterViewInit {
             this.checkColorLink = this.productInfo.colors[0].colorLink;
             this.checkColorId = this.productInfo.colors[0].id;
             this.isLiked = this.productInfo.userLikeProducts;
+            this.productService.getRelatedProduct(this.productInfo.category).subscribe(
+              (res:any)=>{
+                if(res.data.body != null){
+                  this.relatedProduct = res.data.body;
+                  console.log(this.relatedProduct);
+                } 
+              },
+              err=>{console.log(err)}
+            );
           }
         },
         (err) => {}
       );
+
   }
 
   ngAfterViewInit() {}
+
+  routerToCate(){
+    this.router.navigateByUrl("/products/" + this.type);
+  }
 
   //change big image
   changeViewProduct(image) {
@@ -132,6 +148,19 @@ export class ProductComponent implements OnInit, AfterViewInit {
       });
   }
 
+  movetoProduct(product){
+    let st = ''
+    if(product.sexType == 'WOMAN'){
+      st = 'women'
+    }else if(product.sexType == 'MAN'){
+      st = 'man'
+    }else if(product.sexType == 'Girls'){
+      st = 'girl'
+    }else if(product.sexType == 'Boys'){
+      st = 'boy'
+    }
+    this.router.navigate(['/products/product-detail',{id: product.id, type: st}]).then(()=>window.location.reload());
+  }
   chooseSize(size) {
     this.checkSizeType = size.sizeType;
     this.checkSizeId = size.id;

@@ -59,82 +59,86 @@ public class CrawlDataService {
     }
 
 
-    public void crawlDataSexType(String link) {
+//    public void crawlDataSexType() {
+//        try {
+//
+//            final Document document = Jsoup.connect(webURL).get();
+//
+//            Element element = document.selectFirst(".ocm-flex");
+//            System.out.println(element.html());
+//            Element getSecond = document.selectFirst("#main-navigation");
+//
+//            Elements getMenuItem = getSecond.select(".nav-item");
+//
+//            //Giữ lại
+//            getMenuItem.remove(4);
+//            getMenuItem.remove(4);
+//            getMenuItem.remove(4);
+//            getMenuItem.remove(getMenuItem.size() - 1);
+//            getMenuItem.remove(0);
+//
+//
+//            //Duyệt từng đối tượng trong menu lớn
+//            for (Element e : getMenuItem) {
+//
+//                String folderURL = "C:\\Users\\Admin\\Desktop\\MySpringProject\\src\\main\\java\\shop-web\\src\\assets\\img";
+//
+//
+//                //Lấy tên SEX TYPE
+//                String sexTypeProduct = e.getElementsByTag("span").first().text();
+//                sexType = sexTypeProduct;
+//                sexTypeProduct = sexTypeProduct.replaceAll("[\\/:*?\"<>|]", "");
+//                ;
+//                //URL folder SEXTYPE
+//                folderURL = folderURL + "\\" + sexTypeProduct;
+//
+//                //Tạo folder SEXTYPE
+//                createFolder(folderURL);
+//
+//                //Đường link dẫn tới SUPER CATEGORY
+//                String superCategoryLink = webURL + e.selectFirst("a[href]").attr("href");
+//
+//                //Tạo đường link dẫn tới SUPER CATEGORY
+//                if (sexTypeProduct.equalsIgnoreCase("men") || sexTypeProduct.equalsIgnoreCase("women")) {
+//                    superCategoryLink = superCategoryLink + "/clothes";
+//                } else if (sexTypeProduct.equalsIgnoreCase("kids")) {
+//                    superCategoryLink = superCategoryLink + "/girls";
+//                } else {
+//                    superCategoryLink = superCategoryLink + "/living";
+//                }
+////                System.out.println("************************************************************************************************************************************");
+////                System.out.println("************************************************************************************************************************************");
+//                System.out.println("*************************************" + "START ACCESSING " + sexTypeProduct + " PAGE: " + superCategoryLink + "**************************************");
+////                System.out.println("************************************************************************************************************************************");
+////                System.out.println("************************************************************************************************************************************");
+//
+//                crawlDataSuperCategory(superCategoryLink, folderURL);
+//
+////                System.out.println("************************************************************************************************************************************");
+////                System.out.println("************************************************************************************************************************************");
+//                System.out.println("*************************************" + "END ACCESSING " + sexTypeProduct + " PAGE: " + superCategoryLink + "**************************************");
+////                System.out.println("************************************************************************************************************************************");
+////                System.out.println("************************************************************************************************************************************");
+////                System.out.println();
+////                System.out.println();
+////                System.out.println();
+////                System.out.println();
+////                System.out.println();
+//
+//            }
+//
+//        } catch (NullPointerException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+//    private void crawlDataSuperCategory(String link, String folder) {
+
+
+    public void crawlDataSuperCategory() {
         try {
-
-            final Document document = Jsoup.connect(link).get();
-
-            Element getSecond = document.selectFirst("#main-navigation");
-
-            Elements getMenuItem = getSecond.select(".nav-item");
-
-            //Giữ lại
-            getMenuItem.remove(4);
-            getMenuItem.remove(4);
-            getMenuItem.remove(4);
-            getMenuItem.remove(getMenuItem.size() - 1);
-            getMenuItem.remove(0);
-
-
-            //Duyệt từng đối tượng trong menu lớn
-            for (Element e : getMenuItem) {
-
-                String folderURL = "C:\\Users\\Admin\\Desktop\\MySpringProject\\src\\main\\java\\shop-web\\src\\assets\\img";
-
-
-                //Lấy tên SEX TYPE
-                String sexTypeProduct = e.getElementsByTag("span").first().text();
-                sexType = sexTypeProduct;
-                sexTypeProduct = sexTypeProduct.replaceAll("[\\/:*?\"<>|]", "");
-                ;
-                //URL folder SEXTYPE
-                folderURL = folderURL + "\\" + sexTypeProduct;
-
-                //Tạo folder SEXTYPE
-                createFolder(folderURL);
-
-                //Đường link dẫn tới SUPER CATEGORY
-                String superCategoryLink = webURL + e.selectFirst("a[href]").attr("href");
-
-                //Tạo đường link dẫn tới SUPER CATEGORY
-                if (sexTypeProduct.equalsIgnoreCase("men") || sexTypeProduct.equalsIgnoreCase("women")) {
-                    superCategoryLink = superCategoryLink + "/clothes";
-                } else if (sexTypeProduct.equalsIgnoreCase("kids")) {
-                    superCategoryLink = superCategoryLink + "/girls";
-                } else {
-                    superCategoryLink = superCategoryLink + "/living";
-                }
-//                System.out.println("************************************************************************************************************************************");
-//                System.out.println("************************************************************************************************************************************");
-                System.out.println("*************************************" + "START ACCESSING " + sexTypeProduct + " PAGE: " + superCategoryLink + "**************************************");
-//                System.out.println("************************************************************************************************************************************");
-//                System.out.println("************************************************************************************************************************************");
-
-                crawlDataSuperCategory(superCategoryLink, folderURL);
-
-//                System.out.println("************************************************************************************************************************************");
-//                System.out.println("************************************************************************************************************************************");
-                System.out.println("*************************************" + "END ACCESSING " + sexTypeProduct + " PAGE: " + superCategoryLink + "**************************************");
-//                System.out.println("************************************************************************************************************************************");
-//                System.out.println("************************************************************************************************************************************");
-//                System.out.println();
-//                System.out.println();
-//                System.out.println();
-//                System.out.println();
-//                System.out.println();
-
-            }
-
-        } catch (NullPointerException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void crawlDataSuperCategory(String link, String folder) {
-        try {
-            Document document = Jsoup.connect(link).get();
-
+            Document document = Jsoup.connect("https://www.esprit.eu/kids/girls").get();
+            String folder = "C:\\Users\\Admin\\Desktop\\MySpringProject\\src\\main\\java\\shop-web\\src\\assets\\img\\woman";
             //Menu toàn bộ SUPER CATEGORY của thẻ ul
             Element menuSuperCategory = document.selectFirst(".sidenavigation__level-1");
 
@@ -142,11 +146,11 @@ public class CrawlDataService {
             Elements superCategories = menuSuperCategory.select(".sidenavigation__level-1 > li");
 //            for (Element cate : superCategories) {
             if(superCategories.size() > 4){
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 2; i++) {
 
                     //SUPER CATEGORY NAME lưu vào database
                     String superCategoryDB = superCategories.get(i).getElementsByTag("a").first().text();
-
+                    sexType = superCategoryDB;
                     superCategoryDB = superCategoryDB.replaceAll("[\\/:*?\"<>|]", "");
 
 
@@ -160,7 +164,6 @@ public class CrawlDataService {
                         superCategoryEntity.setName(superCategoryDB);
                         superCategoryEntity = superCategoryService.createNewOrUpdateSuperCategory(superCategoryEntity);
                     }
-
 
                     //Tạo folder SUPER CATEGORY
                     createFolder(folderSuperCategoryURL);
@@ -211,7 +214,7 @@ public class CrawlDataService {
             Elements categoryLink = menuCategory.select("li");
 
             if(categoryLink.size() > 3){
-                for (int i = 0; i < 3; i++) {
+                for (int i = 4; i < 9; i++) {
 
                     //CATEGORY NAME lưu vào database
                     String categoryDBName = categoryLink.get(i).getElementsByTag("a").first().text();
@@ -227,7 +230,9 @@ public class CrawlDataService {
 
                     //DATABASE
                     CategoryEntity categoryEntity = categoryService.findCategoryByName(categoryDBName);
+
                     if(categoryEntity == null){
+                        categoryEntity = new CategoryEntity();
                         categoryEntity.setCategoryName(categoryDBName);
                         categoryEntity.setSuperCategoryEntity(superCategory);
                         categoryEntity = categoryService.createNewOrUpdateCategory(categoryEntity);
@@ -410,7 +415,7 @@ public class CrawlDataService {
 
             Element menuProduct = null;
             try {
-                menuProduct = document.selectFirst(".product-overview__product-list");
+                menuProduct = document.selectFirst(".product-overview .product-list");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -432,7 +437,7 @@ public class CrawlDataService {
                         CategoryEntity categoryEntity = categoryService.addNewProduct(id, productEntity);
                         if(categoryEntity != null){
                             productService.addNewCategory(productEntity.getId(), categoryEntity);
-                            System.out.println("UPDATE PRODUCT" + productNameAtPage + " TO CATEGORY " + categoryEntity.getCategoryName() + " SUCCESS");
+                            System.out.println("UPDATE PRODUCT " + productNameAtPage + " TO CATEGORY " + categoryEntity.getCategoryName() + " SUCCESS");
                         }
                     } else if (code == 2) {
                         SubCategoryEntity subCategoryEntity = subCategoryService.addNewProduct(id, productEntity);
@@ -447,9 +452,9 @@ public class CrawlDataService {
 
                     String finalLinkToProduct = webURL + getProductInfoLink;
 
-                    System.out.println("PRODUCT: " + finalLinkToProduct + ", " + "CREATE SUCCESS");
+                    System.out.println("PRODUCT " + finalLinkToProduct + ", " + "CREATE SUCCESS");
 
-                    getProductInfo(finalLinkToProduct);
+                    getProductInfo(finalLinkToProduct,code, id);
                 }
 
             });
@@ -460,7 +465,7 @@ public class CrawlDataService {
         }
     }
 
-    private void getProductInfo(String link) {
+    private void getProductInfo(String link, int code, Long id) {
         try {
             String productName;
             String productPriceString = null;
@@ -536,8 +541,14 @@ public class CrawlDataService {
                 productEntity.setUnitPrice(productPrice);
                 productEntity.setSexType(sexType);
                 productEntity.setDescription(productDescription);
-
                 productEntity = productService.createNewOrUpdateProduct(productEntity);
+                if (code == 1) {
+                    productEntity = productService.addNewCategory(productEntity.getId(), categoryService.getCategoryToUpdate(id));
+                    categoryService.addNewProduct(id, productEntity);
+                } else if(code == 2) {
+                    productEntity = productService.addNewSubCategory(productEntity.getId(), subCategoryService.getSubCategoryToUpdate(id));
+                    subCategoryService.addNewProduct(id, productEntity);
+                }
 
 
                 //DATABASE
@@ -569,6 +580,7 @@ public class CrawlDataService {
                                     colorEntity.setColorLink(imageLinkDB);
                                     colorEntity = colorService.createNewOrUpdateColor(colorEntity);
                                 }
+                                productColorEntity = new ProductColorEntity();
                                 ProductColorKey productColorKey = new ProductColorKey(productEntity.getId(), colorEntity.getId());
                                 productColorEntity = new ProductColorEntity();
                                 productColorEntity.setId(productColorKey);

@@ -19,7 +19,7 @@ import java.util.Collection;
 @JsonIgnoreProperties(value = {"subCategoryEntities","superCategoryEntity","productEntities"})
 public class CategoryEntity extends BaseEntity<String> {
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String categoryName;
 
     @Column(nullable = true)

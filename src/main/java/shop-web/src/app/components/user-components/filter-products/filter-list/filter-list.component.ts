@@ -29,6 +29,7 @@ export class FilterListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.configPagination);
     if (
       this.configPagination.keyword === null && 
       this.configPagination.filter === null
@@ -44,7 +45,7 @@ export class FilterListComponent implements OnInit {
         alert("You have to login first");
       }
     }
-    else if (
+    if (
       this.configPagination.keyword !== null ||
       this.configPagination.filter !== null
     ) {

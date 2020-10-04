@@ -35,6 +35,7 @@ export class FilterListService {
 
   findProductsFilter(page, size, sortBy, fPrice, lPrice, color, sexTypes): Observable<any>
   {
+    console.log(page, size, sortBy, fPrice, lPrice, color, sexTypes);
     const params = new HttpParams()
                     .set('page', page)
                     .set('size', size)

@@ -20,6 +20,7 @@ import ou.phamquangtinh.service.component_service.IProductService;
 import ou.phamquangtinh.service.util.CommonUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements IProductService {
@@ -64,7 +65,12 @@ public class ProductService implements IProductService {
             categoryEntityCollection.add(categoryEntity);
             productEntity.setCategoryEntities(categoryEntityCollection);
         }else{
-                productEntity.getCategoryEntities().add(categoryEntity);
+            Collection<CategoryEntity> collection = productEntity.getCategoryEntities();
+            if(collection.contains(categoryEntity)){
+                System.out.println("EXIST CATEGORY " + categoryEntity.getCategoryName() + " IN PRODUCT " + productEntity.getProductName());
+                return null;
+            }
+            productEntity.getCategoryEntities().add(categoryEntity);
         }
         return productJPARepository.saveAndFlush(productEntity);
     }
@@ -117,13 +123,11 @@ public class ProductService implements IProductService {
             subCategoryEntities.add(subCategoryEntity);
             productEntity.setSubCategoryEntity(subCategoryEntities);
         }else{
-//            Collection<SubCategoryEntity> collection = productEntity.getSubCategoryEntity();
-//            if(collection.contains(subCategoryEntity)){
-//                System.out.println("EXIST SUB CATEGORY " + subCategoryEntity.getName() + " IN PRODUCT " + productEntity.getProductName());
-//                return null;
-//            }else{
-//                productEntity.getSubCategoryEntity().add(subCategoryEntity);
-//            }
+            Collection<SubCategoryEntity> collection = productEntity.getSubCategoryEntity();
+            if(collection.contains(subCategoryEntity)){
+                System.out.println("EXIST SUB CATEGORY " + subCategoryEntity.getName() + " IN PRODUCT " + productEntity.getProductName());
+                return null;
+            }
             productEntity.getSubCategoryEntity().add(subCategoryEntity);
 
         }
@@ -197,9 +201,34 @@ public class ProductService implements IProductService {
                                                                    double lPrice, String colorName, int page, int size, String sortBy) {
         Sort sort = commonUtil.getSort(sortBy);
         Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Page<ProductEntity> pageRes = null;
+        if(colorName.equals("")){
+            pageRes = productJPARepository.findBySexTypeInAndUnitPriceBetween(sexType, fPrice, lPrice, pageable);
+        }else{
+            pageRes = productJPARepository
+                    .findBySexTypeInAndUnitPriceBetweenAndProductColorEntities_ColorEntity_ColorNameContaining(sexType,fPrice,lPrice,colorName,pageable);
+        }
+
+        return commonUtil.getListResponsePagination(pageRes);
+    }
+
+    @Override
+    public List<ProductEntity> findTop12ProductsByCategory(Set<String> cates) {
+        return productJPARepository.findTop12ByCategoryEntities_CategoryNameInOrSubCategoryEntity_NameIn(cates,cates);
+    }
+
+    @Override
+    public List<ProductEntity> findTop10SuperCategoryProduct(String categoryName, String sType) {
+        return productJPARepository.findTop10BySexTypeAndCategoryEntities_SuperCategoryEntity_NameIgnoreCase(sType, categoryName);
+    }
+
+    @Override
+    public ListResponsePagination findProductBySexType(String sType, int page, int size, String sortBy) {
+        Sort sort = commonUtil.getSort(sortBy);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
 
         Page<ProductEntity> pageRes = productJPARepository
-                .findBySexTypeInAndUnitPriceBetweenAndProductColorEntities_ColorEntity_ColorNameContaining(sexType,fPrice,lPrice,colorName,pageable);
+                .findBySexTypeIgnoreCase(sType, pageable);
 
         return commonUtil.getListResponsePagination(pageRes);
     }
@@ -242,6 +271,7 @@ public class ProductService implements IProductService {
         ProductEntity productEntity = findProductById(proId);
         ModelMapper modelMapper = new ModelMapper();
         productInfoResponse = modelMapper.map(productEntity, ProductInfoResponse.class);
+
         List<ColorModel> colors = new ArrayList<>();
         List<SizeModel> sizes = new ArrayList<>();
         List<ProductImagesModel> firstImgesColor = new ArrayList<>();
@@ -256,7 +286,6 @@ public class ProductService implements IProductService {
                     availableProductEntity.getSizeEntity().getSizeType());
             sizes.add(sizeModel);
         }
-
         for (ProductColorEntity productColorEntity : productColorEntities) {
             if(colors.get(0).getId().equals(productColorEntity.getId().getColorId())){
                 for (ProductImagesEntity productImagesEntity : productColorEntity.getProductImagesEntities()) {
@@ -266,6 +295,10 @@ public class ProductService implements IProductService {
                 break;
             }
 
+        }
+        productInfoResponse.setCategory(productEntity.getCategoryEntities().stream().map(CategoryEntity::getCategoryName).collect(Collectors.toList()));
+        for(SubCategoryEntity sub: productEntity.getSubCategoryEntity()){
+            productInfoResponse.getCategory().add(sub.getName());
         }
 
         productInfoResponse.setColors(colors);

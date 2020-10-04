@@ -18,6 +18,7 @@ export class ProductItemComponent implements OnInit {
   @Input() productItem: any;
   @Input() page: number;
 
+  currentRouter: string;
   qty: number = 1;
   bigImage: any;
   id: any = null;
@@ -41,6 +42,7 @@ export class ProductItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentRouter = this.router.url.replace("/products/","");
     this.bigImage = this.sanitize(
       this.productItem.productAvatarEntities[1].imageLink
     );
@@ -86,7 +88,7 @@ export class ProductItemComponent implements OnInit {
   }
 
   moveToProductInfo() {
-    this.router.navigate(['/products/product-detail',{page:this.page, id: this.productItem.id}]);
+    this.router.navigate(['/products/product-detail',{page:this.page, id: this.productItem.id, type: this.currentRouter}]);
   }
 
   //like product

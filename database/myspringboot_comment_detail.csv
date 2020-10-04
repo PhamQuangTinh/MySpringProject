@@ -1,5 +1,2 @@
-1441,15,very nice product,quangtinh,2020-09-26 15:16:34,quangtinh,2020-09-26 15:16:34
-1441,16,beautifull,quangtinh,2020-09-26 15:16:38,quangtinh,2020-09-26 15:16:38
-1441,17,ok la,quangtinh,2020-09-26 15:18:03,quangtinh,2020-09-26 15:18:03
-1527,13,nice product,quangtinh,2020-09-26 15:16:16,quangtinh,2020-09-26 15:16:16
-1527,14,perfectProduct,quangtinh,2020-09-26 15:16:22,quangtinh,2020-09-26 15:16:22
+#,product_id,user_comment_id,comment_content,created_by,created_date,modified_by,modified_date
+1,1689,18,nice product,quangtinh,2020-10-03 12:53:26,quangtinh,2020-10-03 12:53:26

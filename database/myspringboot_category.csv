@@ -1,2 +1,33 @@
-77,quangtinh,2020-08-24 19:48:31,quangtinh,2020-08-24 20:01:17,New Season,,3,
-78,quangtinh,2020-08-24 20:04:07,quangtinh,2020-08-24 20:04:12,T-shirts & long sleeves,,3,
+#,id,created_by,created_date,modified_by,modified_date,description,super_category_id,modifie_by,category_name
+1,87,quangtinh,2020-10-02 13:39:49,,2020-10-02 13:40:24,,17,quangtinh,New Season
+2,88,quangtinh,2020-10-02 13:55:45,,2020-10-02 13:55:45,,17,quangtinh,Jackets & coats
+3,89,quangtinh,2020-10-02 14:23:07,,2020-10-02 14:23:07,,17,quangtinh,Jumpers & cardigans
+4,90,quangtinh,2020-10-02 15:55:31,,2020-10-02 15:55:31,,18,quangtinh,Bras
+5,91,quangtinh,2020-10-02 16:24:30,,2020-10-02 16:24:30,,18,quangtinh,Briefs
+6,92,quangtinh,2020-10-02 18:29:49,,2020-10-02 18:29:57,,19,quangtinh,Tracksuit bottoms
+7,93,quangtinh,2020-10-02 18:36:16,,2020-10-02 18:36:27,,19,quangtinh,T-shirts & long sleeve tops
+8,94,quangtinh,2020-10-02 18:42:56,,2020-10-02 18:43:04,,19,quangtinh,Jackets & sweatshirts
+9,95,quangtinh,2020-10-02 18:45:19,,2020-10-02 18:45:30,,20,quangtinh,Trainers
+10,96,quangtinh,2020-10-02 18:48:51,,2020-10-02 18:48:51,,20,quangtinh,Long boots & short boots
+11,97,quangtinh,2020-10-02 18:48:53,,2020-10-02 18:49:02,,20,quangtinh,Ballerinas
+12,98,quangtinh,2020-10-02 19:24:06,,2020-10-02 19:24:06,,17,quangtinh,Jeans
+13,99,quangtinh,2020-10-02 19:26:37,,2020-10-02 19:26:37,,17,quangtinh,Trousers
+14,100,quangtinh,2020-10-02 19:33:48,,2020-10-02 19:33:53,,21,quangtinh,Bags & wallets
+15,101,quangtinh,2020-10-02 19:34:37,,2020-10-02 19:34:50,,21,quangtinh,Belts
+16,102,quangtinh,2020-10-02 19:35:37,,2020-10-02 19:35:49,,21,quangtinh,Scarves & hats
+17,103,quangtinh,2020-10-02 19:38:24,,2020-10-02 19:38:33,,21,quangtinh,Gloves
+18,104,quangtinh,2020-10-02 19:38:47,,2020-10-02 19:39:01,,22,quangtinh,Business casual
+19,105,quangtinh,2020-10-02 19:48:13,,2020-10-02 19:48:19,,22,quangtinh,Fabric for autumn cashmere
+20,106,quangtinh,2020-10-02 19:49:39,,2020-10-02 19:49:53,,22,quangtinh,Fabric for autumn corduroy & fleece
+21,107,quangtinh,2020-10-02 19:50:43,,2020-10-02 19:50:49,,22,quangtinh,Premium fabrics
+22,108,quangtinh,2020-10-02 20:07:29,,2020-10-02 20:07:29,,23,quangtinh,Dresses & skirts
+23,109,quangtinh,2020-10-02 20:07:31,,2020-10-02 20:07:31,,23,quangtinh,Jeans & trousers
+24,110,quangtinh,2020-10-02 20:07:32,,2020-10-02 20:07:32,,23,quangtinh,T-shirts & blouses
+25,111,quangtinh,2020-10-02 20:07:34,,2020-10-02 20:07:48,,23,quangtinh,Jumpers
+26,112,quangtinh,2020-10-02 20:08:38,,2020-10-02 20:08:38,,24,quangtinh,T-shirts & shirts
+27,113,quangtinh,2020-10-02 20:08:40,,2020-10-02 20:08:50,,24,quangtinh,Sweatshirts
+28,114,quangtinh,2020-10-02 20:18:05,,2020-10-02 20:18:05,,23,quangtinh,Underwear
+29,115,quangtinh,2020-10-02 20:18:06,,2020-10-02 20:18:06,,23,quangtinh,Shoes & socks
+30,116,quangtinh,2020-10-02 20:18:08,,2020-10-02 20:18:08,,23,quangtinh,Nightwear
+31,117,quangtinh,2020-10-02 20:18:09,,2020-10-02 20:18:16,,23,quangtinh,Accessories
+32,118,quangtinh,2020-10-02 20:18:42,,2020-10-02 20:18:50,,24,quangtinh,Swimwear

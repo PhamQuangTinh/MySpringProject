@@ -1,3 +1,17 @@
-3,quangtinh,2020-08-24 20:04:12,quangtinh,2020-08-24 20:09:31,,Long sleeve tops,78,
-4,quangtinh,2020-08-24 20:20:09,quangtinh,2020-08-24 20:23:28,,Vests,78,
-5,quangtinh,2020-08-24 20:41:19,quangtinh,2020-08-24 20:43:46,,T-shirts,78,
+#,id,created_by,created_date,modified_by,modified_date,description,name,category_id,modifie_by
+1,9,quangtinh,2020-10-02 13:55:49,,2020-10-02 13:57:07,,Jackets,88,quangtinh
+2,10,quangtinh,2020-10-02 14:10:35,,2020-10-02 14:10:41,,Coats,88,quangtinh
+3,11,quangtinh,2020-10-02 14:21:28,,2020-10-02 14:21:38,,Parkas,88,quangtinh
+4,12,quangtinh,2020-10-02 14:23:10,,2020-10-02 14:23:16,,Jumpers,89,quangtinh
+5,13,quangtinh,2020-10-02 14:47:06,,2020-10-02 14:47:13,,Cardigans,89,quangtinh
+6,14,quangtinh,2020-10-02 15:32:07,,2020-10-02 15:32:14,,Best basics,89,quangtinh
+7,15,quangtinh,2020-10-02 15:55:35,,2020-10-02 15:55:53,,Padded,90,quangtinh
+8,16,quangtinh,2020-10-02 16:10:15,,2020-10-02 16:10:34,,Unpadded,90,quangtinh
+9,17,quangtinh,2020-10-02 16:19:14,,2020-10-02 16:19:30,,Push-up,90,quangtinh
+10,18,quangtinh,2020-10-02 16:24:33,,2020-10-02 16:24:51,,Slips,91,quangtinh
+11,19,quangtinh,2020-10-02 16:33:59,,2020-10-02 16:34:14,,Thongs,91,quangtinh
+12,20,quangtinh,2020-10-02 16:39:15,,2020-10-02 16:39:31,,Shorts,91,quangtinh
+13,21,quangtinh,2020-10-02 19:24:09,,2020-10-02 19:24:13,,Slim fit,98,quangtinh
+14,22,quangtinh,2020-10-02 19:26:11,,2020-10-02 19:26:15,,Straight fit,98,quangtinh
+15,23,quangtinh,2020-10-02 19:26:33,,2020-10-02 19:26:37,,Relaxed fit,98,quangtinh
+16,24,quangtinh,2020-10-02 19:29:29,,2020-10-02 19:29:39,,Sweatshirts,89,quangtinh

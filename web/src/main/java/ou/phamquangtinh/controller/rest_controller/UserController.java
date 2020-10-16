@@ -144,8 +144,9 @@ public class UserController {
 
     @GetMapping("/get/all_user/pagination")
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    public ResponseEntity<Object> getAllUsersPagination(@RequestParam("page") int page, @RequestParam("size") int size) {
-        ListResponsePagination res = userService.findAllUsers(page, size);
+    public ResponseEntity<Object> getAllUsersPagination(@RequestParam("page") int page, @RequestParam("size") int size,
+                                                        @RequestParam("sort") String sort) {
+        ListResponsePagination res = userService.findAllUsers(page, size, sort);
         return ResponseEntity.ok(res);
     }
 

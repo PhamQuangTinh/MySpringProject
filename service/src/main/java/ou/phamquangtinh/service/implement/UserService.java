@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.dto.request.user_request.RegisterReq;
 import ou.phamquangtinh.dto.request.user_request.UpdateUserReq;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
+import ou.phamquangtinh.dto.response.PageMetadata;
+import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.*;
 import ou.phamquangtinh.entity.middle_entity.UserCommentEntity;
 import ou.phamquangtinh.repository.UserJPARepository;
@@ -23,6 +25,7 @@ import ou.phamquangtinh.service.component_service.IUserService;
 import ou.phamquangtinh.service.util.CommonUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -263,12 +266,33 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ListResponsePagination findAllUsers(int page, int size) {
-        Sort sort = Sort.by("lastName").descending();
+    public ListResponsePagination findAllUsers(int page, int size, String sortBy) {
+        Sort sort = commonUtil.getSort(sortBy);
         Pageable pageable = PageRequest.of(page - 1,size,sort);
         Page<UserEntity> userEntityList = userJPARepository.findAll(pageable);
+        ListResponsePagination res = new ListResponsePagination();
+        List<UserEntityResponse> listRes = userEntityList.getContent().stream().map(x->{
+            UserEntityResponse userEntityResponse = new UserEntityResponse();
+            userEntityResponse.setId(x.getId());
+            userEntityResponse.setEmail(x.getEmail());
+            userEntityResponse.setFirstName(x.getFirstName());
+            userEntityResponse.setLastName(x.getLastName());
+            userEntityResponse.setPhone(x.getPhone());
+            userEntityResponse.setUsername(x.getUsername());
+            userEntityResponse.setCreatedDate(x.getCreatedDate());
+            userEntityResponse.setRoleString(x.getRoles().stream().map(RoleEntity::getCode).collect(Collectors.joining(",")));
+            return userEntityResponse;
+        }).collect(Collectors.toList());
+        PageMetadata pageMetadata = new PageMetadata();
 
-        return commonUtil.getListResponsePagination(userEntityList);
+        pageMetadata.setPage(userEntityList.getNumber() + 1);
+        pageMetadata.setSize(userEntityList.getSize());
+        pageMetadata.setTotalElements(userEntityList.getTotalElements());
+        pageMetadata.setTotalPages(userEntityList.getTotalPages());
+        pageMetadata.setNumberOfElements(userEntityList.getNumberOfElements());
+        res.setListResponse(listRes);
+        res.setPageMetadata(pageMetadata);
+        return res;
 
     }
 

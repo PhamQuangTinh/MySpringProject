@@ -2,6 +2,7 @@ package ou.phamquangtinh.service.component_service;
 
 import ou.phamquangtinh.dto.request.order_request.CheckCartItems;
 import ou.phamquangtinh.dto.request.order_request.PaymentRequest;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.entity.OrderEntity;
 import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 
@@ -18,4 +19,6 @@ public interface IOrderService {
     void removeOrder(Long orderId);
 
     Long orderTransaction(PaymentRequest paymentRequest);
+
+    ListResponsePagination getAllOrderService(int page, int size, String sort);
 }

@@ -11,10 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ou.phamquangtinh.controller.security.service.MyUserDetailService;
 import ou.phamquangtinh.controller.security.service.MyUserDetails;
 import ou.phamquangtinh.dto.request.order_request.CheckCartItems;
@@ -102,5 +99,11 @@ public class OrderController {
         return ResponseEntity.ok(new StringResponse("fail"));
     }
 
+
+    @GetMapping("/get/all_order_pagination")
+    public ResponseEntity<?> getAllOrderPagination(@RequestParam("page") int page, @RequestParam("size") int size,
+                                                   @RequestParam("sort") String sort){
+        return ResponseEntity.ok(orderService.getAllOrderService(page, size, sort));
+    }
 
 }

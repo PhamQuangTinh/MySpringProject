@@ -6,8 +6,6 @@ import { MessengerService } from './../../../../../services/messenger.service';
 import { ProductItemService } from './product-item.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { PlatformLocation } from '@angular/common' 
-
 declare const $: any;
 @Component({
   selector: 'app-product-item',

@@ -2,23 +2,34 @@ package ou.phamquangtinh.service.implement;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.dto.request.order_request.CheckCartItems;
 import ou.phamquangtinh.dto.request.order_request.PaymentRequest;
+import ou.phamquangtinh.dto.response.FindOrderResponse;
+import ou.phamquangtinh.dto.response.ListResponsePagination;
+import ou.phamquangtinh.dto.response.PageMetadata;
+import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.OrderEntity;
+import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.entity.UserEntity;
 import ou.phamquangtinh.entity.middle_entity.AvailableProductEntity;
 import ou.phamquangtinh.entity.middle_entity.OrderDetailEntity;
 import ou.phamquangtinh.entity.middle_entity.embaddableEntity.OderDetailKey;
 import ou.phamquangtinh.repository.OrderJPARepository;
 import ou.phamquangtinh.service.component_service.*;
+import ou.phamquangtinh.service.util.CommonUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -42,6 +53,8 @@ public class OrderService implements IOrderService {
     @Autowired
     private IOrderService orderService;
 
+    @Autowired
+    private CommonUtil commonUtil;
 
     @Override
     public OrderEntity createNewOrUpdateOrderEntity(OrderEntity orderEntity) {
@@ -72,6 +85,33 @@ public class OrderService implements IOrderService {
     public void removeOrder(Long orderId) {
         OrderEntity orderEntity = getOrderToUpdate(orderId);
         orderJPARepository.delete(orderEntity);
+    }
+
+    @Override
+    public ListResponsePagination getAllOrderService(int page, int size, String sortBy) {
+        Sort sort = commonUtil.getSort(sortBy);
+        Pageable pageable = PageRequest.of(page - 1,size,sort);
+        Page<OrderEntity> userEntityList = orderJPARepository.findAll(pageable);
+        ListResponsePagination res = new ListResponsePagination();
+        List<FindOrderResponse> listRes = userEntityList.getContent().stream().map(x->{
+            FindOrderResponse order = new FindOrderResponse();
+            order.setId(x.getId());
+            order.setCreatedBy(x.getCreatedBy());
+            order.setCreatedDate(x.getCreatedDate());
+            order.setPayerId(x.getPayerId());
+            order.setPaymentId(x.getPaymentId());
+            order.setUserId(x.getUserEntity().getId());
+            return order;
+        }).collect(Collectors.toList());
+        PageMetadata pageMetadata = new PageMetadata();
+        pageMetadata.setPage(userEntityList.getNumber() + 1);
+        pageMetadata.setSize(userEntityList.getSize());
+        pageMetadata.setTotalElements(userEntityList.getTotalElements());
+        pageMetadata.setTotalPages(userEntityList.getTotalPages());
+        pageMetadata.setNumberOfElements(userEntityList.getNumberOfElements());
+        res.setListResponse(listRes);
+        res.setPageMetadata(pageMetadata);
+        return res;
     }
 
     @Override

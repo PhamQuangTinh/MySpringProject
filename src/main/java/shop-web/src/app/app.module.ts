@@ -1,3 +1,12 @@
+import { ProductItemComponent } from './components/user-components/shop/product-list/product-item/product-item.component';
+import { ProductListComponent } from './components/user-components/shop/product-list/product-list.component';
+import { MenuComponent } from './components/user-components/menu/menu.component';
+import { PagesComponent } from './components/user-components/pages/pages.component';
+import { ContactComponent } from './components/user-components/contact/contact.component';
+import { ProductComponent } from './components/user-components/product/product.component';
+import { ShopComponent } from './components/user-components/shop/shop.component';
+import { CheckOutComponent } from './components/user-components/check-out/check-out.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { RegisterComponent } from './components/user-components/register/register.component';
 import { LoginComponent } from './components/user-components/login/login.component';
@@ -24,11 +33,10 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { FilterProductsComponent } from './components/user-components/filter-products/filter-products.component';
 import { FilterItemComponent } from './components/user-components/filter-products/filter-list/filter-item/filter-item.component';
 import { FilterListComponent } from './components/user-components/filter-products/filter-list/filter-list.component';
-
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
-    AppComponent,
     HeaderComponent,
     FooterComponent,
     HomeComponent,
@@ -40,7 +48,17 @@ import { FilterListComponent } from './components/user-components/filter-product
     FilterProductsComponent,
     FilterListComponent,
     FilterItemComponent,
-  
+    CheckOutComponent,
+    PageNotFoundComponent,
+    ProductComponent,
+    ShopComponent,
+    ContactComponent,
+    PagesComponent,
+    ProductComponent,
+    MenuComponent,
+    ProductListComponent,
+    ProductItemComponent,
+    AppComponent
   ],
   imports: [
     CommonModule,
@@ -52,8 +70,10 @@ import { FilterListComponent } from './components/user-components/filter-product
     CarouselModule,
     AppRoutingModule,
     NgxImageZoomModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatSelectModule,
   ],
+
   schemas: [ CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     //Add token to request header

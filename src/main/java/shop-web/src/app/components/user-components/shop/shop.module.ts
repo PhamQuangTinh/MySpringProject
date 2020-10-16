@@ -11,15 +11,12 @@ import { PagesComponent } from '../pages/pages.component';
 
 import { ProductComponent } from '../product/product.component';
 import { MenuComponent } from '../menu/menu.component';
-import { CheckOutComponent } from '../check-out/check-out.component';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import { PageNotFoundComponent } from '../../page-not-found/page-not-found.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductItemComponent } from './product-list/product-item/product-item.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
-
 @NgModule({
   declarations: [
     // HomeComponent,
@@ -28,11 +25,8 @@ import { NgxImageZoomModule } from 'ngx-image-zoom';
     PagesComponent,
     ProductComponent,
     MenuComponent,
-    CheckOutComponent,
-    PageNotFoundComponent,
     ProductListComponent,
     ProductItemComponent,
-    
   ],
   imports: [
     ReactiveFormsModule,

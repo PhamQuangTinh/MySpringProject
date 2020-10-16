@@ -35,7 +35,7 @@ public interface IUserService {
 
     List<UserEntity> findByLastName(String lastName);
 
-    ListResponsePagination findAllUsers(int page, int size);
+    ListResponsePagination findAllUsers(int page, int size, String sort);
 
     ListResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size);
 

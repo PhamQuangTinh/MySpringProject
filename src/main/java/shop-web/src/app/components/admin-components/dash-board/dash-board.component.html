@@ -1,0 +1,350 @@
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand" href="index.html">Admin Page</a>
+    <!-- <ul class="navbar-nav ml-auto ml-md-0">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">Settings</a>
+                <a class="dropdown-item" href="#">Activity Log</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="login.html">Logout</a>
+            </div>
+        </li>
+    </ul> -->
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <a class="nav-link" href="javascript:void(0)" (click)="productAdmin()">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Product
+                    </a>
+                    <a class="nav-link" href="javascript:void(0)" (click)="userAdmin()">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        User
+                    </a>
+                    <a class="nav-link" href="javascript:void(0)" (click)="orderAdmin()">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        Order
+                    </a>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                Start Bootstrap
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area mr-1"></i>
+                                Area Chart Example
+                            </div>
+                            <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-bar mr-1"></i>
+                                Bar Chart Example
+                            </div>
+                            <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table mr-1"></i>
+                        DataTable Example
+                    </div>
+
+
+                    <button style="margin-bottom: 10px;" class="btn btn-sm btn-primary" (click)="addNewItem(null)">
+                        Add New User
+                    </button>
+                    <!-- Navbar-->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr *ngIf="adminChild == 'product'">
+                                        <th>action</th>
+                                        <th>ID</th>
+                                        <th>Product Name</th>
+                                        <th>Unit Price</th>
+                                        <th>Sex Type</th>
+                                        <th>Discount</th>
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                    <tr *ngIf="adminChild == 'user'">
+                                        <th>action</th>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Phone</th>
+                                        <th>Created Date</th>
+                                        <th>Role</th>
+
+                                    </tr>
+                                    <tr *ngIf="adminChild == 'order'">
+                                        <th>action</th>
+                                        <th>ID</th>
+                                        <th>User ID</th>
+                                        <th>Created Date</th>
+                                        <th>Created By</th>
+                                        <th>Payer ID</th>
+                                        <th>Payment ID</th>
+                                    </tr>
+
+                                </thead>
+                                <tfoot>
+                                    <tr *ngIf="adminChild == 'product'">
+                                        <th>action</th>
+                                        <th>ID</th>
+                                        <th>Product Name</th>
+                                        <th>Unit Price</th>
+                                        <th>Sex Type</th>
+                                        <th>Discount</th>
+                                        <th>Created By</th>
+                                        <th>Created Date</th>
+                                    </tr>
+                                    <tr *ngIf="adminChild == 'user'">
+                                        <th>action</th>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Phone</th>
+                                        <th>Created Date</th>
+                                        <th>Role</th>
+                                    </tr>
+                                    <tr *ngIf="adminChild == 'order'">
+                                        <th>action</th>
+                                        <th>ID</th>
+                                        <th>User ID</th>
+                                        <th>Payer ID</th>
+                                        <th>Payment ID</th>
+                                        <th>Created Date</th>
+                                        <th>Created By</th>
+                                    </tr>
+                                </tfoot>
+
+                                <tbody>
+                                    <ng-container *ngIf="adminChild == 'product'">
+                                        <tr *ngFor="let item of data; index as i" (click)="chooseColumn(i+1)"
+                                            [class.isChoosing]="isChoosing(i+1)">
+                                            <td>
+                                                <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
+                                                        class="material-icons" data-toggle="tooltip" title="Edit"
+                                                        style="color: #a3931c;">&#xE254;</i></a>
+                                                <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
+                                                        class="material-icons" data-toggle="tooltip" title="Delete"
+                                                        style="color: #ff0505;">&#xE872;</i></a>
+                                            </td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.productName}}</td>
+                                            <td>{{item.unitPrice}}</td>
+                                            <td>{{item.sexType}}</td>
+                                            <td>{{item.discount}}</td>
+                                            <td>{{item.createdBy}}</td>
+                                            <td>{{item.createdDate}}</td>
+                                        </tr>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="adminChild == 'user'">
+                                        <tr *ngFor="let item of data; index as i" (click)="chooseColumn(i+1)"
+                                            [class.isChoosing]="isChoosing(i+1)">
+                                            <td>
+                                                <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
+                                                        class="material-icons" data-toggle="tooltip" title="Edit"
+                                                        style="color: #a3931c;">&#xE254;</i></a>
+                                                <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
+                                                        class="material-icons" data-toggle="tooltip" title="Delete"
+                                                        style="color: #ff0505;">&#xE872;</i></a>
+                                            </td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.username}}</td>
+                                            <td>{{item.firstName}}</td>
+                                            <td>{{item.lastName}}</td>
+                                            <td>{{item.phone}}</td>
+                                            <td>{{item.createdDate}}</td>
+                                            <td>{{item.roleString}}</td>
+                                        </tr>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="adminChild == 'order'">
+                                        <tr *ngFor="let item of data; index as i" (click)="chooseColumn(i+1)"
+                                            [class.isChoosing]="isChoosing(i+1)">
+                                            <td>
+                                                <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
+                                                        class="material-icons" data-toggle="tooltip" title="Edit"
+                                                        style="color: #a3931c;">&#xE254;</i></a>
+                                                <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
+                                                        class="material-icons" data-toggle="tooltip" title="Delete"
+                                                        style="color: #ff0505;">&#xE872;</i></a>
+                                            </td>
+                                            <td>{{item.id}}</td>
+                                            <td>{{item.userId}}</td>
+                                            <td>{{item.payerId}}</td>
+                                            <td>{{item.paymentId}}</td>
+                                            <td>{{item.createdDate}}</td>
+                                            <td>{{item.createdBy}}</td>
+                                        </tr>
+                                    </ng-container>
+
+
+                                </tbody>
+                            </table>
+                            <nav aria-label="...">
+                                <ul class="pagination">
+                                    <li class="page-item" [class.disabled]="isFirstPage()">
+                                        <a class="page-link" href="javascript:void(0)" tabindex="-1"
+                                            (click)="goPre()">Previous</a>
+                                    </li>
+                                    <ng-container *ngFor="let page of counter(pageMetadata.totalPages); index as i">
+                                        <li class="page-item" [class.active]="isCurrentPage(i+1)"><a class="page-link"
+                                                href="javascript:void(0)" (click)="goToPage(i+1)">{{i+1}}</a></li>
+                                    </ng-container>
+                                    <li class="page-item" [class.disabled]="isLastPage()">
+                                        <a class="page-link" href="javascript:void(0)" (click)="goNext()">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+
+<!--Add New Product-->
+<!-- <div class="modal fade" id="addNewItem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" *ngIf="!isEdit" id="exampleModalLabel">Thêm Người Dùng</h5>
+                <h5 class="modal-title" *ngIf="isEdit" id="exampleModalLabel">Chỉnh Sửa Người Dùng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"> -->
+
+                <!-- <div class="row">
+                <div class = "col-1" >
+                    Mã User
+                </div>
+                <div class = "col-2">
+                    <input type="text" disabled class = "form-control" [(ngModel)] = user.id/>
+                </div>
+               
+                <div class = "col-2">
+                    Tên Tài Khoản
+                </div>
+                <div class = "col-3">
+                    <input type="text" class = "form-control" [(ngModel)] = "user.username"/>
+                </div>
+
+                <div class = "col-1">
+                    Mật Khẩu
+                </div>
+                <div class = "col-3">
+                    <input type="text" class = "form-control" [(ngModel)] = user.password   />
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+              <div class = "col-1" >
+                Họ
+              </div>
+              <div class = "col-3">
+                  <input type="text"  class = "form-control" [(ngModel)] = user.ho/>
+              </div>
+
+              <div class = "col-1" >
+                Tên
+              </div>
+              <div class = "col-3">
+                  <input type="text"  class = "form-control" [(ngModel)] = user.ten/>
+              </div>
+
+              <div class = "col-1" >
+                Quyền
+              </div>
+              <div class = "col-3">
+                <select class = "form-control" [(ngModel)] = user.roleid >
+                  <option *ngFor = "let role of ListRole" value = {{role.id}} >{{role.name}}</option>
+                </select>
+              </div>
+            </div>
+
+            <br/>
+            <div class="row">
+              <div class = "col-1" >
+                Email
+              </div>
+              <div class = "col-4">
+                  <input type="text"  class = "form-control" [(ngModel)] = user.email/>
+              </div>
+
+              <div class = "col-2" >
+                Số Điện Thoại
+              </div>
+              <div class = "col-3">
+                  <input type="text"  class = "form-control" [(ngModel)] = user.sdt/>
+              </div>
+            </div> -->
+
+
+<!-- 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" *ngIf="!isEdit" (click)="editComfirm()">Tạo Mới</button>
+                <button type="button" class="btn btn-info" *ngIf="isEdit" (click)="editComfirm()">Sửa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<!--Dialog-->
+<!-- <div class="modal" id="editComfirm" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác Nhận</h5>
+                <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p *ngIf="!isEdit">Bạn chắc chắc muốn thêm người dùng này không ?</p>
+                <p *ngIf="isEdit">Bạn chắc chắc muốn sửa người dùng này không ?</p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="editUser()">Xác Nhận</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+
+            </div>
+        </div>
+    </div>
+</div> -->

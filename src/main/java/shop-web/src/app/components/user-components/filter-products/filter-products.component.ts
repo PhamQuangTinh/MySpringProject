@@ -53,7 +53,6 @@ export class FilterProductsComponent implements OnInit, AfterViewInit {
     }
     this.config.keyword = this.session.getKeyword();
     this.config.filter = this.session.getFilter();
-    console.log(this.config.userId, this.config.keyword, this.config.filter);
   }
   
 

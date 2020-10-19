@@ -48,4 +48,6 @@ public interface IUserService {
     UserEntity addNewComment(Long userId, Long productId, String content);
 
     UserEntity addNewOrder(Long userId, OrderEntity orderEntity);
+
+    UserEntity updateUserAdmin(UpdateUserReq user);
 }

@@ -10,8 +10,8 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.4/7103ab519b1cdbb0642ad4eaf1db209d905d0f96/lombok-1.18.4.jar" />
         </processorPath>
         <module name="my-spring-boot-project.domain.main" />
-        <module name="my-spring-boot-project.repository.main" />
         <module name="my-spring-boot-project.web.main" />
+        <module name="my-spring-boot-project.repository.main" />
         <module name="my-spring-boot-project.service.main" />
         <module name="my-spring-boot-project.dto.main" />
       </profile>

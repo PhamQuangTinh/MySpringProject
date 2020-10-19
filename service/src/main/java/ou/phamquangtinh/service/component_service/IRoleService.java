@@ -6,6 +6,8 @@ import ou.phamquangtinh.dto.response.role_response.GetUserFromRoleResponse;
 import ou.phamquangtinh.entity.RoleEntity;
 import ou.phamquangtinh.entity.UserEntity;
 
+import java.util.List;
+
 public interface IRoleService {
     GetUserFromRoleResponse findUserByCodeOfRole(String code);
 
@@ -18,4 +20,5 @@ public interface IRoleService {
     RoleEntity addNewUser(Long roleId, UserEntity userEntity);
 
 
+    List<RoleEntity> findAllRole();
 }

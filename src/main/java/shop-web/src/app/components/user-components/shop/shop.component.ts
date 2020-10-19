@@ -1,7 +1,8 @@
+import { SessionStorageService } from 'src/app/services/session-storage.service';
 import { ShopService } from './shop.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { MessengerService } from './../../../services/messenger.service';
-import { Subject, Observable, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 declare const $: any;
@@ -49,6 +50,7 @@ export class ShopComponent implements OnInit, AfterViewInit {
     code: 1,
     filter: null,
     sType: '',
+    category: '',
   };
   pageSize: number;
   public maxSize: number = 20;
@@ -66,12 +68,15 @@ export class ShopComponent implements OnInit, AfterViewInit {
   constructor(
     private msg: MessengerService,
     private router: Router,
-    private shopService: ShopService
+    private shopService: ShopService,
+    private route: ActivatedRoute,
+    private session: SessionStorageService,
     ) {
-      this.currentRouter = this.config.sType = this.router.url.replace("/products/","");
     }
 
   ngOnInit(): void {
+    this.currentRouter = this.config.sType = this.config.sType = this.router.url.replace("/products/","");
+    this.config.category = this.session.getCategory();
   }
 
   ngAfterViewInit() {

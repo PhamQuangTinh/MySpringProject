@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
         
         this.success = true;
         this.tokenService.saveToken(res.headers.get('token'))
-        this.router.navigate(['/products/women']).then(()=>{window.location.reload()});
+        this.router.navigate(['/home']).then(()=>{window.location.reload()});
         
 
     

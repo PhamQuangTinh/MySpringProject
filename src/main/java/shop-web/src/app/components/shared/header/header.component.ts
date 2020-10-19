@@ -16,13 +16,14 @@ declare const $: any;
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit{
   lastName = '';
   isLoggedIn = false;
   userId: any;
 
   keyword: any ='';
 
+  sexType: string = 'home';
   value = '';
   cartItems = [];
 
@@ -30,6 +31,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   cartTotal = 0;
 
   subscription: Subscription;
+
+  hasAdminRole:boolean = false;
+
+  category: string = 'All Categories';
 
 
   constructor(
@@ -41,13 +46,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private session: SessionStorageService
   ) {
   }
-
   ngOnInit(): void {
+    if(this.session.getCategory() != null){
+      this.category = this.session.getCategory();
+    }else{
+      this.category = 'All Categories';
+    }
+
+    if(this.session.getSexType() != null){
+      this.sexType = this.session.getSexType();
+    }else{
+      this.sexType = 'home';
+    }
+
     try{
-      this.userId = this.tokenService.getUser().id;
+      var user = this.tokenService.getUser();
+      this.userId = user.id;
+      for(var i = 0; i < user.authorities.length; i++){
+        if(user.authorities[i].authority == "SUPER_ADMIN"){
+            this.hasAdminRole = true;
+            break;
+        }
+    }
     }catch{
+      this.hasAdminRole = false;
       this.userId = null;
     }
+
     
     $('.mobile-menu').slicknav({
       prependTo: '#mobile-menu-wrap',
@@ -84,12 +109,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
     
   }
 
-
-
   signOut() {
     this.tokenService.removeUser();
     this.tokenService.removeToken();
     this.router.navigateByUrl('/home').then(()=>{window.location.reload()});
+  }
+
+  goToTransactionHistory(){
+    this.router.navigate(['/transaction', this.tokenService.getUser().id]);
   }
 
   //calc products total
@@ -126,9 +153,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return index;
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
 
   viewProduct(product){
     $('.searchProductUl').slideUp('fast');
@@ -161,5 +185,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.router.navigateByUrl('/filter').then(()=>this.session.saveKeyword(this.keyword));   
     }
   }
+
+  changeCategory(cate){
+    return this.category == cate;
+  }
+
+  chooseCategory(cate){
+    var sType = this.router.url.replace("/products/","");
+    if(sType != '/home'){
+      this.router.navigateByUrl('/home').then(()=>this.router.navigateByUrl('/products/' + sType));
+    }
+    this.category = cate;
+    this.sessionStorage.saveCategory(cate);
+  }
+
+
+
 
 }

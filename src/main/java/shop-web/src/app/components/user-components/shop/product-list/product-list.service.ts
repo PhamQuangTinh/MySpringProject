@@ -14,7 +14,7 @@ export class ProductListService {
 
   }
 
-  findAllProductsPaginationService(page, size, sortBy, sType): Observable<any>
+  findAllProductsPaginationService(page, size, sortBy, sType, category): Observable<any>
     {
         if(sType == 'women'){
           sType = 'woman';
@@ -29,8 +29,9 @@ export class ProductListService {
                     .set('sType', sType)
                     .set('page', page)
                     .set('size', size)
-                    .set('sort',sortBy);
-        return this.http.get(productsUrl + '/get/all_product_by_sType', {params})
+                    .set('sort',sortBy)
+                    .set('cate', category);
+        return this.http.get(productsUrl + '/get/all_product_by_sType_and_cate', {params})
         .pipe(catchError(this.errorHandler));
 
     }

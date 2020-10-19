@@ -9,6 +9,8 @@ import { LoginComponent } from './components/user-components/login/login.compone
 import { FilterProductsComponent } from './components/user-components/filter-products/filter-products.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ShopComponent } from './components/user-components/shop/shop.component';
+import { HistoryTransactionComponent } from './components/user-components/history-transaction/history-transaction.component';
+import { OrderComfirmComponent } from './components/user-components/order-comfirm/order-comfirm.component';
 
 
 
@@ -62,9 +64,14 @@ const routes: Routes = [
     path:'filter',
     component: FilterProductsComponent
   },
+  
   {
     path:'login',
     component: LoginComponent
+  },
+  {
+    path:'pay-confirm',
+    component: OrderComfirmComponent,
   },
   {
     path:'register',
@@ -79,6 +86,10 @@ const routes: Routes = [
     path:'check-out',
     component: CheckOutComponent
   },
+  {
+    path:'transaction/:id',
+    component: HistoryTransactionComponent,
+  },  
   {
     path:'',
     redirectTo: 'home',

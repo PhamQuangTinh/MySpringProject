@@ -34,6 +34,8 @@ import { FilterProductsComponent } from './components/user-components/filter-pro
 import { FilterItemComponent } from './components/user-components/filter-products/filter-list/filter-item/filter-item.component';
 import { FilterListComponent } from './components/user-components/filter-products/filter-list/filter-list.component';
 import {MatSelectModule} from '@angular/material/select';
+import { HistoryTransactionComponent } from './components/user-components/history-transaction/history-transaction.component';
+import { OrderComfirmComponent } from './components/user-components/order-comfirm/order-comfirm.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import {MatSelectModule} from '@angular/material/select';
     MenuComponent,
     ProductListComponent,
     ProductItemComponent,
-    AppComponent
+    AppComponent,
+    HistoryTransactionComponent,
+    OrderComfirmComponent
   ],
   imports: [
     CommonModule,

@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import ou.phamquangtinh.dto.request.order_request.CheckCartItems;
 import ou.phamquangtinh.dto.request.order_request.PaymentRequest;
 import ou.phamquangtinh.dto.response.FindOrderResponse;
+import ou.phamquangtinh.dto.response.GetOrderByUserIdResponse;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.PageMetadata;
+import ou.phamquangtinh.dto.response.role_response.GetUserFromRoleResponse;
 import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.OrderEntity;
 import ou.phamquangtinh.entity.RoleEntity;
@@ -85,6 +87,31 @@ public class OrderService implements IOrderService {
     public void removeOrder(Long orderId) {
         OrderEntity orderEntity = getOrderToUpdate(orderId);
         orderJPARepository.delete(orderEntity);
+    }
+
+    @Override
+    public List<GetOrderByUserIdResponse> getOrderById(Long userId) {
+        List<OrderEntity> orderEntity = orderJPARepository.findByUserEntity_Id(userId);
+
+        if(orderEntity != null){
+            return orderEntity.stream().map(x->{
+                GetOrderByUserIdResponse response = new GetOrderByUserIdResponse();
+                response.setId(x.getId());
+                response.setCreateDated(x.getCreatedDate());
+                response.setPayerId(x.getPayerId());
+                response.setPaymentId(x.getPaymentId());
+                response.setTotalItems(x.getOrderDetail().size());
+                response.setTotalPrice(x.getOrderDetail().stream()
+                        .mapToDouble(y-> y.getQuantity() * y.getProductEntity().getUnitPrice()).sum());
+                return response;
+            }).collect(Collectors.toList());
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteOrderAdmin(Long id) {
+        orderJPARepository.deleteById(id);
     }
 
     @Override

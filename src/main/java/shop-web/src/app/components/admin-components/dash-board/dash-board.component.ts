@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { DashBoardService} from './dash-board.service'
 declare const $:any;
@@ -15,6 +16,12 @@ export class DashBoardComponent implements OnInit {
   columnChoosing = 1;
   currentPageDisplay = 40;
   isEdit = false;
+  typeOfItem: String;
+  listRole: any;
+
+  itemData: any;
+
+  deleteDataId: any;
   user: any = {
     id: 0,
     username: "",
@@ -23,8 +30,48 @@ export class DashBoardComponent implements OnInit {
     phone:"",
     lastName:"",
     firstName:"",
-    roles:[]
+    roleString:""
   }
+
+  product: any = {
+    id: 0,
+
+    productName: "",
+
+    unitPrice: 0,
+
+    description: "",
+
+    discount: 0,
+
+    sexType: "",
+  }
+
+  productCopy: any = {
+    id: 0,
+    
+    productName: "",
+
+    unitPrice: "",
+
+    description: "",
+
+    discount: "",
+
+    sexType: "",
+  }
+
+  userCopy: any = {
+    id: 0,
+    username: "",
+    password: "",
+    email:"",
+    phone:"",
+    lastName:"",
+    firstName:"",
+    roleString:""
+  }
+  item = "2340";
   constructor(
     private service: DashBoardService,
   ) { }
@@ -32,6 +79,168 @@ export class DashBoardComponent implements OnInit {
   ngOnInit(): void {
     this.findProductPagination(1,this.currentPageDisplay, this.adminChild);
   }
+
+  editItem(isEdit, type, data){
+    this.isEdit = isEdit;
+    this.typeOfItem = type;
+    if(this.typeOfItem == 'user'){
+      if(data != null){
+        this.user = data;
+      }else{
+        this.user = this.userCopy;
+        this.service.findAllRole().subscribe(
+          res =>{
+            if(res.success && res.data.body != null){
+              this.listRole = res.data.body;
+            }
+          },
+          err=>{console.log(err)}
+        )
+      }
+    }else if(this.typeOfItem == 'product'){
+      if(data != null){
+        this.product = data;
+      }else{
+        this.product = this.productCopy;
+      }
+    }
+
+
+    $("#editItem").modal('show');
+  }
+
+  deleteItem(dataId){
+    this.deleteDataId = dataId;
+    $("#deleteConfirm").modal('show');
+  }
+
+  deleteItemFinal(){
+    if(this.adminChild == 'user'){
+      this.service.deleteUser(this.deleteDataId).subscribe(
+        res=>{
+          $('#deleteConfirm').modal('hide');
+          this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+        },err=>{
+          $('#deleteConfirm').modal('hide');
+          this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+        }
+      );
+
+    }else if(this.adminChild == 'product'){
+      this.service.deleteProduct(this.deleteDataId).subscribe(
+        res=>{
+          $('#deleteConfirm').modal('hide');
+          this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+        },err=>{
+          alert("err");
+          $('#deleteConfirm').modal('hide');
+          this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+        }
+      );
+    } else if(this.adminChild == 'order'){
+      this.service.deleteOrder(this.deleteDataId).subscribe(
+        res=>{
+          $('#deleteConfirm').modal('hide');
+          this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+        },err=>{
+          alert("err");
+          $('#deleteConfirm').modal('hide');
+          this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+        }
+      )
+    }
+  }
+
+  editComfirm(){
+    //Kiểm tra điều kiện
+    $("#editComfirm").modal('show');
+  }
+
+  editItemFinal(){
+    if(this.isEdit){
+      if(this.adminChild == 'user'){
+        this.service.updateUser(this.user).subscribe(
+          res=>{
+            if(res.success && res.data.body != null){
+              alert("Update success");
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+              this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+            }else{
+              alert("Update failed")
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+            }
+          },err=>{
+            $("#editComfirm").modal('hide');
+            $("#editItem").modal('hide');
+          }
+        )
+      }else if(this.adminChild == 'product'){
+        this.service.updateProduct(this.product).subscribe(
+          res=>{
+            if(res.success && res.data.body != null){
+              alert("Update success");
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+              this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+            }else{
+              alert("Update failed")
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+            }
+          },err=>{
+            $("#editComfirm").modal('hide');
+            $("#editItem").modal('hide');
+          }
+        )
+      }
+    }
+    else{
+      if(this.adminChild == 'user'){
+        this.service.createUser(this.user).subscribe(
+          res=>{
+            if(res.success && res.data.body != null){
+              alert("Create success");
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+              this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+            }else{
+              alert("Create failed")
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+            }
+          },err=>{
+            alert("Error");
+            $("#editComfirm").modal('hide');
+            $("#editItem").modal('hide');
+          }
+        )
+      }else if(this.adminChild == 'product'){
+        this.service.createProduct(this.product).subscribe(
+          res=>{
+            if(res.success && res.data.body != null){
+              alert("Create success");
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+              this.findProductPagination(1,this.currentPageDisplay, this.adminChild)
+            }else{
+              alert("Create failed")
+              $("#editComfirm").modal('hide');
+              $("#editItem").modal('hide');
+            }
+          },err=>{
+            alert("Error");
+            $("#editComfirm").modal('hide');
+            $("#editItem").modal('hide');
+          }
+        )
+      }
+    }
+
+  }
+
+  
 
   productAdmin(){
     this.adminChild = 'product';
@@ -47,7 +256,8 @@ export class DashBoardComponent implements OnInit {
   orderAdmin(){
     this.adminChild = 'order';
     this.currentPage = 1;
-    this.goToPageIndex();  }
+    this.goToPageIndex();  
+  }
 
 
   findProductPagination(page, size, type){
@@ -113,9 +323,9 @@ export class DashBoardComponent implements OnInit {
     return '1';
   }
 
-  addNewItem(shopObject){
+  addNewItem(edit,shopObject){
+    this.isEdit = edit;
     if(shopObject == null){
-      
     }else{
 
     }
@@ -125,5 +335,6 @@ export class DashBoardComponent implements OnInit {
   goToPageIndex(){
     this.findProductPagination(this.currentPage,this.currentPageDisplay, this.adminChild);
   }
+
 
 }

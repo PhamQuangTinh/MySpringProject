@@ -70,6 +70,11 @@ public class RoleService implements IRoleService {
     }
 
     @Override
+    public List<RoleEntity> findAllRole() {
+        return roleRepository.findAll();
+    }
+
+    @Override
     public RoleEntity addNewUser(Long roleId, UserEntity userEntity) {
         RoleEntity roleEntity = roleRepository.getOne(roleId);
         if(roleEntity.getUsers() == null){

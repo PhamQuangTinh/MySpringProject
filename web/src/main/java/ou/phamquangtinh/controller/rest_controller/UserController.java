@@ -161,11 +161,16 @@ public class UserController {
 
     //**************************************************PUT USER*************************************************
     @PutMapping("/put/updation")
-    public ResponseEntity<Object> updateUser(UpdateUserReq user) {
+    public ResponseEntity<Object> updateUser(@RequestBody UpdateUserReq user) {
 
         UserEntity userOK = userService.updateUser(user);
 
         return ResponseEntity.ok(userOK);
+    }
+
+    @PutMapping("/put/update_user_admin")
+    public ResponseEntity<?> updateUserAdmin(@RequestBody UpdateUserReq user){
+        return ResponseEntity.ok(userService.updateUserAdmin(user));
     }
 
 

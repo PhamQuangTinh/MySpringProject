@@ -26,7 +26,8 @@ export class AuthInterceptor implements HttpInterceptor {
       // this.router.navigateByUrl(`/login`);
       this.token.removeToken();
       this.token.removeUser();
-      this.router.navigateByUrl('/home');
+      // this.router.navigateByUrl('/home');
+      alert("Authorization failed");
       // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
       return of(err.message); // or EMPTY may be appropriate here
     }
@@ -40,7 +41,6 @@ export class AuthInterceptor implements HttpInterceptor {
     let authReq = req;
 
     const tokenRequest = this.token.getToken();
-
     //Gắn token vào header
     if(tokenRequest != null){
       authReq = req.clone({
@@ -53,16 +53,6 @@ export class AuthInterceptor implements HttpInterceptor {
     }
     
     return next.handle(authReq).pipe(
-      // tap(
-      //   succ =>{},
-      //   err => {
-      //     if(err.status == 403 || err.status == 401){
-      //       localStorage.removeItem('auth-token');
-      //       this.router.navigateByUrl('/login');
-      //     }
-      //   },
-
-      // ),
       catchError((x) => this.handleAuthError(x))
     );
   }

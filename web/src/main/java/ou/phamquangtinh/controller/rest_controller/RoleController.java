@@ -25,6 +25,11 @@ public class RoleController {
 
     }
 
+    @GetMapping("/get/all_role")
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public ResponseEntity<?> findAllRole(){
+        return  ResponseEntity.ok(roleService.findAllRole());
+    }
 
 
 

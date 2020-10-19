@@ -31,21 +31,20 @@ export class ProductListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.configPagination.sType);
     this.findAllProductsPagination(
       this.configPagination.currentPage,
       this.configPagination.itemsPerPage,
       this.configPagination.sortBy,
-      this.configPagination.code,
-      this.configPagination.sType
+      this.configPagination.sType,
+      this.configPagination.category
     );
     this.eventPagination.subscribe(() => {
       this.findAllProductsPagination(
         this.configPagination.currentPage,
         this.configPagination.itemsPerPage,
         this.configPagination.sortBy,
-        this.configPagination.code,
-        this.configPagination.sType
+        this.configPagination.sType,
+        this.configPagination.category
       );
     });
 
@@ -54,10 +53,9 @@ export class ProductListComponent implements OnInit {
   
   // find all products to show
   // tslint:disable-next-line:typedef no-shadowed-variable
-  findAllProductsPagination(page, size, sortBy, code, sType) {
-    if (code === 1) {
+  findAllProductsPagination(page, size, sortBy, sType, category) {
         this.service
-          .findAllProductsPaginationService(page, size, sortBy, sType)
+          .findAllProductsPaginationService(page, size, sortBy, sType, category)
           .subscribe(
             (res) => {
               if (res.success && res.data.body != null) {
@@ -70,7 +68,7 @@ export class ProductListComponent implements OnInit {
               console.log(err);
             }
           );
-      }
+      
     
     
   }

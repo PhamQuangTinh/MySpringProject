@@ -85,6 +85,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                         "/api/product/get/product_info",
                         "/api/product/get/sex_type_and_price",
                         "/api/product/get/product_name",
+                        "/api/product/get/all_product_by_sType",
+                        "/api/product/get/super_category_products_and_sex_type",
+                        "/api/product/get/related_product_by_category",
+                        "/api/product/get/product_info",
+                        "/api/product/get/all_product_by_sType_and_cate",
 
 
                         //Product Color

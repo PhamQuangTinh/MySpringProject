@@ -1,0 +1,31 @@
+<app-header></app-header>
+
+<table class="table" style="margin-top: 30px;">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Order Id</th>
+      <th scope="col">Order Date</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Total Product</th>
+      <th scope="col">Payment Id</th>
+      <th scope="col">Payer Id</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of transactionData; index as i">
+      <th>{{i+1}}</th>
+      <td>{{order.id}}</td>
+      <td>{{order.createDated}}</td>
+      <td>{{order.totalPrice | number:'1.2-3'}}</td>
+      <td>{{order.totalItems}}</td>
+      <td>{{order.paymentId}}</td>
+      <td>{{order.payerId}}</td>
+
+    </tr>
+</table>
+
+
+<app-footer></app-footer>

@@ -110,7 +110,6 @@ export class ProductComponent implements OnInit, AfterViewInit {
               (res:any)=>{
                 if(res.data.body != null){
                   this.relatedProduct = res.data.body;
-                  console.log(this.relatedProduct);
                 } 
               },
               err=>{console.log(err)}

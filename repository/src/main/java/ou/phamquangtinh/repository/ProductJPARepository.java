@@ -3,6 +3,7 @@ package ou.phamquangtinh.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ou.phamquangtinh.entity.ProductEntity;
 
 import java.util.List;
@@ -45,11 +46,15 @@ public interface ProductJPARepository extends JpaRepository<ProductEntity, Long>
 
     Page<ProductEntity> findBySexTypeIgnoreCase(String sType, Pageable page);
 
+    Page<ProductEntity> findBySexTypeIgnoreCaseAndSubCategoryEntity_CategoryEntity_IdInOrSexTypeIgnoreCaseAndCategoryEntities_IdIn(
+            String sType,List<Long> ids, String sType1, List<Long> ids1, Pageable page);
+
 
     List<ProductEntity> findTop10BySexTypeAndCategoryEntities_SuperCategoryEntity_NameIgnoreCase(String sType, String superCategoryName);
 
     Page<ProductEntity> findBySexTypeInAndUnitPriceBetween(Set<String> sexType, double fPrice, double lPrice, Pageable page);
 
     List<ProductEntity> findTop12ByCategoryEntities_CategoryNameInOrSubCategoryEntity_NameIn(Set<String> cates, Set<String> subCates);
+
 
 }

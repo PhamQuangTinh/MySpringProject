@@ -15,10 +15,10 @@ public class CrawlDataController {
     private CrawlDataService crawlDataService;
 
 
-    @PostMapping("post/data-crawling")
-    private String crawlDataController(){
-        crawlDataService.crawlDataSuperCategory();
-
-        return "Success";
-    }
+//    @PostMapping("post/data-crawling")
+//    private String crawlDataController(){
+//        crawlDataService.crawlDataSuperCategory();
+//
+//        return "Success";
+//    }
 }

@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ou.phamquangtinh.dto.request.CreateNewProductResquest;
 import ou.phamquangtinh.service.component_service.IProductService;
 
+import javax.xml.ws.Response;
 import java.util.Set;
 
 @RestController
@@ -50,6 +52,12 @@ public class ProductController {
     public ResponseEntity<?> getProductBySexType(@RequestParam("sType") String sType, @RequestParam("page") int page,
                                                  @RequestParam("size") int size, @RequestParam("sort") String sort){
         return ResponseEntity.ok(productService.findProductBySexType(sType, page, size, sort));
+    }
+
+    @GetMapping("/get/all_product_by_sType_and_cate")
+    public ResponseEntity<?> getProductBySexTypeAndCategory(@RequestParam("sType") String sType, @RequestParam("cate") String category,
+                                                            @RequestParam("page") int page,@RequestParam("size") int size, @RequestParam("sort") String sort){
+        return ResponseEntity.ok(productService.findProductBySexTypeAndCategory(sType, category, page, size, sort));
     }
 
     @GetMapping("/get/sub_cate_name/{name}")
@@ -124,4 +132,23 @@ public class ProductController {
         return ResponseEntity.ok(productService.findTop12ProductsByCategory(cates));
     }
 
+
+
+    @PostMapping("/post/create_new_product")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
+    public ResponseEntity<?> createNewProduct(@RequestBody CreateNewProductResquest request){
+        return ResponseEntity.ok(productService.createProductAdmin(request));
+    }
+
+    @PutMapping("/put/update_product")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
+    public ResponseEntity<?> updateNewProduct(@RequestBody CreateNewProductResquest request){
+        return ResponseEntity.ok(productService.updateProductAdmin(request));
+    }
+
+    @DeleteMapping("/delete/delete_product/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
+    public void deleteProduct(@PathVariable("id") Long proid){
+        productService.deleteProductAdmin(proid);
+    }
 }

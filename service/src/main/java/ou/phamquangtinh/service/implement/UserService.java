@@ -52,13 +52,13 @@ public class UserService implements IUserService {
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             ModelMapper modelMapper = new ModelMapper();
             UserEntity userResponse = modelMapper.map(user, UserEntity.class);
-            UserEntity userEntityRes =  userJPARepository.saveAndFlush(userResponse);
+            UserEntity userEntityRes = userJPARepository.saveAndFlush(userResponse);
             userEntityRes = userJPARepository.getOne(userEntityRes.getId());
             Collection<RoleEntity> roles = new HashSet<>();
             RoleEntity roleEntity = null;
             for (String role : user.getRoles()) {
                 roleEntity = roleService.findRoleByCode(role);
-                roleEntity = roleService.addNewUser(roleEntity.getId(),userEntityRes);
+                roleEntity = roleService.addNewUser(roleEntity.getId(), userEntityRes);
                 roles.add(roleEntity);
             }
             userEntityRes.setRoles(roles);
@@ -161,19 +161,15 @@ public class UserService implements IUserService {
     }
 
 
-
-
-
-
     @Override
     public ListResponsePagination findByLastNameOrFirstNameContaining(String keyword, int page, int size) {
 
         Sort sort = Sort.by("lastName").descending();
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        Page<UserEntity> users = userJPARepository.findByFirstNameOrLastNameContaining(keyword,keyword, pageable);
+        Page<UserEntity> users = userJPARepository.findByFirstNameOrLastNameContaining(keyword, keyword, pageable);
 
 
-        return  commonUtil.getListResponsePagination(users);
+        return commonUtil.getListResponsePagination(users);
     }
 
     @Override
@@ -181,19 +177,19 @@ public class UserService implements IUserService {
         UserEntity userEntity = getUserToUpdate(userId);
 
         ProductEntity productEntity = productService.getProductToUpdate(productId);
-        if(userEntity.getLikeProductEntities() == null){
+        if (userEntity.getLikeProductEntities() == null) {
             List<ProductEntity> productEntities = new ArrayList<>();
             productEntities.add(productEntity);
             userEntity.setLikeProductEntities(productEntities);
-        }else{
+        } else {
             userEntity.getLikeProductEntities().add(productEntity);
         }
 
-        if(productEntity.getProductLikeByUserEntities() == null){
+        if (productEntity.getProductLikeByUserEntities() == null) {
             List<UserEntity> userEntities = new ArrayList<>();
             userEntities.add(userEntity);
             productEntity.setProductLikeByUserEntities(userEntities);
-        }else{
+        } else {
             productEntity.getProductLikeByUserEntities().add(userEntity);
         }
 
@@ -206,9 +202,9 @@ public class UserService implements IUserService {
         UserEntity userEntity = getUserToUpdate(userId);
         ProductEntity productEntity = productService.getProductToUpdate(proId);
 
-        if(userEntity.getLikeProductEntities() == null){
+        if (userEntity.getLikeProductEntities() == null) {
             return;
-        }else{
+        } else {
             userEntity.getLikeProductEntities().remove(productEntity);
             productEntity.getProductLikeByUserEntities().remove(userEntity);
         }
@@ -220,25 +216,42 @@ public class UserService implements IUserService {
     @Override
     public void addNewUserComment(Long userId, UserCommentEntity userCommentEntity) {
         UserEntity userEntity = getUserToUpdate(userId);
-        if(userEntity.getUserCommentEntities() == null){
+        if (userEntity.getUserCommentEntities() == null) {
             Collection<UserCommentEntity> userCommentEntities = new ArrayList<>();
             userCommentEntities.add(userCommentEntity);
             userEntity.setUserCommentEntities(userCommentEntities);
-        }else{
+        } else {
             userEntity.getUserCommentEntities().add(userCommentEntity);
         }
         userJPARepository.saveAndFlush(userEntity);
     }
 
     @Override
+    public UserEntity updateUserAdmin(UpdateUserReq user) {
+        UserEntity userEntity = userJPARepository.getOne(user.getId());
+
+        userEntity.setPhone(user.getPhone());
+
+        userEntity.setEmail(user.getEmail());
+
+        userEntity.setFirstName(user.getFirstName());
+
+        userEntity.setLastName(user.getLastName());
+
+        userEntity.setPassword(new BCryptPasswordEncoder().encode(user.getNewPass()));
+
+        return userJPARepository.save(userEntity);
+}
+
+    @Override
     public UserEntity addNewOrder(Long userId, OrderEntity orderEntity) {
         UserEntity userEntity = getUserToUpdate(userId);
-        if(userEntity != null){
-            if(userEntity.getOrders() == null){
+        if (userEntity != null) {
+            if (userEntity.getOrders() == null) {
                 Collection<OrderEntity> orderEntities = new ArrayList<>();
                 orderEntities.add(orderEntity);
                 userEntity.setOrders(orderEntities);
-            }else{
+            } else {
                 userEntity.getOrders().add(orderEntity);
             }
             return userJPARepository.saveAndFlush(userEntity);
@@ -268,10 +281,10 @@ public class UserService implements IUserService {
     @Override
     public ListResponsePagination findAllUsers(int page, int size, String sortBy) {
         Sort sort = commonUtil.getSort(sortBy);
-        Pageable pageable = PageRequest.of(page - 1,size,sort);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<UserEntity> userEntityList = userJPARepository.findAll(pageable);
         ListResponsePagination res = new ListResponsePagination();
-        List<UserEntityResponse> listRes = userEntityList.getContent().stream().map(x->{
+        List<UserEntityResponse> listRes = userEntityList.getContent().stream().map(x -> {
             UserEntityResponse userEntityResponse = new UserEntityResponse();
             userEntityResponse.setId(x.getId());
             userEntityResponse.setEmail(x.getEmail());

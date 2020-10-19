@@ -27,7 +27,13 @@
                             class="caret"></b></a>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="javascript:void(0)" (click)="signOut()">Log out</a>
+                        <a class="dropdown-item" href="javascript:void(0)"
+                            (click)="goToTransactionHistory()">Transaction History</a>
+                        <a class="dropdown-item" href="javascript:void(0)" *ngIf="hasAdminRole"
+                            routerLink="/admin/dash-board">Admin Page</a>
+
                     </div>
+
                 </div>
                 <div class="top-social">
                     <a href="#"><i class="ti-facebook"></i></a>
@@ -50,23 +56,26 @@
                 </div>
                 <div class="col-lg-7 col-md-7">
                     <div class="advanced-search">
-                        <button type="button" class="category-btn">All Categories</button>
-                    
+                        <!-- <button type="button" class="category-btn">All Categories</button> -->
+
                         <div class="input-group">
-                            <input class="inputMe" type="text" (keyup)="search($event)" [(ngModel)]="keyword" placeholder="What do you need?">
-                            <button type="button" (click) = "getProductsSearching()"><i class="ti-search"></i></button>
-                                <div class="menuResult">
-                                    <ul class="searchProductUl" *ngIf="ListProductsSearching.length > 0">
-                                        <a href="javascript:void(0)">
-                                            <li *ngFor="let pro of ListProductsSearching;trackBy: trackByFn" (click)="viewProduct(pro)">
-                                                <div class="searchImage">
-                                                    <img src="http://localhost:4200{{pro.productAvatarEntities[1].imageLink}}" alt="">
-                                                </div>
-                                                <div class="text-searchProduct">{{pro.productName}}</div>
-                                            </li>   
-                                        </a>
-                                    </ul>
-                                </div>
+                            <input class="inputMe" type="text" (keyup)="search($event)" [(ngModel)]="keyword"
+                                placeholder="What do you need?">
+                            <button type="button" (click)="getProductsSearching()"><i class="ti-search"></i></button>
+                            <div class="menuResult">
+                                <ul class="searchProductUl" *ngIf="ListProductsSearching.length > 0">
+                                    <a href="javascript:void(0)">
+                                        <li *ngFor="let pro of ListProductsSearching;trackBy: trackByFn"
+                                            (click)="viewProduct(pro)">
+                                            <div class="searchImage">
+                                                <img src="http://localhost:4200{{pro.productAvatarEntities[1].imageLink}}"
+                                                    alt="">
+                                            </div>
+                                            <div class="text-searchProduct">{{pro.productName}}</div>
+                                        </li>
+                                    </a>
+                                </ul>
+                            </div>
 
                         </div>
                     </div>
@@ -107,12 +116,15 @@
                                     <h5>${{cartTotal | number:'1.2-3'}}</h5>
                                 </div>
                                 <div class="select-button" *ngIf="cartItems.length !== 0">
-                                    <a href="javascript:void(0)" class="primary-btn view-card" routerLink="/shopping-cart">VIEW CARD</a>
-                                    <a href="javascript:void(0)" class="primary-btn checkout-btn" routerLink="/check-out">CHECK OUT</a>
+                                    <a href="javascript:void(0)" class="primary-btn view-card"
+                                        routerLink="/shopping-cart">VIEW CARD</a>
+                                    <a href="javascript:void(0)" class="primary-btn checkout-btn"
+                                        routerLink="/check-out">CHECK OUT</a>
                                 </div>
 
                                 <div class="select-button" *ngIf="cartItems.length === 0">
-                                    <a href="javascript:void(0)" class="primary-btn checkout-btn" routerLink="/products/women">SHOPPING NOW</a>
+                                    <a href="javascript:void(0)" class="primary-btn checkout-btn"
+                                        routerLink="/products/women">SHOPPING NOW</a>
                                 </div>
                             </div>
                         </li>
@@ -131,48 +143,56 @@
     </div>
     <div class="nav-item">
         <div class="container">
-            <div class="nav-depart">
+            <div class="nav-depart" style="min-width: 280px; ">
                 <div class="depart-btn">
                     <i class="ti-menu"></i>
-                    <span>All departments</span>
+                    <span>{{category}}</span>
                     <ul class="depart-hover">
-                        <li class="active"><a href="#">Women’s Clothing</a></li>
-                        <li><a href="#">Men’s Clothing</a></li>
-                        <li><a href="#">Underwear</a></li>
-                        <li><a href="#">Kid's Clothing</a></li>
-                        <li><a href="#">Brand Fashion</a></li>
-                        <li><a href="#">Accessories/Shoes</a></li>
-                        <li><a href="#">Luxury Brands</a></li>
-                        <li><a href="#">Brand Outdoor Apparel</a></li>
+                        <li [class.active]="changeCategory('All Categories')" (click)="chooseCategory('All Categories')"><a href="javascript:void(0)">All Categories</a></li>
+                        <li [class.active]="changeCategory('T-shirts')" (click)="chooseCategory('T-shirts')"><a href="javascript:void(0)">T-shirts</a></li>
+                        <li [class.active]="changeCategory('Jeans')" (click)="chooseCategory('Jeans')"><a href="javascript:void(0)">Jeans</a></li>
+                        <li [class.active]="changeCategory('Underwear')" (click)="chooseCategory('Underwear')"><a href="javascript:void(0)">Underwear</a></li>
+                        <li [class.active]="changeCategory('Jackets & coats')" (click)="chooseCategory('Jackets & coats')"><a href="javascript:void(0)">Jackets & coats</a></li>
+                        <li [class.active]="changeCategory('Accessories')" (click)="chooseCategory('Accessories')"><a href="javascript:void(0)">Accessories</a></li>
+                        <li [class.active]="changeCategory('New Season')" (click)="chooseCategory('New Season')"><a href="javascript:void(0)">New Season</a></li>
                     </ul>
                 </div>
             </div>
             <nav class="nav-menu mobile-menu">
+                <!-- <ul>
+                    <li [class.activeAAA]="isCurrentRouteSType('home')">
+                        <a href="javascript:void(0)" (click)="goToPageSType('home')">Home</a>
+                    </li>
+                    <li [class.activeAAA]="isCurrentRouteSType('women')">
+                        <a href="javascript:void(0)" (click)="goToPageSType('women')">Women</a>
+                    </li>
+                    <li [class.activeAAA]="isCurrentRouteSType('men')">
+                        <a href="javascript:void(0)" (click)="goToPageSType('men')">Men</a>
+                    </li>
+                    <li [class.activeAAA]="isCurrentRouteSType('girl')">
+                        <a href="javascript:void(0)" (click)="goToPageSType('girl')">Girl</a>
+                    </li>
+                    <li [class.activeAAA]="isCurrentRouteSType('boy')">
+                        <a href="javascript:void(0)" (click)="goToPageSType('boy')">Boy</a>
+                    </li>
+                    <li [class.activeAAA]="isCurrentRouteSType('about us')">
+                        <a href="javascript:void(0)">About Us</a>
+                    </li>
+
+                </ul> -->
                 <ul>
                     <li><a routerLink="/home" routerLinkActive="activeAAA">Home</a></li>
-                    <li><a routerLink="/products/women" routerLinkActive="activeAAA">WOMEN</a></li>
+                    <li><a href="javascript:void(0)" routerLink="/products/women" routerLinkActive="activeAAA" >WOMEN</a></li>
                     <li><a href="javascript:void(0)" routerLink="/products/men" routerLinkActive="activeAAA">Men</a>
-                        <!-- <ul class="dropdown">
-                            <li><a href="#">#</a></li>
-                            <li><a href="#">#</a></li>
-                            <li><a href="#">#</a></li>
-                        </ul> -->
+
                     </li>
                     <li><a href="javascript:void(0)" routerLink="/products/girl" routerLinkActive="activeAAA">Girl</a>
-                        <!-- <ul class="dropdown">
-                            <li><a href="#">#</a></li>
-                            <li><a href="#">#</a></li>
-                            <li><a href="#">#</a></li>
-                        </ul> -->
+
                     </li>
                     <li><a href="javascript:void(0)" routerLink="/products/boy" routerLinkActive="activeAAA">Boy</a>
-                        <!-- <ul class="dropdown">
-                            <li><a href="#">#</a></li>
-                            <li><a href="#">#</a></li>
-                            <li><a href="#">#</a></li>
-                        </ul> -->
+
                     </li>
-                    <li><a href="./contact.html">About Us</a></li>
+                    <li><a href="javascript:void(0)">About Us</a></li>
 
                 </ul>
             </nav>

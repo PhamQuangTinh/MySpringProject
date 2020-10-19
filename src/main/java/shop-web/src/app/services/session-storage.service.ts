@@ -8,12 +8,15 @@ const CART_KEY = "cart_key"
 const KEYWORD = "keyword"
 const FILTER = "filter";
 const ORDER_ID = "orderId";
+const CATE_KEY = 'cate';
+const SEX_TYPE = 's-type';
 @Injectable({
   providedIn: 'root',
 })
 export class SessionStorageService {
  
 
+  
   constructor() {}
 
   public saveKeyword(keyword){
@@ -69,5 +72,31 @@ export class SessionStorageService {
   }
   public getOrderId(): string{
     return window.sessionStorage.getItem(ORDER_ID);
+  }
+
+  public saveCategory(cate: string) {
+    this.removeCategory();
+    window.localStorage.setItem(CATE_KEY, cate);
+  }
+
+  public getCategory(): any {
+    return localStorage.getItem(CATE_KEY);
+  }
+
+  public removeCategory(){
+    window.localStorage.removeItem(CATE_KEY);
+  }
+
+  public saveSexType(type: string) {
+    this.removeSexType();
+    window.localStorage.setItem(SEX_TYPE, type);
+  }
+
+  public getSexType(): any {
+    return localStorage.getItem(SEX_TYPE);
+  }
+
+  public removeSexType(){
+    window.localStorage.removeItem(SEX_TYPE);
   }
 }

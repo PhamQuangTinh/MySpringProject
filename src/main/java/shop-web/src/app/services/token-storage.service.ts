@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
+const CATE_KEY = 'cate'
+const SEX_TYPE = 's-type'
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +40,8 @@ export class TokenStorageService {
   public removeUser(){
     window.localStorage.removeItem(USER_KEY);
   }
+
+
+
 
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ou.phamquangtinh.dto.request.CreateNewProductResquest;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.ProductInfoResponse;
 import ou.phamquangtinh.dto.response.model.ColorModel;
@@ -213,8 +214,74 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public ProductEntity createProductAdmin(CreateNewProductResquest request) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setProductName(request.getProductName());
+        productEntity.setUnitPrice(request.getUnitPrice());
+        productEntity.setSexType(request.getSexType());
+        productEntity.setDiscount(request.getDiscount());
+        productEntity.setDescription(request.getDescription());
+        return productJPARepository.saveAndFlush(productEntity);
+    }
+
+    @Override
+    public ProductEntity updateProductAdmin(CreateNewProductResquest request) {
+        ProductEntity productEntity = getProductToUpdate(request.getId());
+        productEntity.setProductName(request.getProductName());
+        productEntity.setUnitPrice(request.getUnitPrice());
+        productEntity.setSexType(request.getSexType());
+        productEntity.setDiscount(request.getDiscount());
+        productEntity.setDescription(request.getDescription());
+        return productJPARepository.saveAndFlush(productEntity);
+    }
+
+    @Override
+    public void deleteProductAdmin(Long proid) {
+        productJPARepository.deleteById(proid);
+    }
+
+    @Override
     public List<ProductEntity> findTop12ProductsByCategory(Set<String> cates) {
         return productJPARepository.findTop12ByCategoryEntities_CategoryNameInOrSubCategoryEntity_NameIn(cates,cates);
+    }
+
+    @Override
+    public ListResponsePagination findProductBySexTypeAndCategory(String sType, String categoryName, int page, int size, String sortBy) {
+        Sort sort = commonUtil.getSort(sortBy);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Page<ProductEntity> pageRes = null;
+        List<Long> ids = new ArrayList<>();
+        switch (categoryName) {
+            case "T-shirts":
+                ids.add(93L);
+                ids.add(110L);
+                ids.add(112L);
+                break;
+            case "Jeans":
+                ids.add(109L);
+                ids.add(98L);
+                break;
+            case "Underwear":
+                ids.add(114L);
+                break;
+            case "Accessories":
+                ids.add(117L);
+
+                break;
+            case "New Season":
+                ids.add(87L);
+                break;
+            case "Jackets & coats":
+                ids.add(88L);
+                break;
+        }
+        if(ids.isEmpty()){
+            pageRes = productJPARepository
+                    .findBySexTypeIgnoreCase(sType, pageable);
+        }else{
+            pageRes = productJPARepository.findBySexTypeIgnoreCaseAndSubCategoryEntity_CategoryEntity_IdInOrSexTypeIgnoreCaseAndCategoryEntities_IdIn(sType, ids, sType, ids, pageable);
+        }
+        return commonUtil.getListResponsePagination(pageRes);
     }
 
     @Override

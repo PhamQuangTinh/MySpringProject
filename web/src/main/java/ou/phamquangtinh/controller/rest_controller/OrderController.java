@@ -43,8 +43,8 @@ public class OrderController {
     private IPaypalService paypalService;
 
 
-    private static final String SUCCESS_URL = "http://localhost:4200/check-out";
-    private static final String CANCEL_URL = "http://localhost:4200/products/women";
+    private static final String SUCCESS_URL = "http://localhost:4200/pay-confirm";
+    private static final String CANCEL_URL = "http://localhost:4200/pay-confirm";
     private static final String PAYMENT_METHOD = "paypal";
     private static final String PAYMENT_INTENT = "sale";
 
@@ -101,9 +101,21 @@ public class OrderController {
 
 
     @GetMapping("/get/all_order_pagination")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN')")
     public ResponseEntity<?> getAllOrderPagination(@RequestParam("page") int page, @RequestParam("size") int size,
                                                    @RequestParam("sort") String sort){
         return ResponseEntity.ok(orderService.getAllOrderService(page, size, sort));
+    }
+
+    @GetMapping("/get/get_order_by_user_id/{user_id}")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN','USER')")
+    public ResponseEntity<?> getOrderByUserId(@PathVariable("user_id") Long userId){
+        return ResponseEntity.ok(orderService.getOrderById(userId));
+    }
+
+    @DeleteMapping("/delete/delete_order/{id}")
+    public void deleteOrderAdmin(@PathVariable("id") Long id){
+        orderService.deleteOrderAdmin(id);
     }
 
 }

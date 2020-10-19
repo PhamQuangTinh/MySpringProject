@@ -1,5 +1,6 @@
 package ou.phamquangtinh.service.component_service;
 
+import ou.phamquangtinh.dto.request.CreateNewProductResquest;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.ProductInfoResponse;
 import ou.phamquangtinh.entity.CategoryEntity;
@@ -67,7 +68,15 @@ public interface IProductService {
 
     ListResponsePagination findProductBySexType(String sType, int page, int size, String sortBy);
 
+    ListResponsePagination findProductBySexTypeAndCategory(String sType, String categoryName, int page, int size, String sortBy);
+
     List<ProductEntity> findTop10SuperCategoryProduct(String categoryName, String sType);
 
     List<ProductEntity> findTop12ProductsByCategory(Set<String> cates);
+
+    ProductEntity createProductAdmin(CreateNewProductResquest request);
+
+    ProductEntity updateProductAdmin(CreateNewProductResquest request);
+
+    void deleteProductAdmin(Long proid);
 }

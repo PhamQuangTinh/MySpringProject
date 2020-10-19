@@ -48,7 +48,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
   };
 
   ngOnInit(): void {
-    
     this.getCategoryProductMen("Clothes");
     this.getCategoryProductGirl("Clothes");
 

@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private token: TokenStorageService, private router: Router) {}
   private handleAuthError(err: HttpErrorResponse): Observable<any> {
     //handle your auth error or rethrow
-    if (err.status === 401 || err.status === 403) {
+    if (err.status === 401 || err.status === 403 || err.status  === 500) {
       //navigate /delete cookies or whatever
       // this.router.navigateByUrl(`/login`);
       this.token.removeToken();

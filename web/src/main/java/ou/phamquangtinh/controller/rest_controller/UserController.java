@@ -1,7 +1,6 @@
 package ou.phamquangtinh.controller.rest_controller;
 
 
-import com.paypal.api.payments.Payment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ou.phamquangtinh.controller.security.service.MyUserDetailService;
@@ -19,9 +17,7 @@ import ou.phamquangtinh.controller.security.util.JwtUtil;
 import ou.phamquangtinh.dto.request.user_request.*;
 import ou.phamquangtinh.dto.response.ListResponsePagination;
 import ou.phamquangtinh.dto.response.user_response.RegisterResponse;
-import ou.phamquangtinh.dto.response.user_response.UserEntityResponse;
 import ou.phamquangtinh.entity.UserEntity;
-import ou.phamquangtinh.service.component_service.IPaypalService;
 import ou.phamquangtinh.service.component_service.IUserService;
 
 import java.util.List;
@@ -108,6 +104,12 @@ public class UserController {
 
 
     //****************************************GET USER*******************************************
+    @GetMapping("/get/confirm_admin")
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    public void confirmAdmin(){
+
+    }
+
     @GetMapping("/get/user_name/{username}")
     public ResponseEntity<Object> getUserByUsername(@PathVariable("username") String userName) {
 

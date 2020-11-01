@@ -74,7 +74,8 @@ export class DashBoardComponent implements OnInit {
   item = "2340";
   constructor(
     private service: DashBoardService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.findProductPagination(1,this.currentPageDisplay, this.adminChild);

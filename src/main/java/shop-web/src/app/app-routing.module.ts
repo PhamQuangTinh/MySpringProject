@@ -50,7 +50,6 @@ const routes: Routes = [
         pathMatch: 'full'
       }
     ]
-    // loadChildren: () => import('./components/user-components/shop/shop.module').then(m => m.ShopModule),
   },
   {
     path:'admin',

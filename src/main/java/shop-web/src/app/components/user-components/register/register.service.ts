@@ -1,3 +1,4 @@
+import { userUrl } from './../../../config/api';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -18,8 +19,8 @@ export class RegisterService {
     }
 
     register(user) : Observable<any>{
-        return this.http.post('http://localhost:8080/api/user/post/register',user,httpOptions)
-                        .pipe(catchError(this.errorHandler));
+        console.log(user);
+        return this.http.post(userUrl + '/post/register',user)
     }
 
     errorHandler(error: HttpErrorResponse){

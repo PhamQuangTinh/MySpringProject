@@ -39,7 +39,6 @@ export class HeaderComponent implements OnInit{
 
   constructor(
     private tokenService: TokenStorageService,
-    private sessionStorage: SessionStorageService,
     private msg: MessengerService,
     private headerService: HeaderService,
     private router: Router,
@@ -102,7 +101,7 @@ export class HeaderComponent implements OnInit{
       this.calcCartTotal();
     });
     
-    this.cartItems = this.sessionStorage.getCartItems();
+    this.cartItems = this.session.getCartItems();
     if (this.cartItems.length !== 0) {
       this.calcCartTotal();
     }
@@ -196,7 +195,7 @@ export class HeaderComponent implements OnInit{
       this.router.navigateByUrl('/home').then(()=>this.router.navigateByUrl('/products/' + sType));
     }
     this.category = cate;
-    this.sessionStorage.saveCategory(cate);
+    this.session.saveCategory(cate);
   }
 
 
